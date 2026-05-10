@@ -1,0 +1,20 @@
+{
+  "run_id": "graph__k24__C36__L3",
+  "stage": "graph_core",
+  "rank": 1,
+  "selection_score": 1.001932389750849,
+  "AUROC_mean": 0.7389064607620787,
+  "AUROC_std": 0.0014157023153107485,
+  "AUPRC_mean": 0.26302592898877036,
+  "AUPRC_std": 0.002608122488188896,
+  "overrides": {
+    "beta": 0.005,
+    "knn_k": 24,
+    "lambda_E": 0.1,
+    "lambda_H": 0.35,
+    "lambda_bal": 0.01,
+    "num_clusters": 36,
+    "num_hops": 3,
+    "tau_s": 0.05
+  }
+}

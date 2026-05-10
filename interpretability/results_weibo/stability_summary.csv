@@ -1,0 +1,2 @@
+dataset,num_trials,top_fraction,top_node_jaccard_mean,top_node_jaccard_std,score_rank_spearman_mean,score_rank_spearman_std
+weibo,3,0.05,0.8697404553182387,0.005172884444002968,0.8244956999812271,0.005285912052530215

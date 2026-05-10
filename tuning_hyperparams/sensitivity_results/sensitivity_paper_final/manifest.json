@@ -1,0 +1,466 @@
+{
+  "base_config": "/root/autodl-fs/recap/params/recap.json",
+  "output_dir": "/autodl-fs/data/recap/tuning_hyperparams/sensitivity_results/sensitivity_paper_final",
+  "device": "cuda:0",
+  "epochs": 200,
+  "trials": 3,
+  "train_datasets": [
+    "pubmed",
+    "Flickr",
+    "questions",
+    "YelpChi"
+  ],
+  "test_datasets": [
+    "Facebook",
+    "cora",
+    "citeseer",
+    "ACM",
+    "BlogCatalog",
+    "weibo",
+    "Reddit",
+    "Amazon"
+  ],
+  "knn_cache_dir": "/autodl-fs/data/recap/knn_cache",
+  "knn_search_dtype": "auto",
+  "include_heatmap": false,
+  "jobs": [
+    {
+      "run_id": "baseline",
+      "kind": "baseline",
+      "param": "baseline",
+      "value": "baseline"
+    },
+    {
+      "run_id": "knn_k__2",
+      "kind": "sensitivity",
+      "param": "knn_k",
+      "value": 2
+    },
+    {
+      "run_id": "knn_k__3",
+      "kind": "sensitivity",
+      "param": "knn_k",
+      "value": 3
+    },
+    {
+      "run_id": "knn_k__4",
+      "kind": "sensitivity",
+      "param": "knn_k",
+      "value": 4
+    },
+    {
+      "run_id": "knn_k__5",
+      "kind": "sensitivity",
+      "param": "knn_k",
+      "value": 5
+    },
+    {
+      "run_id": "knn_k__6",
+      "kind": "sensitivity",
+      "param": "knn_k",
+      "value": 6
+    },
+    {
+      "run_id": "knn_k__8",
+      "kind": "sensitivity",
+      "param": "knn_k",
+      "value": 8
+    },
+    {
+      "run_id": "knn_k__10",
+      "kind": "sensitivity",
+      "param": "knn_k",
+      "value": 10
+    },
+    {
+      "run_id": "knn_k__12",
+      "kind": "sensitivity",
+      "param": "knn_k",
+      "value": 12
+    },
+    {
+      "run_id": "knn_k__16",
+      "kind": "sensitivity",
+      "param": "knn_k",
+      "value": 16
+    },
+    {
+      "run_id": "num_clusters__4",
+      "kind": "sensitivity",
+      "param": "num_clusters",
+      "value": 4
+    },
+    {
+      "run_id": "num_clusters__6",
+      "kind": "sensitivity",
+      "param": "num_clusters",
+      "value": 6
+    },
+    {
+      "run_id": "num_clusters__8",
+      "kind": "sensitivity",
+      "param": "num_clusters",
+      "value": 8
+    },
+    {
+      "run_id": "num_clusters__10",
+      "kind": "sensitivity",
+      "param": "num_clusters",
+      "value": 10
+    },
+    {
+      "run_id": "num_clusters__12",
+      "kind": "sensitivity",
+      "param": "num_clusters",
+      "value": 12
+    },
+    {
+      "run_id": "num_clusters__14",
+      "kind": "sensitivity",
+      "param": "num_clusters",
+      "value": 14
+    },
+    {
+      "run_id": "num_clusters__16",
+      "kind": "sensitivity",
+      "param": "num_clusters",
+      "value": 16
+    },
+    {
+      "run_id": "num_clusters__20",
+      "kind": "sensitivity",
+      "param": "num_clusters",
+      "value": 20
+    },
+    {
+      "run_id": "num_clusters__24",
+      "kind": "sensitivity",
+      "param": "num_clusters",
+      "value": 24
+    },
+    {
+      "run_id": "num_hops__1",
+      "kind": "sensitivity",
+      "param": "num_hops",
+      "value": 1
+    },
+    {
+      "run_id": "num_hops__2",
+      "kind": "sensitivity",
+      "param": "num_hops",
+      "value": 2
+    },
+    {
+      "run_id": "num_hops__3",
+      "kind": "sensitivity",
+      "param": "num_hops",
+      "value": 3
+    },
+    {
+      "run_id": "num_hops__5",
+      "kind": "sensitivity",
+      "param": "num_hops",
+      "value": 5
+    },
+    {
+      "run_id": "num_hops__6",
+      "kind": "sensitivity",
+      "param": "num_hops",
+      "value": 6
+    },
+    {
+      "run_id": "num_hops__8",
+      "kind": "sensitivity",
+      "param": "num_hops",
+      "value": 8
+    },
+    {
+      "run_id": "num_hops__10",
+      "kind": "sensitivity",
+      "param": "num_hops",
+      "value": 10
+    },
+    {
+      "run_id": "num_hops__12",
+      "kind": "sensitivity",
+      "param": "num_hops",
+      "value": 12
+    },
+    {
+      "run_id": "num_hops__14",
+      "kind": "sensitivity",
+      "param": "num_hops",
+      "value": 14
+    },
+    {
+      "run_id": "tau_s__0p08",
+      "kind": "sensitivity",
+      "param": "tau_s",
+      "value": 0.08
+    },
+    {
+      "run_id": "tau_s__0p1",
+      "kind": "sensitivity",
+      "param": "tau_s",
+      "value": 0.1
+    },
+    {
+      "run_id": "tau_s__0p12",
+      "kind": "sensitivity",
+      "param": "tau_s",
+      "value": 0.12
+    },
+    {
+      "run_id": "tau_s__0p15",
+      "kind": "sensitivity",
+      "param": "tau_s",
+      "value": 0.15
+    },
+    {
+      "run_id": "tau_s__0p2",
+      "kind": "sensitivity",
+      "param": "tau_s",
+      "value": 0.2
+    },
+    {
+      "run_id": "tau_s__0p25",
+      "kind": "sensitivity",
+      "param": "tau_s",
+      "value": 0.25
+    },
+    {
+      "run_id": "tau_s__0p3",
+      "kind": "sensitivity",
+      "param": "tau_s",
+      "value": 0.3
+    },
+    {
+      "run_id": "tau_s__0p4",
+      "kind": "sensitivity",
+      "param": "tau_s",
+      "value": 0.4
+    },
+    {
+      "run_id": "tau_s__0p5",
+      "kind": "sensitivity",
+      "param": "tau_s",
+      "value": 0.5
+    },
+    {
+      "run_id": "beta__0",
+      "kind": "sensitivity",
+      "param": "beta",
+      "value": 0
+    },
+    {
+      "run_id": "beta__0p002",
+      "kind": "sensitivity",
+      "param": "beta",
+      "value": 0.002
+    },
+    {
+      "run_id": "beta__0p01",
+      "kind": "sensitivity",
+      "param": "beta",
+      "value": 0.01
+    },
+    {
+      "run_id": "beta__0p02",
+      "kind": "sensitivity",
+      "param": "beta",
+      "value": 0.02
+    },
+    {
+      "run_id": "beta__0p03",
+      "kind": "sensitivity",
+      "param": "beta",
+      "value": 0.03
+    },
+    {
+      "run_id": "beta__0p05",
+      "kind": "sensitivity",
+      "param": "beta",
+      "value": 0.05
+    },
+    {
+      "run_id": "beta__0p08",
+      "kind": "sensitivity",
+      "param": "beta",
+      "value": 0.08
+    },
+    {
+      "run_id": "beta__0p12",
+      "kind": "sensitivity",
+      "param": "beta",
+      "value": 0.12
+    },
+    {
+      "run_id": "beta__0p16",
+      "kind": "sensitivity",
+      "param": "beta",
+      "value": 0.16
+    },
+    {
+      "run_id": "lambda_H__0p2",
+      "kind": "sensitivity",
+      "param": "lambda_H",
+      "value": 0.2
+    },
+    {
+      "run_id": "lambda_H__0p5",
+      "kind": "sensitivity",
+      "param": "lambda_H",
+      "value": 0.5
+    },
+    {
+      "run_id": "lambda_H__0p65",
+      "kind": "sensitivity",
+      "param": "lambda_H",
+      "value": 0.65
+    },
+    {
+      "run_id": "lambda_H__0p8",
+      "kind": "sensitivity",
+      "param": "lambda_H",
+      "value": 0.8
+    },
+    {
+      "run_id": "lambda_H__1p0",
+      "kind": "sensitivity",
+      "param": "lambda_H",
+      "value": 1.0
+    },
+    {
+      "run_id": "lambda_H__1p2",
+      "kind": "sensitivity",
+      "param": "lambda_H",
+      "value": 1.2
+    },
+    {
+      "run_id": "lambda_H__1p5",
+      "kind": "sensitivity",
+      "param": "lambda_H",
+      "value": 1.5
+    },
+    {
+      "run_id": "lambda_H__2p0",
+      "kind": "sensitivity",
+      "param": "lambda_H",
+      "value": 2.0
+    },
+    {
+      "run_id": "lambda_H__2p5",
+      "kind": "sensitivity",
+      "param": "lambda_H",
+      "value": 2.5
+    },
+    {
+      "run_id": "lambda_bal__0",
+      "kind": "sensitivity",
+      "param": "lambda_bal",
+      "value": 0
+    },
+    {
+      "run_id": "lambda_bal__0p005",
+      "kind": "sensitivity",
+      "param": "lambda_bal",
+      "value": 0.005
+    },
+    {
+      "run_id": "lambda_bal__0p02",
+      "kind": "sensitivity",
+      "param": "lambda_bal",
+      "value": 0.02
+    },
+    {
+      "run_id": "lambda_bal__0p05",
+      "kind": "sensitivity",
+      "param": "lambda_bal",
+      "value": 0.05
+    },
+    {
+      "run_id": "lambda_bal__0p08",
+      "kind": "sensitivity",
+      "param": "lambda_bal",
+      "value": 0.08
+    },
+    {
+      "run_id": "lambda_bal__0p1",
+      "kind": "sensitivity",
+      "param": "lambda_bal",
+      "value": 0.1
+    },
+    {
+      "run_id": "lambda_bal__0p15",
+      "kind": "sensitivity",
+      "param": "lambda_bal",
+      "value": 0.15
+    },
+    {
+      "run_id": "lambda_bal__0p2",
+      "kind": "sensitivity",
+      "param": "lambda_bal",
+      "value": 0.2
+    },
+    {
+      "run_id": "lambda_bal__0p3",
+      "kind": "sensitivity",
+      "param": "lambda_bal",
+      "value": 0.3
+    },
+    {
+      "run_id": "lambda_E__0",
+      "kind": "sensitivity",
+      "param": "lambda_E",
+      "value": 0
+    },
+    {
+      "run_id": "lambda_E__0p001",
+      "kind": "sensitivity",
+      "param": "lambda_E",
+      "value": 0.001
+    },
+    {
+      "run_id": "lambda_E__0p005",
+      "kind": "sensitivity",
+      "param": "lambda_E",
+      "value": 0.005
+    },
+    {
+      "run_id": "lambda_E__0p01",
+      "kind": "sensitivity",
+      "param": "lambda_E",
+      "value": 0.01
+    },
+    {
+      "run_id": "lambda_E__0p02",
+      "kind": "sensitivity",
+      "param": "lambda_E",
+      "value": 0.02
+    },
+    {
+      "run_id": "lambda_E__0p05",
+      "kind": "sensitivity",
+      "param": "lambda_E",
+      "value": 0.05
+    },
+    {
+      "run_id": "lambda_E__0p08",
+      "kind": "sensitivity",
+      "param": "lambda_E",
+      "value": 0.08
+    },
+    {
+      "run_id": "lambda_E__0p2",
+      "kind": "sensitivity",
+      "param": "lambda_E",
+      "value": 0.2
+    },
+    {
+      "run_id": "lambda_E__0p3",
+      "kind": "sensitivity",
+      "param": "lambda_E",
+      "value": 0.3
+    }
+  ]
+}

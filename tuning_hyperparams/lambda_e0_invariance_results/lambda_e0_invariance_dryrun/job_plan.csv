@@ -1,0 +1,15 @@
+run_id,kind,param,value
+baseline,lambda_E0_baseline,baseline,baseline
+beta__0p0,lambda_E0_probe,beta,0.0
+beta__0p05,lambda_E0_probe,beta,0.05
+lambda_H__0p0,lambda_E0_probe,lambda_H,0.0
+lambda_H__0p8,lambda_E0_probe,lambda_H,0.8
+cluster_init_gain__0p8,lambda_E0_probe,cluster_init_gain,0.8
+cluster_init_gain__3p5,lambda_E0_probe,cluster_init_gain,3.5
+tau_c__0p25,lambda_E0_probe,tau_c,0.25
+tau_c__0p32,lambda_E0_probe,tau_c,0.32
+tau_c__0p65,lambda_E0_probe,tau_c,0.65
+tau_s__0p03,lambda_E0_probe,tau_s,0.03
+tau_s__0p25,lambda_E0_probe,tau_s,0.25
+num_hops__2,lambda_E0_probe,num_hops,2
+num_hops__6,lambda_E0_probe,num_hops,6

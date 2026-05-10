@@ -1,0 +1,260 @@
+/root/miniconda3/lib/python3.12/site-packages/torch_geometric/__init__.py:4: UserWarning: An issue occurred while importing 'torch-scatter'. Disabling its usage. Stacktrace: Could not load this library: /root/miniconda3/lib/python3.12/site-packages/torch_scatter/_version_cuda.so
+  import torch_geometric.typing
+/root/miniconda3/lib/python3.12/site-packages/torch_geometric/__init__.py:4: UserWarning: An issue occurred while importing 'torch-cluster'. Disabling its usage. Stacktrace: Could not load this library: /root/miniconda3/lib/python3.12/site-packages/torch_cluster/_version_cuda.so
+  import torch_geometric.typing
+/root/miniconda3/lib/python3.12/site-packages/torch_geometric/__init__.py:4: UserWarning: An issue occurred while importing 'torch-spline-conv'. Disabling its usage. Stacktrace: Could not load this library: /root/miniconda3/lib/python3.12/site-packages/torch_spline_conv/_version_cuda.so
+  import torch_geometric.typing
+/root/miniconda3/lib/python3.12/site-packages/torch_geometric/__init__.py:4: UserWarning: An issue occurred while importing 'torch-sparse'. Disabling its usage. Stacktrace: Could not load this library: /root/miniconda3/lib/python3.12/site-packages/torch_sparse/_version_cuda.so
+  import torch_geometric.typing
+使用保存的最佳模型配置
+
+======================================================================
+recap 异常检测模型训练
+======================================================================
+
+📋 训练配置:
+  device: cuda:0
+  epochs: 100
+  trials: 3
+  seed: 0
+  output_dir: /autodl-fs/data/recap/tuning_hyperparams/sensitivity_results/sensitivity_default_v2/checkpoints/cluster_init_gain__2p5
+  save_checkpoint: True
+  early_stop: False
+  patience: 30
+  log_diagnostics: True
+  diagnostics_interval: 10
+
+🔧 模型配置:
+  model: recap
+  lr: 5e-05
+  dropout_rate: 0.2
+  h_feats: 256
+  num_hops: 4
+  weight_decay: 5e-05
+  dims: 32
+  num_layers: 2
+  activation: ELU
+  num_views: 1
+  num_clusters: 28
+  knn_k: 20
+  cluster_lr_multiplier: 10.0
+  tau_s: 0.08
+  tau_c: 0.3
+  cluster_init_gain: 2.5
+  sim_block_size: 256
+  knn_cache_enabled: True
+  knn_cache_dir: /autodl-fs/data/recap/knn_cache
+  knn_search_dtype: auto
+  lambda_H: 0.1
+  lambda_bal: 0.0
+  lambda_E: 0.1
+  lambda_usage_entropy: 0.1
+  assignment_entropy_lower: 0.45
+  assignment_entropy_upper: 0.85
+  usage_entropy_lower: 0.65
+  usage_entropy_upper: 0.9
+  gamma: 0.1
+  tau_e: 1.0
+  beta: 0.02
+  eps: 1e-08
+  lambda_ortho: 0.1
+  lambda_min_usage: 0.0
+  lambda_diversity: 0.1
+  min_cluster_ratio: 0.1
+
+💾 保存设置:
+  保存目录：/autodl-fs/data/recap/tuning_hyperparams/sensitivity_results/sensitivity_default_v2/checkpoints/cluster_init_gain__2p5
+  保存检查点：True
+======================================================================
+
+
+📊 使用指定的训练数据集: ['pubmed', 'Flickr', 'questions', 'YelpChi']
+
+📊 使用指定的测试数据集: ['Facebook', 'cora', 'citeseer', 'ACM', 'BlogCatalog', 'weibo', 'Reddit', 'Amazon']
+加载 4 个训练数据集: ['pubmed', 'Flickr', 'questions', 'YelpChi']
+加载 8 个测试数据集: ['Facebook', 'cora', 'citeseer', 'ACM', 'BlogCatalog', 'weibo', 'Reddit', 'Amazon']
+进行 4 跳特征传播...
+
+======================================================================
+Trial 0 开始训练 (seed=0)
+======================================================================
+🔧 模型初始化视图数: 1 (单视图模式)
+
+--- 训练阶段 ---
+开始训练，共 100 个epochs...
+关闭early stopping，训练将跑满设定epochs
+🔧 Assignment layer LR multiplier: 10 (base_lr=5e-05, assignment_lr=0.0005)
+Epoch [1/100], Average Loss: 0.616187
+  Diagnostics: H_ent_norm=0.7029, H_maxp=0.3198, pi_ent_norm=0.9826, pi_std=0.011760, effC=26.44, Lvar=0.000000, Lvar_active=0.0000, scale/adh_std=1
+Epoch [10/100], Average Loss: 0.424529
+  Diagnostics: H_ent_norm=0.5527, H_maxp=0.4860, pi_ent_norm=0.8856, pi_std=0.034845, effC=19.61, Lvar=0.000000, Lvar_active=0.0000, scale/adh_std=1
+Epoch [20/100], Average Loss: 0.350144
+  Diagnostics: H_ent_norm=0.4882, H_maxp=0.5607, pi_ent_norm=0.8021, pi_std=0.049675, effC=15.59, Lvar=0.000000, Lvar_active=0.0000, scale/adh_std=1
+Epoch [30/100], Average Loss: 0.313742
+  Diagnostics: H_ent_norm=0.4707, H_maxp=0.5838, pi_ent_norm=0.7662, pi_std=0.055361, effC=14.25, Lvar=0.000000, Lvar_active=0.0000, scale/adh_std=1
+Epoch [40/100], Average Loss: 0.290350
+  Diagnostics: H_ent_norm=0.4805, H_maxp=0.5771, pi_ent_norm=0.7647, pi_std=0.056164, effC=14.22, Lvar=0.000000, Lvar_active=0.0000, scale/adh_std=1
+Epoch [50/100], Average Loss: 0.267968
+  Diagnostics: H_ent_norm=0.5134, H_maxp=0.5458, pi_ent_norm=0.7835, pi_std=0.054867, effC=14.89, Lvar=0.000000, Lvar_active=0.0000, scale/adh_std=1
+Epoch [60/100], Average Loss: 0.238561
+  Diagnostics: H_ent_norm=0.5575, H_maxp=0.5009, pi_ent_norm=0.8067, pi_std=0.054084, effC=15.78, Lvar=0.000000, Lvar_active=0.0000, scale/adh_std=1
+Epoch [70/100], Average Loss: 0.215100
+  Diagnostics: H_ent_norm=0.5783, H_maxp=0.4778, pi_ent_norm=0.8144, pi_std=0.055026, effC=16.05, Lvar=0.000000, Lvar_active=0.0000, scale/adh_std=1
+Epoch [80/100], Average Loss: 0.194676
+  Diagnostics: H_ent_norm=0.5871, H_maxp=0.4649, pi_ent_norm=0.8149, pi_std=0.056942, effC=16.05, Lvar=0.000000, Lvar_active=0.0000, scale/adh_std=1
+Epoch [90/100], Average Loss: 0.179462
+  Diagnostics: H_ent_norm=0.5846, H_maxp=0.4655, pi_ent_norm=0.8094, pi_std=0.059169, effC=15.79, Lvar=0.000000, Lvar_active=0.0000, scale/adh_std=1
+Epoch [100/100], Average Loss: 0.165844
+  Diagnostics: H_ent_norm=0.5882, H_maxp=0.4602, pi_ent_norm=0.8088, pi_std=0.060239, effC=15.74, Lvar=0.000000, Lvar_active=0.0000, scale/adh_std=1
+训练完成！实际训练 100 个epochs
+
+--- 评估阶段 ---
+  Facebook: AUROC=0.5955, AUPRC=0.0420
+  cora: AUROC=0.8179, AUPRC=0.4013
+  citeseer: AUROC=0.8941, AUPRC=0.4075
+  ACM: AUROC=0.7821, AUPRC=0.3667
+  BlogCatalog: AUROC=0.7174, AUPRC=0.3165
+  weibo: AUROC=0.7419, AUPRC=0.3208
+  Reddit: AUROC=0.5855, AUPRC=0.0459
+  Amazon: AUROC=0.7238, AUPRC=0.1310
+
+--- 保存模型 ---
+检查点已保存到: /autodl-fs/data/recap/tuning_hyperparams/sensitivity_results/sensitivity_default_v2/checkpoints/cluster_init_gain__2p5/recap/trial_0/model.pt
+模型已保存到: /autodl-fs/data/recap/tuning_hyperparams/sensitivity_results/sensitivity_default_v2/checkpoints/cluster_init_gain__2p5/recap/trial_0/model.pt
+
+======================================================================
+Trial 1 开始训练 (seed=1)
+======================================================================
+🔧 模型初始化视图数: 1 (单视图模式)
+
+--- 训练阶段 ---
+开始训练，共 100 个epochs...
+关闭early stopping，训练将跑满设定epochs
+🔧 Assignment layer LR multiplier: 10 (base_lr=5e-05, assignment_lr=0.0005)
+Epoch [1/100], Average Loss: 0.621006
+  Diagnostics: H_ent_norm=0.7032, H_maxp=0.3148, pi_ent_norm=0.9905, pi_std=0.008540, effC=27.13, Lvar=0.000001, Lvar_active=0.0002, scale/adh_std=1
+Epoch [10/100], Average Loss: 0.443695
+  Diagnostics: H_ent_norm=0.5840, H_maxp=0.4444, pi_ent_norm=0.9321, pi_std=0.023504, effC=22.57, Lvar=0.000001, Lvar_active=0.0002, scale/adh_std=1
+Epoch [20/100], Average Loss: 0.377438
+  Diagnostics: H_ent_norm=0.5444, H_maxp=0.4918, pi_ent_norm=0.8917, pi_std=0.031285, effC=20.04, Lvar=0.000001, Lvar_active=0.0002, scale/adh_std=1
+Epoch [30/100], Average Loss: 0.339722
+  Diagnostics: H_ent_norm=0.5492, H_maxp=0.4940, pi_ent_norm=0.8812, pi_std=0.034436, effC=19.44, Lvar=0.000001, Lvar_active=0.0002, scale/adh_std=1
+Epoch [40/100], Average Loss: 0.307487
+  Diagnostics: H_ent_norm=0.5634, H_maxp=0.4868, pi_ent_norm=0.8711, pi_std=0.038321, effC=18.88, Lvar=0.000002, Lvar_active=0.0002, scale/adh_std=1
+Epoch [50/100], Average Loss: 0.281119
+  Diagnostics: H_ent_norm=0.5687, H_maxp=0.4866, pi_ent_norm=0.8571, pi_std=0.042043, effC=18.16, Lvar=0.000002, Lvar_active=0.0002, scale/adh_std=1
+Epoch [60/100], Average Loss: 0.259995
+  Diagnostics: H_ent_norm=0.5683, H_maxp=0.4905, pi_ent_norm=0.8436, pi_std=0.045596, effC=17.48, Lvar=0.000003, Lvar_active=0.0002, scale/adh_std=1
+Epoch [70/100], Average Loss: 0.241920
+  Diagnostics: H_ent_norm=0.5683, H_maxp=0.4924, pi_ent_norm=0.8346, pi_std=0.048228, effC=17.02, Lvar=0.000003, Lvar_active=0.0002, scale/adh_std=1
+Epoch [80/100], Average Loss: 0.225443
+  Diagnostics: H_ent_norm=0.5669, H_maxp=0.4962, pi_ent_norm=0.8236, pi_std=0.051229, effC=16.49, Lvar=0.000003, Lvar_active=0.0002, scale/adh_std=1
+Epoch [90/100], Average Loss: 0.211337
+  Diagnostics: H_ent_norm=0.5671, H_maxp=0.4980, pi_ent_norm=0.8162, pi_std=0.053378, effC=16.15, Lvar=0.000003, Lvar_active=0.0002, scale/adh_std=1
+Epoch [100/100], Average Loss: 0.197370
+  Diagnostics: H_ent_norm=0.5677, H_maxp=0.4980, pi_ent_norm=0.8098, pi_std=0.055080, effC=15.86, Lvar=0.000003, Lvar_active=0.0002, scale/adh_std=1
+训练完成！实际训练 100 个epochs
+
+--- 评估阶段 ---
+  Facebook: AUROC=0.5959, AUPRC=0.0497
+  cora: AUROC=0.8229, AUPRC=0.4089
+  citeseer: AUROC=0.8989, AUPRC=0.4588
+  ACM: AUROC=0.7738, AUPRC=0.3720
+  BlogCatalog: AUROC=0.7193, AUPRC=0.3220
+  weibo: AUROC=0.7365, AUPRC=0.3095
+  Reddit: AUROC=0.5914, AUPRC=0.0465
+  Amazon: AUROC=0.7112, AUPRC=0.1259
+
+--- 保存模型 ---
+检查点已保存到: /autodl-fs/data/recap/tuning_hyperparams/sensitivity_results/sensitivity_default_v2/checkpoints/cluster_init_gain__2p5/recap/trial_1/model.pt
+模型已保存到: /autodl-fs/data/recap/tuning_hyperparams/sensitivity_results/sensitivity_default_v2/checkpoints/cluster_init_gain__2p5/recap/trial_1/model.pt
+
+======================================================================
+Trial 2 开始训练 (seed=2)
+======================================================================
+🔧 模型初始化视图数: 1 (单视图模式)
+
+--- 训练阶段 ---
+开始训练，共 100 个epochs...
+关闭early stopping，训练将跑满设定epochs
+🔧 Assignment layer LR multiplier: 10 (base_lr=5e-05, assignment_lr=0.0005)
+Epoch [1/100], Average Loss: 0.609570
+  Diagnostics: H_ent_norm=0.7091, H_maxp=0.3134, pi_ent_norm=0.9842, pi_std=0.011004, effC=26.58, Lvar=0.000000, Lvar_active=0.0000, scale/adh_std=1
+Epoch [10/100], Average Loss: 0.438542
+  Diagnostics: H_ent_norm=0.5839, H_maxp=0.4462, pi_ent_norm=0.9170, pi_std=0.026204, effC=21.56, Lvar=0.000000, Lvar_active=0.0000, scale/adh_std=1
+Epoch [20/100], Average Loss: 0.385160
+  Diagnostics: H_ent_norm=0.5537, H_maxp=0.4813, pi_ent_norm=0.8910, pi_std=0.031882, effC=20.00, Lvar=0.000000, Lvar_active=0.0000, scale/adh_std=1
+Epoch [30/100], Average Loss: 0.346609
+  Diagnostics: H_ent_norm=0.5538, H_maxp=0.4884, pi_ent_norm=0.8787, pi_std=0.035305, effC=19.32, Lvar=0.000000, Lvar_active=0.0000, scale/adh_std=1
+Epoch [40/100], Average Loss: 0.315930
+  Diagnostics: H_ent_norm=0.5550, H_maxp=0.4941, pi_ent_norm=0.8632, pi_std=0.039312, effC=18.51, Lvar=0.000000, Lvar_active=0.0000, scale/adh_std=1
+Epoch [50/100], Average Loss: 0.293946
+  Diagnostics: H_ent_norm=0.5607, H_maxp=0.4956, pi_ent_norm=0.8506, pi_std=0.042735, effC=17.84, Lvar=0.000000, Lvar_active=0.0000, scale/adh_std=1
+Epoch [60/100], Average Loss: 0.272584
+  Diagnostics: H_ent_norm=0.5653, H_maxp=0.4984, pi_ent_norm=0.8396, pi_std=0.045836, effC=17.25, Lvar=0.000000, Lvar_active=0.0000, scale/adh_std=1
+Epoch [70/100], Average Loss: 0.254452
+  Diagnostics: H_ent_norm=0.5666, H_maxp=0.5043, pi_ent_norm=0.8297, pi_std=0.049057, effC=16.66, Lvar=0.000000, Lvar_active=0.0000, scale/adh_std=1
+Epoch [80/100], Average Loss: 0.237828
+  Diagnostics: H_ent_norm=0.5605, H_maxp=0.5167, pi_ent_norm=0.8130, pi_std=0.054482, effC=15.69, Lvar=0.000000, Lvar_active=0.0000, scale/adh_std=1
+Epoch [90/100], Average Loss: 0.216612
+  Diagnostics: H_ent_norm=0.5559, H_maxp=0.5273, pi_ent_norm=0.7959, pi_std=0.061557, effC=14.53, Lvar=0.000000, Lvar_active=0.0000, scale/adh_std=1
+Epoch [100/100], Average Loss: 0.187394
+  Diagnostics: H_ent_norm=0.5427, H_maxp=0.5404, pi_ent_norm=0.7667, pi_std=0.071624, effC=12.90, Lvar=0.000000, Lvar_active=0.0000, scale/adh_std=1
+训练完成！实际训练 100 个epochs
+
+--- 评估阶段 ---
+  Facebook: AUROC=0.5872, AUPRC=0.0396
+  cora: AUROC=0.8171, AUPRC=0.3949
+  citeseer: AUROC=0.9007, AUPRC=0.4414
+  ACM: AUROC=0.7864, AUPRC=0.3751
+  BlogCatalog: AUROC=0.7248, AUPRC=0.3206
+  weibo: AUROC=0.7538, AUPRC=0.3163
+  Reddit: AUROC=0.5822, AUPRC=0.0448
+  Amazon: AUROC=0.7355, AUPRC=0.1333
+
+--- 保存模型 ---
+检查点已保存到: /autodl-fs/data/recap/tuning_hyperparams/sensitivity_results/sensitivity_default_v2/checkpoints/cluster_init_gain__2p5/recap/trial_2/model.pt
+模型已保存到: /autodl-fs/data/recap/tuning_hyperparams/sensitivity_results/sensitivity_default_v2/checkpoints/cluster_init_gain__2p5/recap/trial_2/model.pt
+
+======================================================================
+聚合 3 次试验的结果
+======================================================================
+
+------------------------- Facebook -------------------------
+AUROC: 0.5929 ± 0.0040
+AUPRC: 0.0437 ± 0.0043
+
+------------------------- cora -------------------------
+AUROC: 0.8193 ± 0.0026
+AUPRC: 0.4017 ± 0.0057
+
+------------------------- citeseer -------------------------
+AUROC: 0.8979 ± 0.0028
+AUPRC: 0.4359 ± 0.0213
+
+------------------------- ACM -------------------------
+AUROC: 0.7808 ± 0.0052
+AUPRC: 0.3712 ± 0.0035
+
+------------------------- BlogCatalog -------------------------
+AUROC: 0.7205 ± 0.0031
+AUPRC: 0.3197 ± 0.0023
+
+------------------------- weibo -------------------------
+AUROC: 0.7441 ± 0.0072
+AUPRC: 0.3156 ± 0.0046
+
+------------------------- Reddit -------------------------
+AUROC: 0.5864 ± 0.0038
+AUPRC: 0.0458 ± 0.0007
+
+------------------------- Amazon -------------------------
+AUROC: 0.7235 ± 0.0099
+AUPRC: 0.1301 ± 0.0031
+
+
+======================================================================
+训练完成！
+所有模型已保存到: /autodl-fs/data/recap/tuning_hyperparams/sensitivity_results/sensitivity_default_v2/checkpoints/cluster_init_gain__2p5/recap/
+======================================================================
+
