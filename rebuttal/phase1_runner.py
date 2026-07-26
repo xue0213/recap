@@ -662,7 +662,14 @@ def train_model(
 
     resume_path = latest_resume_checkpoint(run_dir) if resume else None
     if resume_path is not None:
-        checkpoint = torch.load(resume_path, map_location=device)
+        # Checkpoints are atomically created by this runner in the same trusted
+        # run directory and include optimizer/RNG Python objects, so the
+        # PyTorch 2.6+ weights-only default is intentionally disabled.
+        checkpoint = torch.load(
+            resume_path,
+            map_location=device,
+            weights_only=False,
+        )
         if checkpoint.get("config_hash") != config_hash:
             raise ValueError(f"Resume config hash mismatch: {resume_path}")
         if checkpoint.get("run_spec") != spec.to_dict():
@@ -675,7 +682,7 @@ def train_model(
         diagnostic_seconds = float(checkpoint["diagnostic_seconds"])
         start_epoch = int(checkpoint["epoch"]) + 1
         restore_rng_state(checkpoint["rng_state"])
-        resumed = True
+        resumed = int(checkpoint["epoch"]) < train_config.epochs
 
     if torch.cuda.is_available():
         torch.cuda.reset_peak_memory_stats(torch.device(device))
@@ -891,7 +898,13 @@ def verify_checkpoint_reload(
     reference_scores_path: Path,
     device: str,
 ) -> dict:
-    payload = torch.load(checkpoint_path, map_location=device)
+    # This is a trusted, self-generated Phase 1 checkpoint containing more than
+    # tensor weights (resolved configs, optimizer and RNG state).
+    payload = torch.load(
+        checkpoint_path,
+        map_location=device,
+        weights_only=False,
+    )
     reloaded = recap(**model_config.to_dict()).to(device)
     reloaded.load_state_dict(payload["model_state_dict"], strict=True)
     reloaded.eval()
