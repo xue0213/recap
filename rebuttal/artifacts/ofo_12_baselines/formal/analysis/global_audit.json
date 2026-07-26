@@ -1,0 +1,38 @@
+{
+  "audited_runs": 288,
+  "checkpoint_reloads_passed": 288,
+  "environment_signature_count": 1,
+  "environment_signatures": [
+    [
+      "3.12.3",
+      "2.11.0+cu128",
+      "2.1.3",
+      "12.8",
+      "cuda:0"
+    ]
+  ],
+  "evaluation_populations": {
+    "supervised": "stratified_test_40pct",
+    "unsupervised": "full_graph"
+  },
+  "expected_runs": 288,
+  "format": "recap_ofo12_global_audit_v1",
+  "label_audits_passed": 288,
+  "maximum_reload_abs_difference": 0.00017547607421875,
+  "raw_dataset_hashes": {
+    "ACM": "31833bd23c8fa8d3aa3358876ebea43cf77d03fb4068f2a3b73b3d7dda2b6e98",
+    "Amazon": "6677b4f17f594c4169df3717fc9da9c6b06d1dfcc28e5f0d42beedf4c7843dd3",
+    "BlogCatalog": "65a532eee6903842d684772847f3771a4f16225841ca891af7f3f8b72e68ce5a",
+    "Facebook": "606d8cce2f9a9d2829244f5691d1abf0c3a5e0f28a2ade25a7ca7df304184163",
+    "Flickr": "350986debdbf452359a5edf510649188341de3d0bbaa17e3362e5643d256c88f",
+    "Reddit": "533a739caa38939dff51f1902e6705fbb4e727badf1d408fc0d1b45467cf4fd3",
+    "YelpChi": "61eae7fd894b54840eb7038d52bbf9e3802704ccd16a74526dd2fff3cbff72ca",
+    "citeseer": "9a5dd61bb1840f0ec448b24bd9bfce44a5a922f5dc9060846221b36c02f41a2e",
+    "cora": "1f67271a4355d88efbc11fb4d67419c2e83f8f0f8bc5c5703d4cedb8f2fcca37",
+    "pubmed": "630b73bbe79261d13ec71cede9b71c124da5be39d48817f829fe6ae4102b51e3",
+    "questions": "549173adf44d795b539e219296bb68895e416e84868ac1abc0f512a2c29a5e97",
+    "weibo": "b79248b7ea8329fbfffc6b0c97e73e5e930a79cb5ffa6d0e529117b9bae9b5da"
+  },
+  "recomputed_metrics": 576,
+  "status": "PASS"
+}
