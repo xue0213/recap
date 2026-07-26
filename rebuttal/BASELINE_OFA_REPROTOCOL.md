@@ -143,7 +143,10 @@ Compatibility changes are limited to:
 4. deterministic exact row blocking for full contrastive denominators;
 5. direct top-8 sparse ARPACK SVD in place of computing and discarding the
    full dense singular basis for AnomalyGFM;
-6. resumable artifact, audit, and logging infrastructure.
+6. deterministic CPU sparse aggregation for UNPrompt's frozen target inference
+   only, because CUDA sparse reduction order is not bitwise stable and its
+   graph-level min-max scoring amplifies last-bit differences;
+7. resumable artifact, audit, and logging infrastructure.
 
 Before formal runs, small-graph tests must show numerical equivalence for every
 replaced dense operation within `atol=1e-5, rtol=1e-5`. A compatibility change

@@ -414,6 +414,29 @@ def unprompt_anomaly_score(
     return 1.0 - (similarity - minimum) / (maximum - minimum)
 
 
+def unprompt_deterministic_neighbor_eval(
+    encoder: UNPromptGCN,
+    features: torch.Tensor,
+    adjacency: torch.Tensor,
+) -> torch.Tensor:
+    """Evaluate sparse aggregation deterministically on CPU.
+
+    CUDA sparse reductions may change the last few bits between identical
+    calls. UNPrompt's graph-level min-max score can amplify those differences.
+    This function changes only the evaluation backend, not the linear map,
+    normalization, activation, graph, or arithmetic expression.
+    """
+
+    if encoder.training:
+        raise ValueError("Deterministic UNPrompt evaluation requires eval mode")
+    projected = encoder.linear(features)
+    aggregated = torch.sparse.mm(
+        adjacency.cpu(), projected.cpu()
+    ).to(features.device)
+    output = aggregated + encoder.bias
+    return encoder.activation(encoder.batch_norm(output))
+
+
 class AnomalyGFMGraphConv(nn.Module):
     def __init__(self, in_features: int, out_features: int) -> None:
         super().__init__()

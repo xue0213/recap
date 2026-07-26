@@ -57,6 +57,7 @@ if __package__ in {None, ""}:
         anomalygfm_score_components,
         unprompt_anomaly_score,
         unprompt_completion_loss,
+        unprompt_deterministic_neighbor_eval,
     )
     from rebuttal.baselines.baseline_protocol import (  # type: ignore
         BaselineRunSpec,
@@ -97,6 +98,7 @@ else:
         anomalygfm_score_components,
         unprompt_anomaly_score,
         unprompt_completion_loss,
+        unprompt_deterministic_neighbor_eval,
     )
     from .baseline_protocol import (
         BaselineRunSpec,
@@ -940,6 +942,7 @@ def run_unprompt(
         "contrastive_denominator": "exact all-node, checkpointed row blocks",
         "contrastive_block_size": 2048,
         "target_context": 0,
+        "target_sparse_aggregation_backend": "deterministic CPU",
     }
     atomic_json(directory / "run_start.json", metadata)
 
@@ -1073,7 +1076,11 @@ def run_unprompt(
             graph = graphs[name]
             modified = prompts.add(graph.x)
             neighbor = projection(
-                encoder(modified, graph.adjacency_without_loop_norm)
+                unprompt_deterministic_neighbor_eval(
+                    encoder,
+                    modified,
+                    graph.adjacency_without_loop_norm,
+                )
             )
             self_embedding = projection(encoder(modified, None))
             score_tensor = unprompt_anomaly_score(
@@ -1119,8 +1126,10 @@ def run_unprompt(
             graph = graphs[name]
             modified = reloaded_prompts.add(graph.x)
             neighbor = reloaded_projection(
-                reloaded_encoder(
-                    modified, graph.adjacency_without_loop_norm
+                unprompt_deterministic_neighbor_eval(
+                    reloaded_encoder,
+                    modified,
+                    graph.adjacency_without_loop_norm,
                 )
             )
             self_embedding = reloaded_projection(

@@ -23,6 +23,7 @@ from rebuttal.baselines.baseline_models import (
     UNPromptGrace,
     dense_affinity_message_reference,
     sparse_affinity_message,
+    unprompt_deterministic_neighbor_eval,
 )
 from rebuttal.baselines.baseline_protocol import (
     build_manifest,
@@ -118,6 +119,30 @@ class BaselineProtocolTests(unittest.TestCase):
         self.assertTrue(
             torch.allclose(blocked, full, atol=1e-6, rtol=1e-6)
         )
+
+    def test_unprompt_deterministic_eval_matches_dense(self) -> None:
+        generator = torch.Generator().manual_seed(19)
+        dense = torch.eye(8)
+        dense[torch.arange(7), torch.arange(1, 8)] = 0.5
+        dense[torch.arange(1, 8), torch.arange(7)] = 0.5
+        features = torch.randn(8, 8, generator=generator)
+        encoder = UNPromptGCN()
+        encoder.eval()
+        actual = unprompt_deterministic_neighbor_eval(
+            encoder, features, dense.to_sparse().coalesce()
+        )
+        expected = encoder.activation(
+            encoder.batch_norm(
+                dense @ encoder.linear(features) + encoder.bias
+            )
+        )
+        repeated = unprompt_deterministic_neighbor_eval(
+            encoder, features, dense.to_sparse().coalesce()
+        )
+        self.assertTrue(
+            torch.allclose(actual, expected, atol=1e-6, rtol=1e-6)
+        )
+        self.assertTrue(torch.equal(actual, repeated))
 
     def test_label_vault_blocks_early_target_read(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
