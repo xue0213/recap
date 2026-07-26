@@ -7,27 +7,27 @@ evaluation protocol?
 
 ## Current Understanding
 
-The protocol is computationally feasible on the available RTX PRO 6000
-Blackwell server. A clean timing benchmark using the paper Git baseline showed
-that the largest OFO-excluded graph, Questions, trains for 100 epochs in about
-12.7 seconds and uses about 37.2 GiB peak GPU memory. The main risk is therefore
-scientific and bookkeeping correctness rather than raw compute capacity.
-
-The implementation, label-isolation, cache-equivalence, manifest, and
-all-dataset preflight gates have passed. Both formal seed-0 gates also passed,
-so the remaining locked manifest can run without changing any paper setting.
+The locked Phase 1 is complete and computationally feasible on the available
+RTX PRO 6000 Blackwell server. All implementation, label-isolation,
+cache-equivalence, data-manifest, checkpoint-reload, raw-record, and artifact
+gates passed. The complete accounted data preparation, training, diagnostics,
+and inference time was 313.59 seconds; this excludes orchestration pauses and
+tooling fixes.
 
 ## Key Results
 
-OFO Cora seed 0 achieved 0.828746 AUROC and 0.420978 AUPRC. The clean rerun
-reproduced the metrics observed before the tooling-only audit failures.
-
-OFA Setting A seed 0 achieved 0.743315 dataset-macro AUROC and 0.273419
-dataset-macro AUPRC across eight targets. The checkpoint-reloaded scores agree
-with the in-process scores to within 2.38e-7.
-
-The full 12-dataset preflight completed in 27.87 seconds. All file hashes and
-actual graph statistics are locked in `data_manifest.json`.
+- OFO 11-dataset macro: AUROC 0.717747 ± 0.003883 and AUPRC
+  0.253175 ± 0.002850.
+- OFA Setting A macro: AUROC 0.746515 ± 0.002293 and AUPRC
+  0.270445 ± 0.003428.
+- OFA Setting B macro: AUROC 0.677450 ± 0.002182 and AUPRC
+  0.219756 ± 0.003185.
+- OFA Setting C dataset macro: AUROC 0.673100 ± 0.004322 and AUPRC
+  0.175007 ± 0.000924; domain macro is 0.671091/0.135780.
+- Setting A closely reproduces the manuscript: per-dataset mean absolute
+  differences are 0.37 AUROC percentage points and 0.65 AUPRC points.
+- The full 12-dataset preflight completed in 27.87 seconds. All file hashes and
+  actual graph statistics are locked in `data_manifest.json`.
 
 ## Patterns and Insights
 
@@ -39,9 +39,13 @@ actual graph statistics are locked in `data_manifest.json`.
   materializing an `N x N` matrix.
 - The clean Phase 1 worktree contains no ANN module, so approximate KNN cannot
   accidentally affect the confirmatory datasets.
-- Setting A seed 0 is aligned with the manuscript at the macro level. Facebook
-  AUPRC is higher than the submitted three-seed mean and must be checked after
-  seeds 1 and 2, without using the observation for tuning.
+- Setting A remains aligned with the manuscript after all three seeds.
+- Final anomaly rankings are substantially more stable than community
+  identities. The setting-level macro score Spearman values are 0.890, 0.878,
+  0.735, and 0.663 for OFO/A/B/C; the corresponding soft co-assignment values
+  are 0.632, 0.576, 0.573, and 0.331.
+- Negative evidence must be retained: OFO YelpChi AUROC is 0.4260, and Setting
+  C BlogCatalog score Spearman is only 0.370.
 
 ## Lessons and Constraints
 
@@ -54,14 +58,21 @@ actual graph statistics are locked in `data_manifest.json`.
   locked protocol.
 - Amazon contains 10,224 nodes in the actual dataset; the paper's 10,244 count
   is treated as a documented likely typo.
+- The three historical failure-log entries were post-training tooling defects,
+  not accepted scientific runs. They remain preserved for provenance.
 
 ## Open Questions
 
-- Does the first formal seed-0 gate reproduce the expected performance range?
-- Are all final community assignments stable across seeds under every setting?
-- Are any dataset-specific failures caused by preprocessing/cache version
-  differences?
+- Why is OFO below random on YelpChi under the paper-locked configuration?
+- Why do cross-domain Setting C communities change substantially across seeds
+  even when final score rankings are moderately stable?
+- These are follow-up research questions, not reasons to alter the completed
+  confirmatory Phase 1.
 
 ## Optimization Trajectory
 
-No confirmatory runs yet.
+The trajectory moved from infrastructure validation to two seed-0 gates, then
+broadened to all 42 locked runs. No metric-driven hyperparameter changes were
+made. Exact feature/KNN cache reuse and the exact C×C soft co-assignment
+identity reduced redundant work without changing the experiment definition or
+outputs.

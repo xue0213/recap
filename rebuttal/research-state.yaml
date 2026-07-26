@@ -1,7 +1,7 @@
 project:
   title: "RECAP Phase 1 rebuttal experiments"
   question: "Does RECAP remain effective and community-stable under the locked OFO and OFA evaluation protocol?"
-  status: active
+  status: complete
   started: "2026-07-26"
   domain: "graph anomaly detection"
 
@@ -18,15 +18,27 @@ protocol:
   seeds: [0, 1, 2]
 
 experiments:
-  proxy_metric: "preflight correctness, followed by per-dataset AUROC/AUPRC"
-  total_runs: 2
-  completed_runs: 2
+  proxy_metric: "per-dataset AUROC/AUPRC plus cross-seed community stability"
+  total_runs: 42
+  completed_runs: 42
   failed_runs: 0
-  final_evaluations_completed: 9
-  stability_pairs_completed: 0
-  current_stage: "formal_manifest_execution"
+  final_evaluations_completed: 87
+  stability_pairs_completed: 87
+  current_stage: "complete"
   active_run: null
-  trajectory: []
+  trajectory:
+    - stage: "OFO"
+      auroc_dataset_macro: 0.7177466675
+      auprc_dataset_macro: 0.2531751373
+    - stage: "OFA-A"
+      auroc_dataset_macro: 0.7465154224
+      auprc_dataset_macro: 0.2704448673
+    - stage: "OFA-B"
+      auroc_dataset_macro: 0.6774504735
+      auprc_dataset_macro: 0.2197561250
+    - stage: "OFA-C"
+      auroc_dataset_macro: 0.6731004716
+      auprc_dataset_macro: 0.1750072323
 
 quality_gates:
   paper_implementation_restored: true
@@ -36,16 +48,21 @@ quality_gates:
   cache_equivalence_verified: true
   checkpoint_reload_verified: true
   seed0_gate_passed: true
+  formal_manifest_complete: true
+  raw_record_validation_passed: true
+  artifact_validation_passed: true
+  stability_analysis_complete: true
+  final_report_generated: true
 
 outer_loop:
-  cycle: 2
-  last_direction: deepen
-  last_reflection: "Both formal seed-0 gates passed. Setting A seed 0 is aligned with the manuscript at the macro level; keep all settings fixed and broaden to the remaining 40 runs."
+  cycle: 4
+  last_direction: conclude
+  last_reflection: "All locked runs and audits passed. Setting A reproduces the manuscript closely. Report OFO YelpChi weakness and Setting C community instability without tuning or suppression."
 
 workspace:
   findings: "rebuttal/findings.md"
   log: "rebuttal/research-log.md"
   protocol: "rebuttal/PHASE1_EXECUTION_LOCK.md"
-  run_root: "rebuttal/runs/"
-  artifacts_root: "rebuttal/artifacts/"
-  reports_root: "rebuttal/to_human/"
+  run_root: "rebuttal/artifacts/phase1/runs/"
+  artifacts_root: "rebuttal/artifacts/phase1/"
+  reports_root: "rebuttal/reports/"
