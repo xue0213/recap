@@ -19,12 +19,12 @@ protocol:
 
 experiments:
   proxy_metric: "preflight correctness, followed by per-dataset AUROC/AUPRC"
-  total_runs: 0
-  completed_runs: 0
+  total_runs: 2
+  completed_runs: 2
   failed_runs: 0
-  final_evaluations_completed: 0
+  final_evaluations_completed: 9
   stability_pairs_completed: 0
-  current_stage: "formal_seed0_gates"
+  current_stage: "formal_manifest_execution"
   active_run: null
   trajectory: []
 
@@ -34,13 +34,13 @@ quality_gates:
   data_manifest_verified: true
   label_isolation_verified: true
   cache_equivalence_verified: true
-  checkpoint_reload_verified: false
-  seed0_gate_passed: false
+  checkpoint_reload_verified: true
+  seed0_gate_passed: true
 
 outer_loop:
-  cycle: 1
+  cycle: 2
   last_direction: deepen
-  last_reflection: "Infrastructure and preflight passed. Proceed to the two formal seed-0 gates before broadening to the remaining manifest."
+  last_reflection: "Both formal seed-0 gates passed. Setting A seed 0 is aligned with the manuscript at the macro level; keep all settings fixed and broaden to the remaining 40 runs."
 
 workspace:
   findings: "rebuttal/findings.md"

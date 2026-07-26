@@ -13,13 +13,18 @@ that the largest OFO-excluded graph, Questions, trains for 100 epochs in about
 12.7 seconds and uses about 37.2 GiB peak GPU memory. The main risk is therefore
 scientific and bookkeeping correctness rather than raw compute capacity.
 
-Formal results have not started. The implementation, label-isolation,
-cache-equivalence, manifest, and all-dataset preflight gates have passed. The
-next step is the two formal seed-0 gates.
+The implementation, label-isolation, cache-equivalence, manifest, and
+all-dataset preflight gates have passed. Both formal seed-0 gates also passed,
+so the remaining locked manifest can run without changing any paper setting.
 
 ## Key Results
 
-No formal metric results yet.
+OFO Cora seed 0 achieved 0.828746 AUROC and 0.420978 AUPRC. The clean rerun
+reproduced the metrics observed before the tooling-only audit failures.
+
+OFA Setting A seed 0 achieved 0.743315 dataset-macro AUROC and 0.273419
+dataset-macro AUPRC across eight targets. The checkpoint-reloaded scores agree
+with the in-process scores to within 2.38e-7.
 
 The full 12-dataset preflight completed in 27.87 seconds. All file hashes and
 actual graph statistics are locked in `data_manifest.json`.
@@ -34,6 +39,9 @@ actual graph statistics are locked in `data_manifest.json`.
   materializing an `N x N` matrix.
 - The clean Phase 1 worktree contains no ANN module, so approximate KNN cannot
   accidentally affect the confirmatory datasets.
+- Setting A seed 0 is aligned with the manuscript at the macro level. Facebook
+  AUPRC is higher than the submitted three-seed mean and must be checked after
+  seeds 1 and 2, without using the observation for tuning.
 
 ## Lessons and Constraints
 
