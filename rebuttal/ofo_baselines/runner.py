@@ -1099,8 +1099,9 @@ def run_one(
     )
     set_seed(spec.seed)
     if device.type == "cuda":
+        torch.cuda.set_device(device)
         torch.cuda.empty_cache()
-        torch.cuda.reset_peak_memory_stats(device)
+        torch.cuda.reset_peak_memory_stats()
     config = resolved_config(spec.method, smoke)
     total_started = time.perf_counter()
 
@@ -1168,12 +1169,12 @@ def run_one(
 
         total_seconds = time.perf_counter() - total_started
         peak_gpu_allocated = (
-            int(torch.cuda.max_memory_allocated(device))
+            int(torch.cuda.max_memory_allocated())
             if device.type == "cuda"
             else 0
         )
         peak_gpu_reserved = (
-            int(torch.cuda.max_memory_reserved(device))
+            int(torch.cuda.max_memory_reserved())
             if device.type == "cuda"
             else 0
         )
