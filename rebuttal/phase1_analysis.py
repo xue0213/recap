@@ -19,6 +19,8 @@ from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 REBUTTAL_ROOT = Path(__file__).resolve().parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 if str(REBUTTAL_ROOT) not in sys.path:
     sys.path.insert(0, str(REBUTTAL_ROOT))
 
