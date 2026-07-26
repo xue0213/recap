@@ -148,7 +148,7 @@ phase2_baselines:
     last_reflection: "The complete 24-run/156-evaluation reproduction passed independent score, hash, label, checkpoint, calibration, and aggregation audits. ARC/IA lead A/B; label-free RECAP has higher C dataset-macro AUROC but slightly lower AUPRC. Preserve weak and high-variance baseline results without tuning."
 
 phase2_bc_supplement:
-  status: protocol_locked
+  status: running
   classification: confirmatory_user_revised_scope
   protocol: "rebuttal/BASELINE_BC_SUPPLEMENT_PROTOCOL.md"
   methods: [UNPrompt, AnomalyGFM-ZS]
@@ -159,8 +159,16 @@ phase2_bc_supplement:
   completed_training_runs: 0
   completed_final_evaluations: 0
   original_phase2_artifacts_immutable: true
-  current_stage: implementation_and_gates
+  current_stage: formal_execution
+  quality_gates:
+    protocol_committed_before_results: true
+    primary_manifest_unchanged: true
+    supplement_manifest_verified: true
+    compatibility_tests_passed: true
+    method_setting_smokes_passed: true
+    label_access_guards_verified: true
+    checkpoint_reload_verified: true
   outer_loop:
-    cycle: 1
+    cycle: 2
     last_direction: broaden
-    last_reflection: "The user explicitly broadened B/C to all four baselines. Lock a separate supplement, preserve the accepted primary track, and execute without target-driven tuning."
+    last_reflection: "The supplement passed ten tests and four B/C method-setting smokes with 20/20 finite frozen target scores, zero invalid label events, and reload differences within tolerance. Execute the immutable 12-run manifest."
