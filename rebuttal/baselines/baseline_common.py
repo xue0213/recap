@@ -17,14 +17,18 @@ from typing import Any
 import numpy as np
 import scipy.io as sio
 import scipy.sparse as sp
+import scipy.sparse.linalg as spla
 import torch
+from sklearn.utils.extmath import svd_flip
 
 from .baseline_protocol import DATASETS
 
 
 ARC_ALIGNMENT_VERSION = "official_arc_smooth_pca64_cache_v1"
 UNPROMPT_ALIGNMENT_VERSION = "official_unprompt_torch_svd8_bn_v1"
-ANOMALYGFM_ALIGNMENT_VERSION = "official_anomalygfm_numpy_svd8_rownorm_v1"
+ANOMALYGFM_ALIGNMENT_VERSION = (
+    "official_anomalygfm_sparse_arpack_svd8_rownorm_v2"
+)
 
 
 def utc_now() -> str:
@@ -459,7 +463,12 @@ def prepare_unprompt_graph(
 
 
 def _anomalygfm_cache_path(cache_dir: Path, name: str) -> Path:
-    return cache_dir / "features" / "anomalygfm" / f"{name}_svd8_rownorm.npz"
+    return (
+        cache_dir
+        / "features"
+        / "anomalygfm"
+        / f"{name}_svd8_rownorm_arpack.npz"
+    )
 
 
 def load_anomalygfm_features(
@@ -476,9 +485,25 @@ def load_anomalygfm_features(
         if version == ANOMALYGFM_ALIGNMENT_VERSION and cached_hash == raw_hash:
             return features
 
-    raw = load_raw_features(dataset_dir, name).toarray()
-    left, singular, _ = np.linalg.svd(raw, full_matrices=False)
-    reduced = left[:, :8] * singular[:8]
+    raw = load_raw_features(dataset_dir, name)
+    # The release materializes a full dense SVD and then discards every
+    # component after rank eight. ARPACK computes the same leading singular
+    # triplets directly from the sparse matrix, avoiding hours of redundant
+    # CPU work on ACM/Flickr while preserving the rank-8 objective.
+    left, singular, right = spla.svds(
+        raw,
+        k=8,
+        which="LM",
+        solver="arpack",
+        random_state=0,
+        return_singular_vectors=True,
+    )
+    order = np.argsort(singular)[::-1]
+    left = left[:, order]
+    singular = singular[order]
+    right = right[order]
+    left, _ = svd_flip(left, right, u_based_decision=True)
+    reduced = left * singular
     normalized = row_normalize_features(reduced).astype(np.float32)
     if not np.isfinite(normalized).all():
         raise ValueError(f"{name}: non-finite AnomalyGFM aligned features")

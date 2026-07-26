@@ -141,7 +141,9 @@ Compatibility changes are limited to:
    propagation;
 3. edge-wise cosine aggregation in place of dense masked cosine matrices;
 4. deterministic exact row blocking for full contrastive denominators;
-5. resumable artifact, audit, and logging infrastructure.
+5. direct top-8 sparse ARPACK SVD in place of computing and discarding the
+   full dense singular basis for AnomalyGFM;
+6. resumable artifact, audit, and logging infrastructure.
 
 Before formal runs, small-graph tests must show numerical equivalence for every
 replaced dense operation within `atol=1e-5, rtol=1e-5`. A compatibility change
@@ -170,4 +172,3 @@ Completion requires:
 - complete raw artifacts, method/dataset tables, macros, timing, failure log,
   upstream provenance, and a report of every compatibility or protocol
   deviation.
-

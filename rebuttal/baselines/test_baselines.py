@@ -8,10 +8,13 @@ import numpy as np
 import scipy.io as sio
 import scipy.sparse as sp
 import torch
+from sklearn.utils.extmath import svd_flip
 
 from rebuttal.baselines.baseline_common import (
     LabelVault,
     atomic_npz,
+    load_anomalygfm_features,
+    row_normalize_features,
     sha256_array,
 )
 from rebuttal.baselines.baseline_models import (
@@ -143,6 +146,36 @@ class BaselineProtocolTests(unittest.TestCase):
             labels = vault.load_target_for_evaluation("cora")
             np.testing.assert_array_equal(labels, np.array([0, 1, 0, 0]))
             self.assertTrue(vault.audit()["passed"])
+
+    def test_anomalygfm_rank8_sparse_svd_matches_full(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            rng = np.random.default_rng(17)
+            attributes = rng.normal(size=(30, 12)).astype(np.float32)
+            attributes[np.abs(attributes) < 0.4] = 0
+            sio.savemat(
+                root / "cora.mat",
+                {
+                    "Network": sp.eye(30),
+                    "Attributes": sp.csr_matrix(attributes),
+                    "Label": np.zeros((30, 1), dtype=np.float32),
+                },
+            )
+            actual = load_anomalygfm_features(
+                root, root / "cache", "cora"
+            )
+            left, singular, right = np.linalg.svd(
+                attributes, full_matrices=False
+            )
+            left, _ = svd_flip(
+                left[:, :8], right[:8], u_based_decision=True
+            )
+            expected = row_normalize_features(
+                left * singular[:8]
+            ).astype(np.float32)
+            np.testing.assert_allclose(
+                actual, expected, atol=2e-4, rtol=2e-4
+            )
 
 
 if __name__ == "__main__":
