@@ -36,6 +36,14 @@ UPSTREAM_MANIFEST_PATH = (
 REPORT_PATH = (
     PROJECT_ROOT / "rebuttal" / "reports" / "PHASE2_OFA_BASELINE_REPORT.md"
 )
+PHASE1_MACRO_PATH = (
+    PROJECT_ROOT
+    / "rebuttal"
+    / "artifacts"
+    / "phase1"
+    / "analysis"
+    / "metric_macros.csv"
+)
 
 DATASET_ORDER = {
     setting: {name: index for index, name in enumerate(definition["targets"])}
@@ -496,12 +504,79 @@ def _lookup(
     return matches[0]
 
 
+def _phase1_recap_macros(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    with path.open(encoding="utf-8", newline="") as handle:
+        return [
+            {
+                key: (
+                    float(value)
+                    if key in {
+                        "auroc_mean",
+                        "auroc_std",
+                        "auprc_mean",
+                        "auprc_std",
+                    }
+                    else value
+                )
+                for key, value in row.items()
+            }
+            for row in csv.DictReader(handle)
+            if row["setting"] in {"A", "B", "C"}
+        ]
+
+
+def _calibrations(output_root: Path) -> list[dict[str, Any]]:
+    rows = []
+    for path in sorted((output_root / "calibration").glob("*.json")):
+        value = json.loads(path.read_text(encoding="utf-8"))
+        rows.append(
+            {
+                "name": path.stem,
+                "selected_weight": float(value["selected_weight"]),
+                "calibration_seed": int(value["calibration_seed"]),
+                "grid_size": len(value["grid_records"]),
+            }
+        )
+    return rows
+
+
+def _timings(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    runs = {str(row["run_id"]): row for row in records}
+    groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in runs.values():
+        groups[str(row["method"])].append(row)
+    return [
+        {
+            "method": method,
+            "runs": len(rows),
+            "preparation_seconds": sum(
+                float(row["preparation_seconds"]) for row in rows
+            ),
+            "training_seconds": sum(float(row["train_seconds"]) for row in rows),
+            "evaluation_seconds": sum(
+                float(row["evaluation_seconds"]) for row in rows
+            ),
+            "peak_gpu_gib": max(
+                float(row["peak_gpu_memory_bytes"]) for row in rows
+            )
+            / 2**30,
+        }
+        for method, rows in sorted(groups.items())
+    ]
+
+
 def render_report(
     dataset_rows: list[dict[str, Any]],
     macro_rows: list[dict[str, Any]],
     audit: dict[str, Any],
+    recap_macros: list[dict[str, Any]],
+    calibrations: list[dict[str, Any]],
+    timings: list[dict[str, Any]],
 ) -> str:
     target_a = SETTINGS["A"]["targets"]
+    setting_a_method_order = ("AnomalyGFM-ZS", "IA-GGAD", "ARC", "UNPrompt")
     lines = [
         "# Phase 2 RECAP-OFA Baseline Reproduction Report",
         "",
@@ -518,7 +593,7 @@ def render_report(
         "| Method | " + " | ".join(DATASETS[name]["display"] for name in target_a) + " | Avg. |",
         "|---|" + "---:|" * (len(target_a) + 1),
     ]
-    for method in SETTINGS["A"]["methods"]:
+    for method in setting_a_method_order:
         cells = [
             _metric(
                 float(
@@ -559,7 +634,7 @@ def render_report(
             "|---|" + "---:|" * (len(target_a) + 1),
         ]
     )
-    for method in SETTINGS["A"]["methods"]:
+    for method in setting_a_method_order:
         cells = [
             _metric(
                 float(
@@ -689,6 +764,96 @@ def render_report(
             "",
         ]
     )
+    if recap_macros:
+        lines.extend(
+            [
+                "## Relation to the locked RECAP results",
+                "",
+                "This comparison is descriptive: the baselines use source labels;",
+                "RECAP uses no source labels, target context, or target tuning.",
+                "",
+                "| Setting | RECAP | ARC | IA-GGAD |",
+                "|---|---:|---:|---:|",
+            ]
+        )
+        for setting, aggregation in (
+            ("A", "dataset_macro"),
+            ("B", "dataset_macro"),
+            ("C", "dataset_macro"),
+        ):
+            recap = _lookup(
+                recap_macros,
+                setting=setting,
+                aggregation=aggregation,
+            )
+            arc = _lookup(
+                macro_rows,
+                setting=setting,
+                method="ARC",
+                aggregation=aggregation,
+            )
+            ia = _lookup(
+                macro_rows,
+                setting=setting,
+                method="IA-GGAD",
+                aggregation=aggregation,
+            )
+            lines.append(
+                f"| {setting} | {_paired(recap)} | {_paired(arc)} | {_paired(ia)} |"
+            )
+        lines.extend(
+            [
+                "",
+                "RECAP trails ARC and IA-GGAD in Settings A/B. Under citation-only",
+                "sources (C), RECAP has higher dataset-macro AUROC than both while",
+                "its AUPRC remains slightly below both. In Setting A, RECAP exceeds",
+                "the target-context-free UNPrompt and AnomalyGFM-ZS reproductions",
+                "on both dataset-macro metrics.",
+                "",
+            ]
+        )
+
+    lines.extend(
+        [
+            "## Source-only calibration locks",
+            "",
+            "| Lock | Selected weight | Seed | Grid size |",
+            "|---|---:|---:|---:|",
+        ]
+    )
+    for row in calibrations:
+        lines.append(
+            f"| {row['name']} | {row['selected_weight']:.6g} | "
+            f"{row['calibration_seed']} | {row['grid_size']} |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Formal resource totals",
+            "",
+            "Times are summed once per formal training run; peak memory is the",
+            "maximum observed allocation for that method.",
+            "",
+            "| Method | Runs | Preparation (s) | Training (s) | Evaluation (s) | Peak GPU GiB |",
+            "|---|---:|---:|---:|---:|---:|",
+        ]
+    )
+    for row in timings:
+        lines.append(
+            f"| {row['method']} | {row['runs']} | "
+            f"{row['preparation_seconds']:.2f} | {row['training_seconds']:.2f} | "
+            f"{row['evaluation_seconds']:.2f} | {row['peak_gpu_gib']:.2f} |"
+        )
+    lines.extend(
+        [
+            "",
+            "Method-native settings and every compatibility adaptation are frozen",
+            "in `rebuttal/BASELINE_OFA_REPROTOCOL.md`; dense/sparse and deterministic",
+            "equivalence evidence is recorded in the Phase 2 gate report.",
+            "",
+        ]
+    )
     return "\n".join(lines)
 
 
@@ -703,6 +868,9 @@ def analyze(output_root: Path, dataset_dir: Path) -> dict[str, Any]:
             f"Phase 2 artifact audit failed with {len(audit['problems'])} problems"
         )
     dataset_rows, macro_rows = aggregate(records)
+    recap_macros = _phase1_recap_macros(PHASE1_MACRO_PATH)
+    calibrations = _calibrations(output_root)
+    timings = _timings(records)
     atomic_json(analysis_root / "raw_records.json", records)
     _csv(analysis_root / "raw_records.csv", records)
     atomic_json(analysis_root / "dataset_summary.json", dataset_rows)
@@ -712,7 +880,14 @@ def analyze(output_root: Path, dataset_dir: Path) -> dict[str, Any]:
         analysis_root / "macro_summary.csv",
         [{k: v for k, v in row.items() if k != "seed_values"} for row in macro_rows],
     )
-    report = render_report(dataset_rows, macro_rows, audit)
+    report = render_report(
+        dataset_rows,
+        macro_rows,
+        audit,
+        recap_macros,
+        calibrations,
+        timings,
+    )
     REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
     REPORT_PATH.write_text(report, encoding="utf-8")
     payload = {
