@@ -108,7 +108,7 @@ def audit_runs(
     upstream_hashes: set[str] = set()
     checkpoint_hashes: set[str] = set()
     score_hashes: set[str] = set()
-    dataset_hash_sets: list[dict[str, str]] = []
+    dataset_hash_by_name: dict[str, str] = {}
     label_events = 0
     target_score_files = 0
     checkpoint_reload_max = 0.0
@@ -146,9 +146,16 @@ def audit_runs(
             problems.append(f"{prefix}: upstream manifest hash mismatch")
 
         dataset_hashes = complete.get("dataset_hashes", {})
-        dataset_hash_sets.append(dataset_hashes)
-        if set(dataset_hashes) != set(DATASETS):
-            problems.append(f"{prefix}: incomplete dataset hash map")
+        expected_dataset_hashes = set(spec.source_graphs) | set(spec.target_graphs)
+        if set(dataset_hashes) != expected_dataset_hashes:
+            problems.append(f"{prefix}: source/target dataset hash map differs")
+        for name, value in dataset_hashes.items():
+            if (
+                name in dataset_hash_by_name
+                and dataset_hash_by_name[name] != value
+            ):
+                problems.append(f"{prefix}: {name} dataset hash differs")
+            dataset_hash_by_name[name] = value
 
         checkpoint = complete.get("checkpoint", {})
         if not checkpoint_path.exists() or checkpoint_path.stat().st_size == 0:
@@ -215,12 +222,14 @@ def audit_runs(
             target_score_files += 1
             try:
                 with np.load(score_path, allow_pickle=False) as score_file:
-                    if set(score_file.files) != {
+                    if not {
                         "scores",
                         "query_mask",
                         "context_indices",
-                    }:
-                        problems.append(f"{prefix}/{target}: score keys differ")
+                    }.issubset(score_file.files):
+                        problems.append(
+                            f"{prefix}/{target}: required score keys are missing"
+                        )
                     scores = np.asarray(score_file["scores"], dtype=np.float32)
                     query_mask = np.asarray(score_file["query_mask"], dtype=bool)
                     context = np.asarray(
@@ -250,11 +259,16 @@ def audit_runs(
 
             query_nodes = int(query_mask.sum())
             nodes = int(result.get("nodes", -1))
+            context_result_key = (
+                "internal_reference_nodes"
+                if spec.method == "IA-GGAD"
+                else "context_nodes"
+            )
             if (
                 nodes != len(query_mask)
                 or query_nodes != len(scores)
                 or query_nodes != int(result.get("query_nodes", -1))
-                or len(context) != int(result.get("context_nodes", -1))
+                or len(context) != int(result.get(context_result_key, -1))
             ):
                 problems.append(f"{prefix}/{target}: score/query shape mismatch")
 
@@ -327,10 +341,8 @@ def audit_runs(
             f"evaluation key mismatch: missing={len(expected_keys - actual_keys)}, "
             f"extra={len(actual_keys - expected_keys)}"
         )
-    if dataset_hash_sets and any(
-        value != dataset_hash_sets[0] for value in dataset_hash_sets[1:]
-    ):
-        problems.append("dataset hash map differs across runs")
+    if set(dataset_hash_by_name) != set(DATASETS):
+        problems.append("not every locked dataset was hashed across the manifest")
 
     summary = {
         "format": "recap_phase2_baseline_artifact_audit_v1",
