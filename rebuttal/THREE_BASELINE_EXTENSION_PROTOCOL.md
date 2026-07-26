@@ -65,8 +65,11 @@ evaluations**.
 
 1. All raw MAT files are the same hash-locked twelve files used by the
    completed RECAP experiments under `/root/autodl-tmp/recap/dataset`.
-2. Adjacency is converted to a binary undirected union with duplicate edges and
-   self-loops removed before method-specific self-loop handling.
+2. DiffGAD and GUIDE use the same binary undirected adjacency union as the
+   existing OFO baselines, with duplicate edges and self-loops removed before
+   method-specific self-loop handling. OWLEYE retains the released raw
+   adjacency orientation for its propagation operator because its official
+   64-dimensional caches and demo were built from these exact MAT payloads.
 3. Dataset names, node order, anomaly labels, and evaluation populations are
    unchanged.
 4. AUROC and average precision (reported as AUPRC) are recomputed independently
