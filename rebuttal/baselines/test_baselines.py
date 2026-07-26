@@ -10,6 +10,7 @@ import scipy.sparse as sp
 import torch
 from sklearn.utils.extmath import svd_flip
 
+from rebuttal.baselines.baseline_analysis import aggregate
 from rebuttal.baselines.baseline_common import (
     LabelVault,
     atomic_npz,
@@ -201,6 +202,45 @@ class BaselineProtocolTests(unittest.TestCase):
             np.testing.assert_allclose(
                 actual, expected, atol=2e-4, rtol=2e-4
             )
+
+    def test_analysis_uses_three_seed_population_statistics(self) -> None:
+        records = []
+        for spec in build_manifest():
+            for target_index, target in enumerate(spec.target_graphs):
+                value = 0.5 + 0.01 * spec.seed + 0.001 * target_index
+                records.append(
+                    {
+                        "setting": spec.setting,
+                        "method": spec.method,
+                        "seed": spec.seed,
+                        "target_graph": target,
+                        "domain": {
+                            "Flickr": "Social",
+                            "BlogCatalog": "Social",
+                            "Facebook": "Social",
+                            "weibo": "Social",
+                            "Reddit": "Social",
+                            "Amazon": "E-commerce",
+                            "questions": "Q&A",
+                        }.get(target, "Citation"),
+                        "auroc": value,
+                        "auprc": value / 2,
+                    }
+                )
+        dataset_rows, macro_rows = aggregate(records)
+        self.assertEqual(len(dataset_rows), 52)
+        self.assertEqual(len(macro_rows), 10)
+        setting_a_arc = next(
+            row
+            for row in macro_rows
+            if row["setting"] == "A"
+            and row["method"] == "ARC"
+            and row["aggregation"] == "dataset_macro"
+        )
+        self.assertAlmostEqual(
+            setting_a_arc["auroc_std"], np.std([0.0, 0.01, 0.02], ddof=0)
+        )
+        self.assertEqual(set(setting_a_arc["seed_values"]), {"0", "1", "2"})
 
 
 if __name__ == "__main__":
