@@ -1,0 +1,49 @@
+{
+  "format": "recap_questions_ofo_addendum_manifest_v1",
+  "created_at": "2026-07-26T07:10:00+00:00",
+  "base_commit": "c94c4d7985d2cb1438c430173ad868d68d0c1efe",
+  "locked_protocol": "rebuttal/QUESTIONS_OFO_ADDENDUM_PROTOCOL.md",
+  "training_run_count": 3,
+  "final_evaluation_count": 3,
+  "runs": [
+    {
+      "method": "RECAP-OFO",
+      "paradigm": "one-for-one",
+      "run_id": "ofo__questions__seed0",
+      "seed": 0,
+      "setting": "OFO",
+      "source_graphs": [
+        "questions"
+      ],
+      "target_graphs": [
+        "questions"
+      ]
+    },
+    {
+      "method": "RECAP-OFO",
+      "paradigm": "one-for-one",
+      "run_id": "ofo__questions__seed1",
+      "seed": 1,
+      "setting": "OFO",
+      "source_graphs": [
+        "questions"
+      ],
+      "target_graphs": [
+        "questions"
+      ]
+    },
+    {
+      "method": "RECAP-OFO",
+      "paradigm": "one-for-one",
+      "run_id": "ofo__questions__seed2",
+      "seed": 2,
+      "setting": "OFO",
+      "source_graphs": [
+        "questions"
+      ],
+      "target_graphs": [
+        "questions"
+      ]
+    }
+  ]
+}
