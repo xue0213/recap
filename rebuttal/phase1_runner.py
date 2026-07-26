@@ -37,7 +37,7 @@ if str(REBUTTAL_ROOT) not in sys.path:
 
 from config import ModelConfig, TrainConfig  # noqa: E402
 from model import recap  # noqa: E402
-from phase1_protocol import (  # noqa: E402
+from rebuttal.phase1_protocol import (  # noqa: E402
     DATASETS,
     DIAGNOSTIC_EPOCHS,
     RunSpec,

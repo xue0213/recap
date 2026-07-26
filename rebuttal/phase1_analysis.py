@@ -22,8 +22,8 @@ REBUTTAL_ROOT = Path(__file__).resolve().parent
 if str(REBUTTAL_ROOT) not in sys.path:
     sys.path.insert(0, str(REBUTTAL_ROOT))
 
-from phase1_protocol import RunSpec, build_manifest, dataset_domain  # noqa: E402
-from phase1_runner import (  # noqa: E402
+from rebuttal.phase1_protocol import RunSpec, build_manifest, dataset_domain  # noqa: E402
+from rebuttal.phase1_runner import (  # noqa: E402
     DEFAULT_OUTPUT_ROOT,
     RAW_FIELDS,
     atomic_csv,
