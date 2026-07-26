@@ -200,6 +200,7 @@ def _base_run_metadata(
     dataset_dir: Path,
     vendor_root: Path,
     device: torch.device,
+    protocol_path: Path = PROTOCOL_PATH,
 ) -> dict[str, Any]:
     return {
         "format": "recap_phase2_baseline_run_v1",
@@ -207,8 +208,8 @@ def _base_run_metadata(
         "started_at": utc_now(),
         "dataset_dir": str(dataset_dir.resolve()),
         "vendor_root": str(vendor_root.resolve()),
-        "protocol_path": str(PROTOCOL_PATH),
-        "protocol_sha256": sha256_file(PROTOCOL_PATH),
+        "protocol_path": str(protocol_path),
+        "protocol_sha256": sha256_file(protocol_path),
         "upstream_manifest_path": str(UPSTREAM_MANIFEST_PATH),
         "upstream_manifest_sha256": sha256_file(UPSTREAM_MANIFEST_PATH),
         "environment": environment_metadata(device),
@@ -237,12 +238,15 @@ def run_arc(
     output_root: Path,
     device: torch.device,
     smoke_epochs: int | None = None,
+    protocol_path: Path = PROTOCOL_PATH,
 ) -> dict[str, Any]:
     directory = run_dir(output_root, spec)
     if (directory / "complete.json").exists() and smoke_epochs is None:
         return json.loads((directory / "complete.json").read_text())
     directory.mkdir(parents=True, exist_ok=True)
-    metadata = _base_run_metadata(spec, dataset_dir, vendor_root, device)
+    metadata = _base_run_metadata(
+        spec, dataset_dir, vendor_root, device, protocol_path
+    )
     metadata["resolved_config"] = {
         "method": "ARC",
         "feature_dims": 64,
@@ -525,12 +529,15 @@ def run_ia_ggad(
     output_root: Path,
     device: torch.device,
     smoke_epochs: int | None = None,
+    protocol_path: Path = PROTOCOL_PATH,
 ) -> dict[str, Any]:
     directory = run_dir(output_root, spec)
     if (directory / "complete.json").exists() and smoke_epochs is None:
         return json.loads((directory / "complete.json").read_text())
     directory.mkdir(parents=True, exist_ok=True)
-    metadata = _base_run_metadata(spec, dataset_dir, vendor_root, device)
+    metadata = _base_run_metadata(
+        spec, dataset_dir, vendor_root, device, protocol_path
+    )
     metadata["resolved_config"] = {
         "method": "IA-GGAD",
         "feature_dims": 64,
@@ -915,6 +922,7 @@ def run_unprompt(
     output_root: Path,
     device: torch.device,
     smoke_epochs: int | None = None,
+    protocol_path: Path = PROTOCOL_PATH,
 ) -> dict[str, Any]:
     directory = run_dir(output_root, spec)
     if (directory / "complete.json").exists() and smoke_epochs is None:
@@ -922,7 +930,9 @@ def run_unprompt(
     directory.mkdir(parents=True, exist_ok=True)
     pretrain_epochs = smoke_epochs or 200
     prompt_epochs = smoke_epochs or 900
-    metadata = _base_run_metadata(spec, dataset_dir, vendor_root, device)
+    metadata = _base_run_metadata(
+        spec, dataset_dir, vendor_root, device, protocol_path
+    )
     metadata["resolved_config"] = {
         "method": "UNPrompt",
         "feature_dims": 8,
@@ -1260,13 +1270,16 @@ def run_anomalygfm(
     output_root: Path,
     device: torch.device,
     smoke_epochs: int | None = None,
+    protocol_path: Path = PROTOCOL_PATH,
 ) -> dict[str, Any]:
     directory = run_dir(output_root, spec)
     if (directory / "complete.json").exists() and smoke_epochs is None:
         return json.loads((directory / "complete.json").read_text())
     directory.mkdir(parents=True, exist_ok=True)
     epochs = smoke_epochs or 301
-    metadata = _base_run_metadata(spec, dataset_dir, vendor_root, device)
+    metadata = _base_run_metadata(
+        spec, dataset_dir, vendor_root, device, protocol_path
+    )
     metadata["resolved_config"] = {
         "method": "AnomalyGFM-ZS",
         "feature_dims": 8,
@@ -1588,6 +1601,7 @@ def execute_spec(
     output_root: Path,
     device: torch.device,
     smoke_epochs: int | None = None,
+    protocol_path: Path = PROTOCOL_PATH,
 ) -> dict[str, Any]:
     if spec.method == "ARC":
         return run_arc(
@@ -1597,6 +1611,7 @@ def execute_spec(
             output_root=output_root,
             device=device,
             smoke_epochs=smoke_epochs,
+            protocol_path=protocol_path,
         )
     if spec.method == "IA-GGAD":
         return run_ia_ggad(
@@ -1606,6 +1621,7 @@ def execute_spec(
             output_root=output_root,
             device=device,
             smoke_epochs=smoke_epochs,
+            protocol_path=protocol_path,
         )
     if spec.method == "UNPrompt":
         return run_unprompt(
@@ -1615,6 +1631,7 @@ def execute_spec(
             output_root=output_root,
             device=device,
             smoke_epochs=smoke_epochs,
+            protocol_path=protocol_path,
         )
     if spec.method == "AnomalyGFM-ZS":
         return run_anomalygfm(
@@ -1624,6 +1641,7 @@ def execute_spec(
             output_root=output_root,
             device=device,
             smoke_epochs=smoke_epochs,
+            protocol_path=protocol_path,
         )
     raise NotImplementedError(f"Adapter pending for {spec.method}")
 

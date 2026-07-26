@@ -11,6 +11,11 @@ import torch
 from sklearn.utils.extmath import svd_flip
 
 from rebuttal.baselines.baseline_analysis import aggregate
+from rebuttal.baselines.baseline_bc_protocol import (
+    build_supplement_manifest,
+    expected_supplement_evaluations,
+    validate_supplement_manifest,
+)
 from rebuttal.baselines.baseline_common import (
     LabelVault,
     atomic_npz,
@@ -49,6 +54,23 @@ class BaselineProtocolTests(unittest.TestCase):
         )
         self.assertEqual(setting_methods["B"], {"ARC", "IA-GGAD"})
         self.assertEqual(setting_methods["C"], {"ARC", "IA-GGAD"})
+
+    def test_bc_supplement_manifest_scope(self) -> None:
+        specs = build_supplement_manifest()
+        validate_supplement_manifest(specs)
+        self.assertEqual(len(specs), 12)
+        self.assertEqual(expected_supplement_evaluations(), 60)
+        self.assertEqual({spec.setting for spec in specs}, {"B", "C"})
+        self.assertEqual(
+            {spec.method for spec in specs},
+            {"UNPrompt", "AnomalyGFM-ZS"},
+        )
+        self.assertTrue(
+            all(len(spec.source_graphs) == 4 for spec in specs)
+        )
+        self.assertTrue(
+            all(len(spec.target_graphs) == 5 for spec in specs)
+        )
 
     def test_affinity_sparse_dense_equivalence(self) -> None:
         generator = torch.Generator().manual_seed(7)
@@ -241,6 +263,51 @@ class BaselineProtocolTests(unittest.TestCase):
             setting_a_arc["auroc_std"], np.std([0.0, 0.01, 0.02], ddof=0)
         )
         self.assertEqual(set(setting_a_arc["seed_values"]), {"0", "1", "2"})
+
+    def test_bc_supplement_aggregation_scope(self) -> None:
+        records = []
+        for spec in build_supplement_manifest():
+            for target_index, target in enumerate(spec.target_graphs):
+                records.append(
+                    {
+                        "setting": spec.setting,
+                        "method": spec.method,
+                        "seed": spec.seed,
+                        "target_graph": target,
+                        "domain": {
+                            "Flickr": "Social",
+                            "BlogCatalog": "Social",
+                            "Facebook": "Social",
+                            "weibo": "Social",
+                            "Reddit": "Social",
+                            "Amazon": "E-commerce",
+                            "questions": "Q&A",
+                        }[target],
+                        "auroc": 0.4
+                        + 0.01 * spec.seed
+                        + 0.001 * target_index,
+                        "auprc": 0.2
+                        + 0.005 * spec.seed
+                        + 0.0005 * target_index,
+                    }
+                )
+        dataset_rows, macro_rows = aggregate(records)
+        self.assertEqual(len(dataset_rows), 20)
+        self.assertEqual(len(macro_rows), 6)
+        self.assertEqual(
+            {
+                (row["setting"], row["method"], row["aggregation"])
+                for row in macro_rows
+            },
+            {
+                ("B", "UNPrompt", "dataset_macro"),
+                ("B", "AnomalyGFM-ZS", "dataset_macro"),
+                ("C", "UNPrompt", "dataset_macro"),
+                ("C", "UNPrompt", "domain_macro"),
+                ("C", "AnomalyGFM-ZS", "dataset_macro"),
+                ("C", "AnomalyGFM-ZS", "domain_macro"),
+            },
+        )
 
 
 if __name__ == "__main__":

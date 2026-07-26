@@ -49,9 +49,11 @@ DATASET_ORDER = {
     setting: {name: index for index, name in enumerate(definition["targets"])}
     for setting, definition in SETTINGS.items()
 }
-METHOD_ORDER = {
-    setting: {name: index for index, name in enumerate(definition["methods"])}
-    for setting, definition in SETTINGS.items()
+ALL_METHOD_ORDER = {
+    name: index
+    for index, name in enumerate(
+        ("AnomalyGFM-ZS", "IA-GGAD", "ARC", "UNPrompt")
+    )
 }
 
 
@@ -91,12 +93,13 @@ def audit_runs(
     output_root: Path,
     dataset_dir: Path,
     specs: list[BaselineRunSpec],
+    protocol_path: Path = PROTOCOL_PATH,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     """Independently verify all formal run and score artifacts."""
 
     problems: list[str] = []
     records: list[dict[str, Any]] = []
-    expected_protocol_hash = sha256_file(PROTOCOL_PATH)
+    expected_protocol_hash = sha256_file(protocol_path)
     expected_upstream_hash = sha256_file(UPSTREAM_MANIFEST_PATH)
     expected_ids = {spec.run_id for spec in specs}
     run_root = output_root / "runs"
@@ -342,8 +345,11 @@ def audit_runs(
         )
         for record in records
     }
-    if len(records) != 156 or len(actual_keys) != len(records):
-        problems.append(f"expected 156 unique evaluation records, got {len(records)}")
+    if len(records) != len(expected_keys) or len(actual_keys) != len(records):
+        problems.append(
+            f"expected {len(expected_keys)} unique evaluation records, "
+            f"got {len(records)}"
+        )
     if actual_keys != expected_keys:
         problems.append(
             f"evaluation key mismatch: missing={len(expected_keys - actual_keys)}, "
@@ -355,9 +361,9 @@ def audit_runs(
     summary = {
         "format": "recap_phase2_baseline_artifact_audit_v1",
         "passed": not problems,
-        "training_runs_expected": 24,
+        "training_runs_expected": len(specs),
         "training_runs_found": len(actual_ids & expected_ids),
-        "evaluations_expected": 156,
+        "evaluations_expected": len(expected_keys),
         "evaluations_verified": len(records),
         "target_score_files_verified": target_score_files,
         "unique_score_hashes": len(score_hashes),
@@ -391,7 +397,7 @@ def aggregate(
         dataset_groups.items(),
         key=lambda value: (
             value[0][0],
-            METHOD_ORDER[value[0][0]][value[0][1]],
+            ALL_METHOD_ORDER[value[0][1]],
             DATASET_ORDER[value[0][0]][value[0][2]],
         ),
     ):
@@ -451,7 +457,7 @@ def aggregate(
         seed_macro.items(),
         key=lambda value: (
             value[0][0],
-            METHOD_ORDER[value[0][0]][value[0][1]],
+            ALL_METHOD_ORDER[value[0][1]],
             value[0][2],
         ),
     ):
