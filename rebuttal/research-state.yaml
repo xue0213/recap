@@ -24,23 +24,23 @@ experiments:
   failed_runs: 0
   final_evaluations_completed: 0
   stability_pairs_completed: 0
-  current_stage: "protocol_lock"
+  current_stage: "formal_seed0_gates"
   active_run: null
   trajectory: []
 
 quality_gates:
-  paper_implementation_restored: false
-  ann_isolation_verified: false
-  data_manifest_verified: false
-  label_isolation_verified: false
-  cache_equivalence_verified: false
+  paper_implementation_restored: true
+  ann_isolation_verified: true
+  data_manifest_verified: true
+  label_isolation_verified: true
+  cache_equivalence_verified: true
   checkpoint_reload_verified: false
   seed0_gate_passed: false
 
 outer_loop:
-  cycle: 0
-  last_direction: null
-  last_reflection: ""
+  cycle: 1
+  last_direction: deepen
+  last_reflection: "Infrastructure and preflight passed. Proceed to the two formal seed-0 gates before broadening to the remaining manifest."
 
 workspace:
   findings: "rebuttal/findings.md"

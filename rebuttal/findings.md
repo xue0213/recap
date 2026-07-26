@@ -14,11 +14,15 @@ that the largest OFO-excluded graph, Questions, trains for 100 epochs in about
 scientific and bookkeeping correctness rather than raw compute capacity.
 
 Formal results have not started. The implementation, label-isolation,
-checkpoint, cache-equivalence, and output-schema gates must pass first.
+cache-equivalence, manifest, and all-dataset preflight gates have passed. The
+next step is the two formal seed-0 gates.
 
 ## Key Results
 
 No formal metric results yet.
+
+The full 12-dataset preflight completed in 27.87 seconds. All file hashes and
+actual graph statistics are locked in `data_manifest.json`.
 
 ## Patterns and Insights
 
@@ -28,6 +32,8 @@ No formal metric results yet.
   without changing model outputs when full cache keys match.
 - Soft co-assignment stability must use the exact `C x C` identity rather than
   materializing an `N x N` matrix.
+- The clean Phase 1 worktree contains no ANN module, so approximate KNN cannot
+  accidentally affect the confirmatory datasets.
 
 ## Lessons and Constraints
 
