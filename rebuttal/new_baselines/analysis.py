@@ -98,7 +98,9 @@ def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         raise ValueError(f"cannot write empty CSV {path}")
     columns = list(rows[0])
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=columns)
+        writer = csv.DictWriter(
+            handle, fieldnames=columns, lineterminator="\n"
+        )
         writer.writeheader()
         writer.writerows(rows)
 
