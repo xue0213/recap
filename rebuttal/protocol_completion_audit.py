@@ -52,9 +52,11 @@ OFO_BASELINES = (
     "AnomalyDAE",
     "CoLA",
     "ADA-GAD",
+    "DiffGAD",
+    "GUIDE",
 )
 OFO_METHODS = (*OFO_BASELINES, "RECAP-OFO")
-OFA_BASELINES = ("ARC", "IA-GGAD", "UNPrompt", "AnomalyGFM-ZS")
+OFA_BASELINES = ("ARC", "IA-GGAD", "UNPrompt", "AnomalyGFM-ZS", "OWLEYE")
 OFA_METHODS = (*OFA_BASELINES, "RECAP")
 STABILITY_METRICS = (
     "nmi",
@@ -274,6 +276,7 @@ def load_inputs() -> dict[str, Any]:
     primary = ARTIFACT_ROOT / "phase2_baselines"
     supplement = ARTIFACT_ROOT / "phase2_bc_supplement"
     ofo_baselines = ARTIFACT_ROOT / "ofo_12_baselines" / "formal"
+    extension = ARTIFACT_ROOT / "three_baseline_extension"
     return {
         "phase1_raw": read_json(phase1 / "raw_results.json"),
         "questions_raw": read_json(questions / "raw_results.json"),
@@ -285,6 +288,9 @@ def load_inputs() -> dict[str, Any]:
         "ofa_supplement": read_csv(supplement / "analysis" / "raw_records.csv"),
         "ofo_baselines": read_csv(
             ofo_baselines / "analysis" / "run_records.csv"
+        ),
+        "extension_records": read_csv(
+            extension / "analysis" / "run_records.csv"
         ),
         "audits": {
             "RECAP original Phase 1": read_json(
@@ -301,6 +307,9 @@ def load_inputs() -> dict[str, Any]:
             ),
             "OFO 12-dataset baselines": read_json(
                 ofo_baselines / "analysis" / "global_audit.json"
+            ),
+            "Three-baseline extension": read_json(
+                extension / "analysis" / "global_audit.json"
             ),
         },
     }
@@ -321,9 +330,23 @@ def normalize_ofo_records(inputs: dict[str, Any]) -> list[dict[str, Any]]:
         }
         for row in inputs["ofo_baselines"]
     ]
-    rows = [*baseline, *recap]
+    extension = [
+        {
+            **row,
+            "setting": "OFO",
+            "target_graph": row["dataset"],
+            "method": row["method"],
+            "auroc": row["AUROC"],
+            "auprc": row["AUPRC"],
+            "evaluation_population": "full_graph",
+        }
+        for row in inputs["extension_records"]
+        if row["paradigm"] == "OFO"
+    ]
+    rows = [*baseline, *extension, *recap]
     assert len(recap) == 36
     assert len(baseline) == 288
+    assert len(extension) == 72
     assert_seed_cells(
         rows,
         methods=OFO_METHODS,
@@ -342,9 +365,20 @@ def normalize_ofa_records(inputs: dict[str, Any]) -> list[dict[str, Any]]:
         if str(row["setting"]) in OFA_SETTINGS
     ]
     baseline = [*inputs["ofa_primary"], *inputs["ofa_supplement"]]
-    rows = [*baseline, *recap]
+    extension = [
+        {
+            **row,
+            "target_graph": row["dataset"],
+            "auroc": row["AUROC"],
+            "auprc": row["AUPRC"],
+        }
+        for row in inputs["extension_records"]
+        if row["paradigm"] == "OFA"
+    ]
+    rows = [*baseline, *extension, *recap]
     assert len(recap) == 54
     assert len(baseline) == 216
+    assert len(extension) == 54
     assert_seed_cells(
         rows,
         methods=OFA_METHODS,
@@ -549,7 +583,12 @@ def evaluation_strata(inputs: dict[str, Any]) -> list[dict[str, Any]]:
                 "target_label_context": "none",
                 "target_tuning": method in {"GCN", "GAT", "BWGNN", "XGBGraph"},
                 "evaluation_population": ", ".join(
-                    sorted({row["evaluation_population"] for row in rows})
+                    sorted(
+                        {
+                            row.get("evaluation_population", "full_graph")
+                            for row in rows
+                        }
+                    )
                 ),
                 "query_node_rule": (
                     "held-out stratified test 40%"
@@ -576,6 +615,9 @@ def evaluation_strata(inputs: dict[str, Any]) -> list[dict[str, Any]]:
         elif method == "IA-GGAD":
             context = "10 unlabeled random internal references"
             population = "all target nodes except the 10 references"
+        elif method == "OWLEYE":
+            context = "10 unlabeled target patterns"
+            population = "full target graph"
         else:
             context = "none"
             population = "full target graph"
@@ -607,16 +649,30 @@ def completion_and_consistency(
 
     recap_records = [*inputs["phase1_raw"], *inputs["questions_raw"]]
     ofa_baseline_records = [*inputs["ofa_primary"], *inputs["ofa_supplement"]]
+    extension_records = inputs["extension_records"]
+    extension_ofo_records = [
+        row for row in extension_records if row["paradigm"] == "OFO"
+    ]
+    extension_ofa_records = [
+        row for row in extension_records if row["paradigm"] == "OFA"
+    ]
     audits_passed = all(audit_passed(value) for value in inputs["audits"].values())
     counts = {
         "recap_training_runs": len({row["run_id"] for row in recap_records}),
         "recap_final_evaluations": len(recap_records),
         "ofa_baseline_training_runs": len(
             {row["run_id"] for row in ofa_baseline_records}
+        )
+        + len({row["run_id"] for row in extension_ofa_records}),
+        "ofa_baseline_final_evaluations": (
+            len(ofa_baseline_records) + len(extension_ofa_records)
         ),
-        "ofa_baseline_final_evaluations": len(ofa_baseline_records),
-        "ofo_baseline_training_runs": len(inputs["ofo_baselines"]),
-        "ofo_baseline_final_evaluations": len(inputs["ofo_baselines"]),
+        "ofo_baseline_training_runs": (
+            len(inputs["ofo_baselines"]) + len(extension_ofo_records)
+        ),
+        "ofo_baseline_final_evaluations": (
+            len(inputs["ofo_baselines"]) + len(extension_ofo_records)
+        ),
     }
     counts["all_training_runs"] = (
         counts["recap_training_runs"]
@@ -631,12 +687,12 @@ def completion_and_consistency(
     expected_counts = {
         "recap_training_runs": 45,
         "recap_final_evaluations": 90,
-        "ofa_baseline_training_runs": 36,
-        "ofa_baseline_final_evaluations": 216,
-        "ofo_baseline_training_runs": 288,
-        "ofo_baseline_final_evaluations": 288,
-        "all_training_runs": 369,
-        "all_final_evaluations": 594,
+        "ofa_baseline_training_runs": 45,
+        "ofa_baseline_final_evaluations": 270,
+        "ofo_baseline_training_runs": 360,
+        "ofo_baseline_final_evaluations": 360,
+        "all_training_runs": 450,
+        "all_final_evaluations": 720,
     }
     if counts != expected_counts:
         raise AssertionError(f"Run/evaluation counts mismatch: {counts}")
@@ -690,18 +746,18 @@ def completion_and_consistency(
             "evidence": "Phase 1 raw results",
         },
         {
-            "requirement": "8 OFO baselines",
-            "expected": "8 methods × 12 datasets × 3 seeds",
-            "actual": "288 evaluations / 288 training runs",
+            "requirement": "10 OFO baselines",
+            "expected": "10 methods × 12 datasets × 3 seeds",
+            "actual": "360 evaluations / 360 training runs",
             "status": "PASS",
-            "evidence": "OFO 12-dataset global audit",
+            "evidence": "OFO global audit + three-baseline extension audit",
         },
         {
-            "requirement": "4 OFA baselines in A/B/C",
-            "expected": "4 methods × (8+5+5) targets × 3 seeds",
-            "actual": "216 evaluations / 36 training runs",
+            "requirement": "5 OFA baselines in A/B/C",
+            "expected": "5 methods × (8+5+5) targets × 3 seeds",
+            "actual": "270 evaluations / 45 training runs",
             "status": "PASS",
-            "evidence": "Phase 2 primary + B/C supplement audits",
+            "evidence": "Phase 2 audits + three-baseline extension audit",
         },
         {
             "requirement": "Community stability",
@@ -739,7 +795,25 @@ def completion_and_consistency(
         "all_required_cells_have_seeds_0_1_2": True,
         "no_duplicate_required_cells": True,
         "all_metrics_finite_and_in_unit_interval": True,
-        "all_five_source_artifact_audits_passed": audits_passed,
+        "all_six_source_artifact_audits_passed": audits_passed,
+        "three_baseline_extension_81_of_81_runs": (
+            inputs["audits"]["Three-baseline extension"][
+                "training_runs_complete"
+            ]
+            == 81
+        ),
+        "three_baseline_extension_126_of_126_evaluations": (
+            inputs["audits"]["Three-baseline extension"][
+                "evaluations_recomputed"
+            ]
+            == 126
+        ),
+        "three_baseline_metric_recomputation_exact": (
+            inputs["audits"]["Three-baseline extension"][
+                "maximum_metric_difference"
+            ]
+            == 0
+        ),
         "dataset_macros_recomputed_seed_first": True,
         "setting_c_domain_macros_recomputed_seed_first": True,
         "stability_recomputed_pair_macro_first": len(stability_rows) == 4,
@@ -787,7 +861,9 @@ def completion_and_consistency(
             (
                 "ARC excludes 10 labeled-normal target contexts from evaluation; "
                 "IA-GGAD excludes 10 randomly sampled unlabeled internal reference "
-                "nodes; UNPrompt, AnomalyGFM-ZS, and RECAP score the full target graph."
+                "nodes; UNPrompt, AnomalyGFM-ZS, OWLEYE, and RECAP score the full "
+                "target graph. OWLEYE's 10 unlabeled target patterns remain in "
+                "the evaluation population."
             ),
             (
                 "Settings A, B, and C use different target sets and are not averaged "
@@ -834,8 +910,8 @@ def report_lines(
         "",
         (
             "**PASS. No requested training or inference cell is missing, and no "
-            "rerun is required.** The revised scope contains 369 successful "
-            "training runs and 594 final evaluations. All consolidated values below "
+            "rerun is required.** The revised scope contains 450 successful "
+            "training runs and 720 final evaluations. All consolidated values below "
             "were recomputed from unrounded seed-level or seed-pair-level records "
             "using population standard deviation (`ddof=0`)."
         ),
@@ -1108,6 +1184,9 @@ def report_lines(
             "- `recap_stability_pair_macros.csv` and `recap_stability_summary.csv`",
             "- `recap_timing_by_seed.csv` and `recap_timing_summary.csv`",
             "- `evaluation_strata.csv`",
+            "- `THREE_BASELINE_EXTENSION_REPORT.md`",
+            "- Three-baseline audit and summaries under "
+            "`rebuttal/artifacts/three_baseline_extension/analysis/`",
             "",
         ]
     )
