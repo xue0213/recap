@@ -106,16 +106,16 @@ phase2_baselines:
   planned_final_evaluations: 156
   completed_training_runs: 0
   completed_final_evaluations: 0
-  current_stage: adapter_implementation
+  current_stage: formal_execution
   quality_gates:
     upstream_archives_verified: true
     dataset_identity_verified: true
     gpu_environment_selected: true
-    sparse_equivalence_verified: false
-    label_access_guards_verified: false
-    method_smokes_passed: false
-    formal_manifest_complete: false
+    sparse_equivalence_verified: true
+    label_access_guards_verified: true
+    method_smokes_passed: true
+    formal_manifest_complete: true
   outer_loop:
-    cycle: 1
-    last_direction: deepen
-    last_reflection: "Resolve official-paper/code conflicts and prove compatibility equivalence before formal baseline runs."
+    cycle: 2
+    last_direction: broaden
+    last_reflection: "All four method smokes, six equivalence/label tests, and checkpoint reload gates passed. Execute the full immutable 24-run manifest."
