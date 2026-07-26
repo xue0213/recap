@@ -1,0 +1,5 @@
+sessions:
+  - id: "2026-07-26_001"
+    path: "trace/sessions/2026-07-26_001.yaml"
+    timestamp: "2026-07-26T17:07+08:00"
+    summary: "Completed and independently audited the RECAP-OFA A/B/C baseline reproduction."

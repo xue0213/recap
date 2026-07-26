@@ -1,0 +1,18 @@
+observations:
+  - id: O01
+    timestamp: "2026-07-26T17:07+08:00"
+    provenance: ai-suggested
+    content: >
+      UNPrompt and AnomalyGFM-ZS transfer weakly under the locked multi-source
+      Setting A relative to RECAP, ARC, and IA-GGAD.
+    context: "Post-audit comparison of Setting-A dataset macros."
+    potential_type: claim
+    promoted: false
+  - id: O02
+    timestamp: "2026-07-26T17:07+08:00"
+    provenance: ai-suggested
+    content: >
+      IA-GGAD has unusually high three-seed variance on Amazon in Setting A.
+    context: "Per-dataset review of the completed baseline table."
+    potential_type: observation
+    promoted: false

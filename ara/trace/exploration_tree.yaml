@@ -1,0 +1,92 @@
+tree:
+  - id: N01
+    type: question
+    title: "Reproduce OFA A/B/C baselines under the RECAP protocol"
+    provenance: user
+    timestamp: "2026-07-26T17:07+08:00"
+    description: >
+      Complete equivalent reproductions of the baselines required by
+      RECAP-OFA Settings A, B, and C.
+    children:
+      - id: N02
+        type: experiment
+        title: "Lock and gate four official baseline adapters"
+        provenance: ai-executed
+        timestamp: "2026-07-26T17:07+08:00"
+        result: >
+          Pinned upstreams, verified datasets, locked 24 runs and 156
+          evaluations, and passed method-specific smoke and equivalence gates.
+        evidence: [E02]
+        children:
+          - id: N03
+            type: dead_end
+            title: "CUDA sparse UNPrompt reload was nondeterministic"
+            provenance: ai-executed
+            timestamp: "2026-07-26T17:07+08:00"
+            hypothesis: >
+              Repeated frozen target inference would reproduce checkpoint
+              scores within the locked tolerance on CUDA.
+            failure_mode: >
+              Sparse CUDA reduction changed min-max scores by up to 1.36e-3.
+            lesson: >
+              Last-bit sparse reduction differences must be controlled in the
+              frozen target inference backend.
+            children:
+              - id: N04
+                type: experiment
+                title: "Deterministic UNPrompt target inference recovery"
+                provenance: ai-executed
+                timestamp: "2026-07-26T17:07+08:00"
+                result: >
+                  CPU sparse target aggregation matched the dense expression,
+                  repeated bitwise, and gave zero reload difference on all
+                  eight Setting-A smoke targets.
+                evidence: [C04, E02]
+                children:
+                  - id: N05
+                    type: experiment
+                    title: "Execute the amended formal manifest"
+                    provenance: ai-executed
+                    timestamp: "2026-07-26T17:07+08:00"
+                    result: >
+                      Completed 24/24 runs and 156/156 evaluations with one
+                      shared amended protocol hash.
+                    evidence: [C01, E01]
+                    children:
+                      - id: N06
+                        type: dead_end
+                        title: "Initial independent audit reported 145 mismatches"
+                        provenance: ai-executed
+                        timestamp: "2026-07-26T17:07+08:00"
+                        hypothesis: >
+                          A method-agnostic exact-key and global-dataset-hash
+                          schema would validate every output.
+                        failure_mode: >
+                          Auxiliary method score arrays, IA field naming, and
+                          per-run source-target hash scope invalidated those
+                          auditor assumptions.
+                        lesson: >
+                          Audit required invariants while explicitly allowing
+                          recorded method-specific auxiliary fields.
+                        children:
+                          - id: N07
+                            type: experiment
+                            title: "Independent artifact and metric validation"
+                            provenance: ai-executed
+                            timestamp: "2026-07-26T17:07+08:00"
+                            result: >
+                              Verified 24 checkpoints, 156 score files, 156
+                              recomputed metrics, and 462 label events with
+                              zero remaining problems.
+                            evidence: [C01, E01]
+                            children:
+                              - id: N08
+                                type: experiment
+                                title: "Compare baseline and RECAP macros"
+                                provenance: ai-executed
+                                timestamp: "2026-07-26T17:07+08:00"
+                                result: >
+                                  ARC and IA lead A/B. RECAP has higher C
+                                  dataset-macro AUROC but slightly lower AUPRC,
+                                  and exceeds UNPrompt/AnomalyGFM-ZS in A.
+                                evidence: [C02, C03, E01]

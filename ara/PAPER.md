@@ -1,0 +1,17 @@
+# RECAP Research Artifact
+
+- Project: RECAP residual-community graph anomaly detection
+- Artifact scope: confirmatory reproduction and rebuttal experiments
+- Current completed layers: RECAP Phase 1, Questions OFO addendum, supervised
+  OFA baseline Phase 2
+- Primary protocol: `rebuttal/RECAP_EXPERIMENT_PROTOCOL.md`
+- Phase 2 protocol: `rebuttal/BASELINE_OFA_REPROTOCOL.md`
+- Phase 2 report: `rebuttal/reports/PHASE2_OFA_BASELINE_REPORT.md`
+
+## Layer index
+
+- Logic: `logic/`
+- Executable research code: `src/` and `rebuttal/`
+- Exploration trace: `trace/`
+- Raw-proof index: `evidence/`
+- Unclassified observations: `staging/`
