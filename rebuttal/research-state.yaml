@@ -191,3 +191,21 @@ phase2_bc_supplement:
     cycle: 3
     last_direction: conclude
     last_reflection: "The 12-run/60-evaluation supplement passed independent score, hash, label, checkpoint, calibration, and aggregation audits. RECAP exceeds both added zero-context baselines in B/C; retain weak and high-variance transfer results without tuning."
+
+phase2_ofo_12_baselines:
+  status: protocol_locked
+  classification: confirmatory_user_revised_scope
+  protocol: "rebuttal/OFO_12_BASELINE_PROTOCOL.md"
+  methods: [GCN, GAT, BWGNN, XGBGraph, DOMINANT, AnomalyDAE, CoLA, ADA-GAD]
+  datasets: [pubmed, cora, citeseer, ACM, Flickr, BlogCatalog, Facebook, weibo, Reddit, questions, YelpChi, Amazon]
+  seeds: [0, 1, 2]
+  planned_training_runs: 288
+  planned_final_evaluations: 288
+  completed_training_runs: 0
+  completed_final_evaluations: 0
+  current_stage: protocol_locked
+  original_phase1_and_ofa_artifacts_immutable: true
+  outer_loop:
+    cycle: 0
+    last_direction: continue
+    last_reflection: "Protocol frozen before results; next build and gate the compatibility adapters on one small graph and Questions per method."
