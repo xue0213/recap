@@ -18,6 +18,10 @@ tooling fixes.
 
 - OFO 11-dataset macro: AUROC 0.717747 ± 0.003883 and AUPRC
   0.253175 ± 0.002850.
+- The user-requested OFO Questions addendum achieved AUROC
+  0.634693 ± 0.000468 and AUPRC 0.047751 ± 0.000522. Combining it with the
+  immutable 11-dataset records gives a separately labelled 12-dataset OFO
+  macro of 0.710826 ± 0.003545 AUROC and 0.236056 ± 0.002612 AUPRC.
 - OFA Setting A macro: AUROC 0.746515 ± 0.002293 and AUPRC
   0.270445 ± 0.003428.
 - OFA Setting B macro: AUROC 0.677450 ± 0.002182 and AUPRC
@@ -46,6 +50,9 @@ tooling fixes.
   are 0.632, 0.576, 0.573, and 0.331.
 - Negative evidence must be retained: OFO YelpChi AUROC is 0.4260, and Setting
   C BlogCatalog score Spearman is only 0.370.
+- Questions OFO is highly stable in final anomaly ranking across seeds
+  (Spearman 0.993) and reasonably stable in soft community structure (0.848),
+  even though its AUPRC is low because of the difficult, imbalanced target.
 
 ## Lessons and Constraints
 
@@ -60,6 +67,9 @@ tooling fixes.
   is treated as a documented likely typo.
 - The three historical failure-log entries were post-training tooling defects,
   not accepted scientific runs. They remain preserved for provenance.
+- Questions was added only after the original 11-dataset Phase 1 completed.
+  The combined 12-dataset macro is therefore a transparent post hoc scope
+  addition and must not be presented as part of the original locked scope.
 
 ## Open Questions
 

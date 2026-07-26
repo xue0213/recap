@@ -1,7 +1,7 @@
 project:
   title: "RECAP Phase 1 rebuttal experiments"
   question: "Does RECAP remain effective and community-stable under the locked OFO and OFA evaluation protocol?"
-  status: active
+  status: complete
   started: "2026-07-26"
   domain: "graph anomaly detection"
 
@@ -19,13 +19,15 @@ protocol:
 
 experiments:
   proxy_metric: "per-dataset AUROC/AUPRC plus cross-seed community stability"
-  total_runs: 42
-  completed_runs: 42
+  total_runs: 45
+  completed_runs: 45
   failed_runs: 0
-  final_evaluations_completed: 87
-  stability_pairs_completed: 87
+  final_evaluations_completed: 90
+  stability_pairs_completed: 90
   current_stage: "complete"
   active_run: null
+  formal_phase1_training_runs: 42
+  user_requested_addendum_training_runs: 3
   trajectory:
     - stage: "OFO"
       auroc_dataset_macro: 0.7177466675
@@ -53,21 +55,32 @@ quality_gates:
   artifact_validation_passed: true
   stability_analysis_complete: true
   final_report_generated: true
+  questions_ofo_addendum_complete: true
+  questions_ofo_artifact_validation_passed: true
 
 outer_loop:
-  cycle: 4
+  cycle: 5
   last_direction: conclude
-  last_reflection: "All locked runs and audits passed. Setting A reproduces the manuscript closely. Report OFO YelpChi weakness and Setting C community instability without tuning or suppression."
+  last_reflection: "The user-requested Questions OFO addendum passed all three seeds and audits. Preserve the original 11-dataset result and label the new 12-dataset macro as a post hoc scope addition."
 
 addenda:
   ofo_questions:
     classification: "confirmatory user-requested addendum"
-    status: "protocol_locked"
+    status: "complete"
     protocol: "rebuttal/QUESTIONS_OFO_ADDENDUM_PROTOCOL.md"
     training_runs: 3
     final_evaluations: 3
     seeds: [0, 1, 2]
     original_phase1_results_immutable: true
+    questions_auroc_mean: 0.6346933324
+    questions_auroc_std: 0.0004681145
+    questions_auprc_mean: 0.0477512134
+    questions_auprc_std: 0.0005224704
+    combined_ofo_12_auroc_mean: 0.7108255563
+    combined_ofo_12_auroc_std: 0.0035445911
+    combined_ofo_12_auprc_mean: 0.2360564769
+    combined_ofo_12_auprc_std: 0.0026123169
+    report: "rebuttal/reports/QUESTIONS_OFO_ADDENDUM_REPORT.md"
 
 workspace:
   findings: "rebuttal/findings.md"
