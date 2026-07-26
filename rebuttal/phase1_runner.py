@@ -608,6 +608,7 @@ def checkpoint_payload(
     diagnostics: list[dict],
     train_seconds: float,
     diagnostic_seconds: float,
+    train_cache: dict[str, dict],
     config_hash: str,
 ) -> dict:
     return {
@@ -623,6 +624,7 @@ def checkpoint_payload(
         "diagnostics": diagnostics,
         "train_seconds": train_seconds,
         "diagnostic_seconds": diagnostic_seconds,
+        "train_cache": train_cache,
         "config_hash": config_hash,
         "rng_state": rng_state(),
         "saved_at": utc_now(),
@@ -658,6 +660,7 @@ def train_model(
     diagnostics: list[dict] = []
     train_seconds = 0.0
     diagnostic_seconds = 0.0
+    train_cache: dict[str, dict] = {}
     resumed = False
 
     resume_path = latest_resume_checkpoint(run_dir) if resume else None
@@ -680,6 +683,7 @@ def train_model(
         diagnostics = list(checkpoint["diagnostics"])
         train_seconds = float(checkpoint["train_seconds"])
         diagnostic_seconds = float(checkpoint["diagnostic_seconds"])
+        train_cache = dict(checkpoint.get("train_cache", {}))
         start_epoch = int(checkpoint["epoch"]) + 1
         restore_rng_state(checkpoint["rng_state"])
         resumed = int(checkpoint["epoch"]) < train_config.epochs
@@ -687,7 +691,6 @@ def train_model(
     if torch.cuda.is_available():
         torch.cuda.reset_peak_memory_stats(torch.device(device))
 
-    train_cache: dict[str, dict] = {}
     for epoch in range(start_epoch, train_config.epochs + 1):
         model.train()
         per_source_step_loss: dict[str, float] = {}
@@ -746,6 +749,7 @@ def train_model(
                 diagnostics=diagnostics,
                 train_seconds=train_seconds,
                 diagnostic_seconds=diagnostic_seconds,
+                train_cache=train_cache,
                 config_hash=config_hash,
             )
             checkpoint_path = run_dir / "checkpoints" / f"resume_epoch_{epoch}.pt"
@@ -776,6 +780,7 @@ def train_model(
         diagnostics=diagnostics,
         train_seconds=train_seconds,
         diagnostic_seconds=diagnostic_seconds,
+        train_cache=train_cache,
         config_hash=config_hash,
     )
     final_path = run_dir / "checkpoints" / "final.pt"
