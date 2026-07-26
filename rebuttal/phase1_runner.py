@@ -1102,7 +1102,11 @@ def load_manifest(path: Path) -> list[RunSpec]:
         payload = json.load(handle)
     if payload.get("base_commit") != BASE_COMMIT:
         raise ValueError("Manifest base commit mismatch")
-    expected = [spec.to_dict() for spec in build_manifest()]
+    # JSON has no tuple type. Normalize the declarative Python manifest through
+    # a JSON round trip before comparing it with the persisted JSON payload.
+    expected = json.loads(
+        json.dumps([spec.to_dict() for spec in build_manifest()])
+    )
     if payload.get("runs") != expected:
         raise ValueError("Manifest differs from locked protocol constants")
     return [RunSpec.from_dict(value) for value in payload["runs"]]

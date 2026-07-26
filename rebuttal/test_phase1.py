@@ -18,6 +18,7 @@ from rebuttal.phase1_protocol import build_manifest
 from rebuttal.phase1_runner import (
     DEFAULT_CONFIG_PATH,
     label_free_graph,
+    load_manifest,
     load_model_config,
 )
 
@@ -48,6 +49,11 @@ class ProtocolTests(unittest.TestCase):
         self.assertEqual(config.tau_c, 0.3)
         self.assertEqual(config.knn_k, 64)
         self.assertEqual(config.num_clusters, 36)
+
+    def test_persisted_manifest_matches_declarative_manifest(self):
+        manifest_path = Path(__file__).with_name("phase1_manifest.json")
+        loaded = load_manifest(manifest_path)
+        self.assertEqual(loaded, build_manifest())
 
 
 class ExactOptimizationTests(unittest.TestCase):
