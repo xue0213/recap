@@ -1,0 +1,51 @@
+project:
+  title: "RECAP Phase 1 rebuttal experiments"
+  question: "Does RECAP remain effective and community-stable under the locked OFO and OFA evaluation protocol?"
+  status: active
+  started: "2026-07-26"
+  domain: "graph anomaly detection"
+
+protocol:
+  classification: confirmatory
+  base_commit: "c94c4d7985d2cb1438c430173ad868d68d0c1efe"
+  locked_protocol: "rebuttal/PHASE1_EXECUTION_LOCK.md"
+  ofo_datasets: 11
+  ofo_training_runs: 33
+  ofa_training_runs: 9
+  total_training_runs: 42
+  final_evaluations: 87
+  stability_pairs: 87
+  seeds: [0, 1, 2]
+
+experiments:
+  proxy_metric: "preflight correctness, followed by per-dataset AUROC/AUPRC"
+  total_runs: 0
+  completed_runs: 0
+  failed_runs: 0
+  final_evaluations_completed: 0
+  stability_pairs_completed: 0
+  current_stage: "protocol_lock"
+  active_run: null
+  trajectory: []
+
+quality_gates:
+  paper_implementation_restored: false
+  ann_isolation_verified: false
+  data_manifest_verified: false
+  label_isolation_verified: false
+  cache_equivalence_verified: false
+  checkpoint_reload_verified: false
+  seed0_gate_passed: false
+
+outer_loop:
+  cycle: 0
+  last_direction: null
+  last_reflection: ""
+
+workspace:
+  findings: "rebuttal/findings.md"
+  log: "rebuttal/research-log.md"
+  protocol: "rebuttal/PHASE1_EXECUTION_LOCK.md"
+  run_root: "rebuttal/runs/"
+  artifacts_root: "rebuttal/artifacts/"
+  reports_root: "rebuttal/to_human/"
