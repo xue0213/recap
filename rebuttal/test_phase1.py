@@ -59,6 +59,18 @@ class ProtocolTests(unittest.TestCase):
         loaded = load_manifest(manifest_path)
         self.assertEqual(loaded, build_manifest())
 
+    def test_questions_ofo_addendum_manifest_is_isolated_and_three_seed(self):
+        from rebuttal.questions_ofo_addendum import load_addendum_manifest
+
+        specs = load_addendum_manifest(
+            Path(__file__).with_name("questions_ofo_manifest.json")
+        )
+        self.assertEqual(len(specs), 3)
+        self.assertEqual({spec.seed for spec in specs}, {0, 1, 2})
+        self.assertEqual({spec.source_graphs for spec in specs}, {("questions",)})
+        self.assertEqual({spec.target_graphs for spec in specs}, {("questions",)})
+        self.assertTrue(all(spec.paradigm == "one-for-one" for spec in specs))
+
 
 class ExactOptimizationTests(unittest.TestCase):
     def test_soft_coassignment_identity_matches_naive_matrix(self):

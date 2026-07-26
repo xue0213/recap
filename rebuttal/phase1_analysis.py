@@ -370,6 +370,7 @@ def validate_run_artifacts(
     """Audit every formal run artifact against the locked execution protocol."""
     problems: list[str] = []
     warnings: list[str] = []
+    expected_evaluations = sum(len(spec.target_graphs) for spec in manifest)
     actual_diagnostic_rows = 0
     actual_checkpoints = 0
     actual_logs = 0
@@ -611,7 +612,7 @@ def validate_run_artifacts(
         "passed": not problems,
         "formal_runs_expected": len(manifest),
         "formal_run_directories": len(actual_run_ids),
-        "final_evaluations_expected": 87,
+        "final_evaluations_expected": expected_evaluations,
         "final_evaluations_actual": len(records),
         "diagnostic_rows_expected": expected_diagnostic_rows,
         "diagnostic_rows_actual": actual_diagnostic_rows,
