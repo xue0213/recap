@@ -31,6 +31,11 @@ audits, and checkpoint reloads passed. Its accounted formal-run time is
 2344.41 seconds, excluding smokes, orchestration, independent auditing, and
 report generation.
 
+The final protocol-wide audit is complete. It jointly covers 369 training runs
+and 594 final evaluations: 45/90 for RECAP, 36/216 for the OFA baselines, and
+288/288 for the OFO baselines. Every required cell has seeds 0/1/2, all five
+source artifact audits pass, and no missing experiment or rerun remains.
+
 ## Key Results
 
 - OFO 11-dataset macro: AUROC 0.717747 ± 0.003883 and AUPRC
@@ -68,6 +73,14 @@ report generation.
   and ADA-GAD 0.57575/0.07172. RECAP-OFO's separately labelled post hoc
   12-dataset macro is 0.71083/0.23606 on the same full-graph, label-free
   evaluation regime.
+- Under the protocol-correct seed-pair-first aggregation, the 12-dataset
+  RECAP-OFO stability macro is NMI 0.3724 ± 0.0078, ARI
+  0.4151 ± 0.0166, soft co-assignment 0.6500 ± 0.0124, and score Spearman
+  0.8989 ± 0.0062. Effective community count is 24.91 ± 1.49.
+- Under the protocol-correct seed-first timing aggregation, RECAP-OFO averages
+  3.99 ± 0.02 seconds training and 0.020 ± 0.000 seconds inference per target.
+  Shared OFA training averages 25.92 ± 0.23, 24.68 ± 0.09, and
+  11.66 ± 0.10 seconds for Settings A/B/C, respectively.
 
 ## Patterns and Insights
 
@@ -111,6 +124,13 @@ report generation.
 - GAT has materially higher macro AUPRC seed variation (0.04731) than the
   other supervised baselines. The three fixed seeds were retained without
   result-dependent reruns.
+- The earlier human-readable stability table omitted the protocol-required
+  macro standard deviations and averaged per-dataset summaries instead of
+  forming seed-pair macros first. The corrected consolidation changes only the
+  reporting aggregation, not any model output.
+- The earlier timing report contained the raw components and counts but not
+  the protocol Table 9 seed-first mean±standard-deviation view. The corrected
+  consolidation fills that reporting gap without rerunning a model.
 
 ## Lessons and Constraints
 
