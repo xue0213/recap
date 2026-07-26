@@ -18,3 +18,4 @@ observations:
     context: "Per-dataset review of the completed baseline table."
     potential_type: observation
     promoted: false
+    stale: true

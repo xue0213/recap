@@ -11,3 +11,7 @@ sessions:
     path: "trace/sessions/2026-07-26_003.yaml"
     timestamp: "2026-07-26T20:10+08:00"
     summary: "Completed and audited 288 runs for eight OFO baselines on all twelve datasets."
+  - id: "2026-07-26_004"
+    path: "trace/sessions/2026-07-26_004.yaml"
+    timestamp: "2026-07-26T21:16+08:00"
+    summary: "Audited and consolidated the complete user-revised RECAP experiment protocol."

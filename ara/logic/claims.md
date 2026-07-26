@@ -109,3 +109,17 @@
 - **Proof**: [E04]
 - **Dependencies**: [C07]
 - **Tags**: OFO, comparative-performance, supervised
+
+## C10: The full user-revised RECAP experiment protocol is complete
+- **Statement**: The consolidated scope contains 369 successful training runs
+  and 594 final evaluations, with seeds 0/1/2 in every required
+  method-setting-dataset cell and no missing experiment or required rerun.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Falsification criteria**: Any required cell is absent or duplicated, any
+  source artifact audit fails, any metric lies outside `[0,1]`, or a
+  seed-first/pair-first recomputation disagrees with the consolidated records.
+- **Proof**: [E05,
+  `rebuttal/artifacts/protocol_completion/analysis/consistency_audit.json`]
+- **Dependencies**: [C01, C05, C07]
+- **Tags**: protocol-completion, consistency, aggregation, audit

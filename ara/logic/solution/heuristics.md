@@ -66,3 +66,13 @@
 - **Provenance**: ai-suggested
 - **Sensitivity**: low
 - **Code ref**: [`rebuttal/ofo_baselines/analysis.py`]
+
+## H09: Form seed-level or seed-pair-level macros before uncertainty
+- **Rationale**: Averaging already summarized dataset cells can preserve the
+  mean while losing the protocol-defined covariance structure. Aggregate
+  datasets within each seed (or seed pair for stability) first, then compute
+  the population standard deviation across the three independent units.
+- **Provenance**: ai-suggested
+- **Sensitivity**: medium
+- **Code ref**: [`rebuttal/protocol_completion_audit.py`,
+  `rebuttal/EXPERIMENT_PROTOCOL_COMPLETION_AUDIT.md`]

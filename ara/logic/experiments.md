@@ -28,3 +28,15 @@
 - Acceptance: exact manifest coverage, raw/score/mask hashes, label-access
   order, model persistence, checkpoint reload, and independent metric
   recomputation must pass.
+
+## E05: Protocol-wide completion and consistency audit
+
+- Scope: RECAP-OFO, RECAP-OFA A/B/C, eight OFO baselines, and four OFA
+  baselines in A/B/C
+- Evidence: 369 training runs, 594 final evaluations, 90 stability pair
+  records, 486 diagnostic rows, and 225 RECAP checkpoints
+- Aggregation: dataset macro within seed, Setting-C domain macro within seed,
+  stability macro within seed pair, and timing macro within seed
+- Acceptance: exact cell/seed coverage, finite unit-interval metrics, five
+  passing source artifact audits, explicit evaluation-population strata,
+  deterministic table regeneration, and all protocol/equivalence tests

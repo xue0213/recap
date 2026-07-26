@@ -237,3 +237,37 @@ tree:
                   test-split group; RECAP leads the full-graph unsupervised
                   group.
                 evidence: [C07, C08, C09, E04]
+
+  - id: N21
+    type: question
+    title: "Verify the entire revised experiment protocol and consolidate results"
+    provenance: user
+    timestamp: "2026-07-26T21:16+08:00"
+    description: >
+      Check whether any experiment in the full revised protocol remains
+      incomplete, finish it if necessary, audit reporting consistency, and
+      present one consolidated set of tables.
+    children:
+      - id: N22
+        type: experiment
+        title: "Protocol-wide raw-record completeness and consistency audit"
+        provenance: ai-executed
+        timestamp: "2026-07-26T21:16+08:00"
+        result: >
+          Verified 369 training runs and 594 final evaluations, complete
+          seeds 0/1/2 for every required cell, five passing source artifact
+          audits, 90 stability pair records, 486 diagnostic rows, and 225
+          RECAP checkpoints. No experiment or rerun remained.
+        evidence: [C10, E05]
+        children:
+          - id: N23
+            type: experiment
+            title: "Correct seed-first stability and timing aggregation"
+            provenance: ai-executed
+            timestamp: "2026-07-26T21:16+08:00"
+            result: >
+              Recomputed stability by averaging datasets within each seed
+              pair and timing by averaging targets within each seed before
+              population-standard-deviation reporting. Deterministic output
+              regeneration and 28 protocol/equivalence tests passed.
+            evidence: [C10, E05, H09]
