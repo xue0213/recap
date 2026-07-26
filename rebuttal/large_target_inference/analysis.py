@@ -400,6 +400,10 @@ def _aggregate(
                 "nodes": DATASETS[target]["nodes"],
                 "adjacency_nnz": DATASETS[target]["adjacency_nnz"],
                 "evaluation_nodes": DATASETS[target]["evaluation_nodes"],
+                "anomaly_prevalence": (
+                    DATASETS[target]["anomalies"]
+                    / DATASETS[target]["evaluation_nodes"]
+                ),
                 "primary_knn": DATASETS[target]["primary_knn"],
                 "auroc_mean": auroc_mean,
                 "auroc_std": auroc_std,
@@ -455,13 +459,16 @@ def _report_markdown(
         "",
         "## Primary results",
         "",
-        "| Target | Full nodes | Eval nodes | KNN | AUROC (%) | AUPRC (%) |",
-        "|---|---:|---:|---|---:|---:|",
+        "| Target | Full nodes | Eval nodes | Anomaly rate (%) | KNN | "
+        "AUROC (%) | AUPRC (%) |",
+        "|---|---:|---:|---:|---|---:|---:|",
     ]
     for item in aggregate:
         lines.append(
             f"| {item['display']} | {item['nodes']:,} | "
-            f"{item['evaluation_nodes']:,} | {item['primary_knn']} | "
+            f"{item['evaluation_nodes']:,} | "
+            f"{item['anomaly_prevalence'] * 100:.4f} | "
+            f"{item['primary_knn']} | "
             f"{_fmt_mean_std(item['auroc_mean'], item['auroc_std'], 100)} | "
             f"{_fmt_mean_std(item['auprc_mean'], item['auprc_std'], 100)} |"
         )
@@ -471,6 +478,9 @@ def _report_markdown(
             "Mean ± population standard deviation over the three immutable "
             "Setting-A checkpoints. Every target receives a score for every "
             "node; DGraph-Fin metrics use only its frozen 0/1 evaluation mask.",
+            "AUROC 50% and the listed anomaly rate for AUPRC are the random-"
+            "ranking references; computational completion is not treated as "
+            "evidence of predictive effectiveness.",
             "",
             "## Scalability",
             "",
