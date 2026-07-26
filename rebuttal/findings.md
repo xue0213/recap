@@ -24,6 +24,13 @@ The user-revised B/C completion supplement is complete as a separate immutable
 artifact: 12 additional training runs and 60 evaluations for UNPrompt and
 AnomalyGFM-ZS. Its independently audited accounted time was 971.17 seconds.
 
+The user-requested 12-dataset OFO baseline reproduction is complete: eight
+methods, twelve datasets, three seeds, 288 training-and-inference runs, and 576
+independently recomputed AUROC/AUPRC values. All score/mask/data hashes, label
+audits, and checkpoint reloads passed. Its accounted formal-run time is
+2344.41 seconds, excluding smokes, orchestration, independent auditing, and
+report generation.
+
 ## Key Results
 
 - OFO 11-dataset macro: AUROC 0.717747 ± 0.003883 and AUPRC
@@ -52,6 +59,15 @@ AnomalyGFM-ZS. Its independently audited accounted time was 971.17 seconds.
   0.5792/0.1169 and AnomalyGFM-ZS 0.4964/0.0843.
 - The completed Setting C zero-context baseline macros are UNPrompt
   0.5925/0.1137 and AnomalyGFM-ZS 0.5103/0.0557.
+- The completed supervised OFO baseline macros (AUROC/AUPRC) are GCN
+  0.81525/0.42827, GAT 0.83085/0.43336, BWGNN 0.74378/0.29687, and
+  XGBGraph 0.88840/0.61981. These methods use a stratified 40% target-test
+  population after train/validation supervision.
+- The completed full-graph unsupervised OFO baseline macros are DOMINANT
+  0.53321/0.10402, AnomalyDAE 0.56238/0.09969, CoLA 0.54363/0.11881,
+  and ADA-GAD 0.57575/0.07172. RECAP-OFO's separately labelled post hoc
+  12-dataset macro is 0.71083/0.23606 on the same full-graph, label-free
+  evaluation regime.
 
 ## Patterns and Insights
 
@@ -85,6 +101,16 @@ AnomalyGFM-ZS. Its independently audited accounted time was 971.17 seconds.
 - IA-GGAD's Setting-A Amazon result is high variance
   (AUROC standard deviation 0.1171 and AUPRC standard deviation 0.1571);
   it must not be summarized as uniformly stable.
+- XGBGraph is the strongest reproduced supervised OFO baseline but also the
+  main runtime bottleneck: 1306.99 of 2344.41 accounted seconds. The locked
+  100-tree configuration was retained.
+- RECAP exceeds all four reproduced full-graph unsupervised OFO baselines on
+  both 12-dataset macro metrics. This comparison is protocol-aligned within the
+  unsupervised group; it must not be conflated with the supervised methods'
+  40% test-split numbers.
+- GAT has materially higher macro AUPRC seed variation (0.04731) than the
+  other supervised baselines. The three fixed seeds were retained without
+  result-dependent reruns.
 
 ## Lessons and Constraints
 
@@ -93,8 +119,10 @@ AnomalyGFM-ZS. Its independently audited accounted time was 971.17 seconds.
   `lambda_E=0` implementation.
 - Target labels must never be read inside training or checkpoint-selection
   paths. Intermediate target metrics are post-processed.
-- Questions is excluded only from OFO; removing it from OFA would violate the
-  locked protocol.
+- The original locked Phase 1 excluded Questions only from its initial
+  11-dataset OFO manifest; the later RECAP addendum and the current
+  12-dataset baseline study include Questions. OFA always retained it where
+  specified by Settings A/B/C.
 - Amazon contains 10,224 nodes in the actual dataset; the paper's 10,244 count
   is treated as a documented likely typo.
 - The three historical failure-log entries were post-training tooling defects,
@@ -111,6 +139,14 @@ AnomalyGFM-ZS. Its independently audited accounted time was 971.17 seconds.
 - The rejected UNPrompt CUDA sparse-reduction attempt and the three
   pre-amendment ARC runs remain preserved outside the accepted formal run
   directory. They are excluded from every reported aggregate.
+- The 12-dataset OFO study intentionally has two evaluation populations:
+  supervised GCN/GAT/BWGNN/XGBGraph use the stratified test mask, whereas
+  unsupervised DOMINANT/AnomalyDAE/CoLA/ADA-GAD and RECAP use every node.
+- DOMINANT's quadratic structure term was replaced by an exact algebraic
+  identity. AnomalyDAE and ADA-GAD use the pre-registered 1:1 non-edge
+  sampling with inverse-probability weighting; CoLA uses the documented PyGOD
+  random-neighbor context adapter. These adaptations and their equivalence or
+  smoke gates are part of the final report.
 
 ## Open Questions
 
@@ -137,3 +173,11 @@ work without changing the retained feature subspace or formal objectives.
 The B/C completion was pre-registered as a user-revised supplement rather than
 rewriting the original manifest. Ten tests and four method-setting smokes
 preceded its 12 formal runs; all 60 metrics were recomputed independently.
+
+The 12-dataset OFO baseline phase proceeded method by method with an audit
+after every 12-run seed block and a reflection after every 36-run method.
+XGBGraph's native Booster persistence and the scale-aware CUDA reload threshold
+were locked at the smoke stage. Formal runs then completed without scope
+reduction, parallel timing contamination, metric-driven tuning, or selective
+reruns; a final independent analyzer regenerated all 576 reported metrics from
+the frozen score vectors.
