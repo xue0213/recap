@@ -12,6 +12,7 @@ import numpy as np
 import torch
 from torch import nn
 import torch.nn.functional as F
+from torch.utils.checkpoint import checkpoint
 
 
 class ArcCrossAttention(nn.Module):
@@ -254,3 +255,243 @@ def minmax_anomaly_from_affinity(message: torch.Tensor) -> torch.Tensor:
         return torch.zeros_like(message)
     return 1.0 - (message - minimum) / denominator
 
+
+class UNPromptGCN(nn.Module):
+    def __init__(self, in_features: int = 8, hidden_features: int = 128) -> None:
+        super().__init__()
+        self.linear = nn.Linear(in_features, hidden_features, bias=False)
+        self.batch_norm = nn.BatchNorm1d(hidden_features)
+        self.activation = nn.PReLU()
+        self.bias = nn.Parameter(torch.zeros(hidden_features))
+        nn.init.xavier_uniform_(self.linear.weight)
+
+    def forward(
+        self, features: torch.Tensor, adjacency: torch.Tensor | None
+    ) -> torch.Tensor:
+        output = self.linear(features)
+        if adjacency is not None:
+            output = torch.sparse.mm(adjacency, output)
+        output = output + self.bias
+        return self.activation(self.batch_norm(output))
+
+
+class UNPromptGrace(nn.Module):
+    def __init__(
+        self,
+        encoder: UNPromptGCN,
+        hidden_features: int = 128,
+        projection_features: int = 256,
+        tau: float = 0.5,
+    ) -> None:
+        super().__init__()
+        self.encoder = encoder
+        self.tau = tau
+        self.fc1 = nn.Linear(hidden_features, projection_features)
+        self.fc2 = nn.Linear(projection_features, hidden_features)
+
+    def forward(
+        self, features: torch.Tensor, adjacency: torch.Tensor
+    ) -> torch.Tensor:
+        representation = self.encoder(features, adjacency)
+        return self.fc2(F.elu(self.fc1(representation)))
+
+    def exact_blocked_loss(
+        self,
+        first: torch.Tensor,
+        second: torch.Tensor,
+        *,
+        block_size: int = 2048,
+    ) -> torch.Tensor:
+        """Exact official GRACE denominator with checkpointed row blocks."""
+
+        first_normalized = F.normalize(first, p=2, dim=1)
+        second_normalized = F.normalize(second, p=2, dim=1)
+        node_count = first.shape[0]
+
+        def block_loss(
+            left: torch.Tensor,
+            right: torch.Tensor,
+            start_tensor: torch.Tensor,
+            end_tensor: torch.Tensor,
+        ) -> torch.Tensor:
+            start = int(start_tensor.item())
+            end = int(end_tensor.item())
+
+            def directional(
+                query: torch.Tensor,
+                same: torch.Tensor,
+                other: torch.Tensor,
+            ) -> torch.Tensor:
+                reflected = torch.exp(
+                    torch.mm(query, same.T) / self.tau
+                )
+                between = torch.exp(
+                    torch.mm(query, other.T) / self.tau
+                )
+                row_index = torch.arange(
+                    end - start, device=query.device
+                )
+                column_index = torch.arange(start, end, device=query.device)
+                numerator = between[row_index, column_index]
+                reflected_diagonal = reflected[row_index, column_index]
+                denominator = (
+                    reflected.sum(dim=1)
+                    + between.sum(dim=1)
+                    - reflected_diagonal
+                )
+                return -torch.log(numerator / denominator).sum()
+
+            loss_forward = directional(
+                left[start:end], left, right
+            )
+            loss_reverse = directional(
+                right[start:end], right, left
+            )
+            return 0.5 * (loss_forward + loss_reverse)
+
+        total = first.new_zeros(())
+        for start in range(0, node_count, block_size):
+            end = min(start + block_size, node_count)
+            start_tensor = torch.tensor(start, device=first.device)
+            end_tensor = torch.tensor(end, device=first.device)
+            total = total + checkpoint(
+                block_loss,
+                first_normalized,
+                second_normalized,
+                start_tensor,
+                end_tensor,
+                use_reentrant=False,
+            )
+        return total / node_count
+
+
+class UNPromptPrompts(nn.Module):
+    def __init__(self, in_features: int = 8, prompt_count: int = 10) -> None:
+        super().__init__()
+        self.prompts = nn.Parameter(torch.empty(prompt_count, in_features))
+        self.attention = nn.Linear(in_features, prompt_count)
+        nn.init.xavier_uniform_(self.prompts)
+        self.attention.reset_parameters()
+
+    def add(self, features: torch.Tensor) -> torch.Tensor:
+        weight = F.softmax(self.attention(features), dim=1)
+        return features + torch.mm(weight, self.prompts)
+
+
+class UNPromptProjection(nn.Module):
+    def __init__(self, hidden_features: int = 128) -> None:
+        super().__init__()
+        self.linear = nn.Linear(hidden_features, hidden_features)
+
+    def forward(self, features: torch.Tensor) -> torch.Tensor:
+        return self.linear(features)
+
+
+def unprompt_completion_loss(
+    neighbor: torch.Tensor,
+    self_embedding: torch.Tensor,
+    labels: torch.Tensor,
+) -> torch.Tensor:
+    neighbor = F.normalize(neighbor, p=2, dim=-1)
+    self_embedding = F.normalize(self_embedding, p=2, dim=-1)
+    difference = -torch.sum(neighbor * self_embedding, dim=1)
+    modified = torch.where(labels == 0, difference, -difference)
+    return torch.mean(modified)
+
+
+def unprompt_anomaly_score(
+    neighbor: torch.Tensor, self_embedding: torch.Tensor
+) -> torch.Tensor:
+    similarity = torch.sum(
+        F.normalize(neighbor, p=2, dim=-1)
+        * F.normalize(self_embedding, p=2, dim=-1),
+        dim=1,
+    )
+    minimum = torch.min(similarity)
+    maximum = torch.max(similarity)
+    if float(maximum - minimum) == 0.0:
+        return torch.zeros_like(similarity)
+    return 1.0 - (similarity - minimum) / (maximum - minimum)
+
+
+class AnomalyGFMGraphConv(nn.Module):
+    def __init__(self, in_features: int, out_features: int) -> None:
+        super().__init__()
+        self.linear = nn.Linear(in_features, out_features, bias=False)
+        self.activation = nn.PReLU()
+        self.bias = nn.Parameter(torch.zeros(out_features))
+        nn.init.xavier_uniform_(self.linear.weight)
+
+    def forward(
+        self, features: torch.Tensor, adjacency: torch.Tensor
+    ) -> torch.Tensor:
+        output = torch.sparse.mm(adjacency, self.linear(features))
+        return self.activation(output + self.bias)
+
+
+class AnomalyGFMModel(nn.Module):
+    """Sparse, batch-size-one equivalent of the released zero-shot model."""
+
+    def __init__(self, hidden_features: int = 400) -> None:
+        super().__init__()
+        self.gcn1 = AnomalyGFMGraphConv(8, hidden_features)
+        self.gcn2 = AnomalyGFMGraphConv(hidden_features, hidden_features)
+        self.classifier = nn.Linear(hidden_features, 1, bias=False)
+        self.residual_classifier = nn.Linear(
+            hidden_features, 1, bias=False
+        )
+        self.normal_prompt = nn.Linear(
+            hidden_features, hidden_features, bias=False
+        )
+        self.anomaly_prompt = nn.Linear(
+            hidden_features, hidden_features, bias=False
+        )
+
+    def forward(
+        self,
+        features: torch.Tensor,
+        gcn_adjacency: torch.Tensor,
+        neighbor_adjacency: torch.Tensor,
+        normal_prompt_raw: torch.Tensor,
+        anomaly_prompt_raw: torch.Tensor,
+    ) -> tuple[
+        torch.Tensor,
+        torch.Tensor,
+        torch.Tensor,
+        torch.Tensor,
+        torch.Tensor,
+        torch.Tensor,
+    ]:
+        hidden = self.gcn1(features, gcn_adjacency)
+        embedding = self.gcn2(hidden, gcn_adjacency)
+        normal_prompt = F.relu(self.normal_prompt(normal_prompt_raw))
+        anomaly_prompt = F.relu(self.anomaly_prompt(anomaly_prompt_raw))
+        neighbor_embedding = torch.sparse.mm(
+            neighbor_adjacency, embedding
+        )
+        residual = embedding - neighbor_embedding
+        logits = self.classifier(embedding).squeeze(1)
+        residual_logits = self.residual_classifier(residual).squeeze(1)
+        return (
+            logits,
+            residual_logits,
+            embedding,
+            residual,
+            normal_prompt,
+            anomaly_prompt,
+        )
+
+
+def anomalygfm_score_components(
+    residual: torch.Tensor,
+    normal_prompt: torch.Tensor,
+    anomaly_prompt: torch.Tensor,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    residual = F.normalize(residual, p=2, dim=1)
+    normal_prompt = F.normalize(normal_prompt, p=2, dim=0)
+    anomaly_prompt = F.normalize(anomaly_prompt, p=2, dim=0)
+    normal_similarity = torch.mv(residual, normal_prompt)
+    anomaly_similarity = torch.mv(residual, anomaly_prompt)
+    normal_component = torch.exp(-normal_similarity)
+    anomaly_component = torch.exp(anomaly_similarity)
+    return anomaly_component, normal_component

@@ -15,6 +15,9 @@ from rebuttal.baselines.baseline_common import (
     sha256_array,
 )
 from rebuttal.baselines.baseline_models import (
+    SparseGraphConv,
+    UNPromptGCN,
+    UNPromptGrace,
     dense_affinity_message_reference,
     sparse_affinity_message,
 )
@@ -66,6 +69,53 @@ class BaselineProtocolTests(unittest.TestCase):
             )
         )
 
+    def test_sparse_graph_conv_matches_dense(self) -> None:
+        generator = torch.Generator().manual_seed(11)
+        raw = torch.rand(7, 7, generator=generator)
+        raw = (raw + raw.T) / 2
+        raw = raw + torch.eye(7)
+        degree = raw.sum(dim=1)
+        normalized = (
+            degree.rsqrt()[:, None] * raw * degree.rsqrt()[None, :]
+        )
+        sparse = normalized.to_sparse().coalesce()
+        features = torch.randn(7, 4, generator=generator)
+        conv = SparseGraphConv(4, 6)
+        expected = normalized @ (features @ conv.weight) + conv.bias
+        actual = conv(sparse, features)
+        self.assertTrue(
+            torch.allclose(expected, actual, atol=1e-6, rtol=1e-6)
+        )
+
+    def test_unprompt_blocked_loss_matches_full(self) -> None:
+        generator = torch.Generator().manual_seed(13)
+        first = torch.randn(17, 8, generator=generator, requires_grad=True)
+        second = torch.randn(17, 8, generator=generator, requires_grad=True)
+        grace = UNPromptGrace(UNPromptGCN(), hidden_features=128)
+        blocked = grace.exact_blocked_loss(first, second, block_size=5)
+
+        a = torch.nn.functional.normalize(first, dim=1)
+        b = torch.nn.functional.normalize(second, dim=1)
+
+        def directional(left, right):
+            reflected = torch.exp(left @ left.T / 0.5)
+            between = torch.exp(left @ right.T / 0.5)
+            return -torch.log(
+                between.diag()
+                / (
+                    reflected.sum(1)
+                    + between.sum(1)
+                    - reflected.diag()
+                )
+            )
+
+        full = 0.5 * (
+            directional(a, b).mean() + directional(b, a).mean()
+        )
+        self.assertTrue(
+            torch.allclose(blocked, full, atol=1e-6, rtol=1e-6)
+        )
+
     def test_label_vault_blocks_early_target_read(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -97,4 +147,3 @@ class BaselineProtocolTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

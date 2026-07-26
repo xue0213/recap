@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+import scipy.sparse as sp
 import torch
 from sklearn.metrics import average_precision_score, roc_auc_score
 
@@ -30,7 +31,10 @@ if __package__ in {None, ""}:
         atomic_npz,
         atomic_torch_save,
         environment_metadata,
+        prepare_anomalygfm_graph,
         prepare_arc_graph,
+        prepare_unprompt_graph,
+        scipy_to_torch_sparse,
         set_seed,
         sha256_array,
         sha256_file,
@@ -38,13 +42,21 @@ if __package__ in {None, ""}:
     )
     from rebuttal.baselines.baseline_models import (  # type: ignore
         ArcModel,
+        AnomalyGFMModel,
         SparseAffinityEncoder,
+        UNPromptGCN,
+        UNPromptGrace,
+        UNPromptProjection,
+        UNPromptPrompts,
         ia_forward,
         ia_invariant_score,
         ia_training_loss,
         load_ia_vendor_model,
         minmax_anomaly_from_affinity,
         sparse_affinity_message,
+        anomalygfm_score_components,
+        unprompt_anomaly_score,
+        unprompt_completion_loss,
     )
     from rebuttal.baselines.baseline_protocol import (  # type: ignore
         BaselineRunSpec,
@@ -59,7 +71,10 @@ else:
         atomic_npz,
         atomic_torch_save,
         environment_metadata,
+        prepare_anomalygfm_graph,
         prepare_arc_graph,
+        prepare_unprompt_graph,
+        scipy_to_torch_sparse,
         set_seed,
         sha256_array,
         sha256_file,
@@ -67,13 +82,21 @@ else:
     )
     from .baseline_models import (
         ArcModel,
+        AnomalyGFMModel,
         SparseAffinityEncoder,
+        UNPromptGCN,
+        UNPromptGrace,
+        UNPromptProjection,
+        UNPromptPrompts,
         ia_forward,
         ia_invariant_score,
         ia_training_loss,
         load_ia_vendor_model,
         minmax_anomaly_from_affinity,
         sparse_affinity_message,
+        anomalygfm_score_components,
+        unprompt_anomaly_score,
+        unprompt_completion_loss,
     )
     from .baseline_protocol import (
         BaselineRunSpec,
@@ -839,6 +862,715 @@ def run_ia_ggad(
     return result
 
 
+def _unprompt_drop_features(
+    features: torch.Tensor, probability: float
+) -> torch.Tensor:
+    drop_mask = (
+        torch.empty(
+            features.shape[1],
+            dtype=torch.float32,
+            device=features.device,
+        ).uniform_(0, 1)
+        < probability
+    )
+    augmented = features.clone()
+    augmented[:, drop_mask] = 0
+    return augmented
+
+
+def _unprompt_drop_edges(
+    adjacency: sp.coo_matrix,
+    probability: float,
+    device: torch.device,
+) -> torch.Tensor:
+    """Preserve the released edge-drop sampling and unnormalized output."""
+
+    adjacency = sp.coo_matrix(adjacency, dtype=np.float32)
+    edge_count = adjacency.nnz
+    selected = np.random.choice(
+        edge_count, int(probability * edge_count), replace=False
+    )
+    selected = selected[
+        adjacency.row[selected] != adjacency.col[selected]
+    ]
+    keep = np.ones(edge_count, dtype=np.bool_)
+    keep[selected] = False
+    augmented = sp.coo_matrix(
+        (
+            adjacency.data[keep],
+            (adjacency.row[keep], adjacency.col[keep]),
+        ),
+        shape=adjacency.shape,
+    )
+    return scipy_to_torch_sparse(augmented, device)
+
+
+def run_unprompt(
+    spec: BaselineRunSpec,
+    *,
+    dataset_dir: Path,
+    vendor_root: Path,
+    output_root: Path,
+    device: torch.device,
+    smoke_epochs: int | None = None,
+) -> dict[str, Any]:
+    directory = run_dir(output_root, spec)
+    if (directory / "complete.json").exists() and smoke_epochs is None:
+        return json.loads((directory / "complete.json").read_text())
+    directory.mkdir(parents=True, exist_ok=True)
+    pretrain_epochs = smoke_epochs or 200
+    prompt_epochs = smoke_epochs or 900
+    metadata = _base_run_metadata(spec, dataset_dir, vendor_root, device)
+    metadata["resolved_config"] = {
+        "method": "UNPrompt",
+        "feature_dims": 8,
+        "hidden_feats": 128,
+        "prompt_count": 10,
+        "pretrain_epochs": pretrain_epochs,
+        "formal_pretrain_epochs": 200,
+        "prompt_epochs": prompt_epochs,
+        "formal_prompt_epochs": 900,
+        "pretrain_lr": 1e-3,
+        "pretrain_weight_decay": 1e-5,
+        "prompt_lr": 1e-3,
+        "prompt_weight_decay": 0.0,
+        "edge_drop_probability": 0.2,
+        "feature_drop_probability": 0.3,
+        "contrastive_tau": 0.5,
+        "contrastive_denominator": "exact all-node, checkpointed row blocks",
+        "contrastive_block_size": 2048,
+        "target_context": 0,
+    }
+    atomic_json(directory / "run_start.json", metadata)
+
+    vault = LabelVault(dataset_dir)
+    preparation_started = time.perf_counter()
+    names = tuple(dict.fromkeys(spec.source_graphs + spec.target_graphs))
+    graphs = {
+        name: prepare_unprompt_graph(
+            dataset_dir,
+            output_root / "cache",
+            name,
+            device,
+        )
+        for name in names
+    }
+    preparation_seconds = time.perf_counter() - preparation_started
+    source_labels = {
+        name: torch.from_numpy(vault.load_source(name)).to(device)
+        for name in spec.source_graphs
+    }
+    set_seed(spec.seed)
+    encoder = UNPromptGCN().to(device)
+    grace = UNPromptGrace(encoder).to(device)
+    grace_optimizer = torch.optim.Adam(
+        grace.parameters(), lr=1e-3, weight_decay=1e-5
+    )
+    if torch.cuda.is_available():
+        torch.cuda.reset_peak_memory_stats(device)
+    training_started = time.perf_counter()
+    pretrain_log: list[dict[str, Any]] = []
+    for epoch in range(pretrain_epochs):
+        source_losses = []
+        for name in spec.source_graphs:
+            graph = graphs[name]
+            grace.train()
+            grace_optimizer.zero_grad(set_to_none=True)
+            augmented_features = _unprompt_drop_features(graph.x, 0.3)
+            augmented_adjacency = _unprompt_drop_edges(
+                graph.adjacency_with_loop_raw, 0.2, device
+            )
+            first = grace(graph.x, graph.adjacency_with_loop_norm)
+            second = grace(augmented_features, augmented_adjacency)
+            loss = grace.exact_blocked_loss(
+                first, second, block_size=2048
+            )
+            loss.backward()
+            grace_optimizer.step()
+            source_losses.append(float(loss.detach().cpu()))
+            del first, second, loss, augmented_adjacency, augmented_features
+        if (
+            epoch == 0
+            or epoch == pretrain_epochs - 1
+            or (epoch + 1) % 25 == 0
+        ):
+            pretrain_log.append(
+                {
+                    "epoch": epoch + 1,
+                    "source_loss_mean": float(np.mean(source_losses)),
+                    "source_losses": source_losses,
+                }
+            )
+
+    encoder.eval()
+    encoder.requires_grad_(False)
+    prompts = UNPromptPrompts().to(device)
+    projection = UNPromptProjection().to(device)
+    prompt_optimizer = torch.optim.Adam(
+        list(prompts.parameters()) + list(projection.parameters()),
+        lr=1e-3,
+        weight_decay=0.0,
+    )
+    prompt_log: list[dict[str, Any]] = []
+    for epoch in range(prompt_epochs):
+        source_losses = []
+        for name in spec.source_graphs:
+            graph = graphs[name]
+            prompts.train()
+            projection.train()
+            prompt_optimizer.zero_grad(set_to_none=True)
+            modified = prompts.add(graph.x)
+            neighbor = projection(
+                encoder(modified, graph.adjacency_without_loop_norm)
+            )
+            self_embedding = projection(encoder(modified, None))
+            loss = unprompt_completion_loss(
+                neighbor, self_embedding, source_labels[name]
+            )
+            loss.backward()
+            prompt_optimizer.step()
+            source_losses.append(float(loss.detach().cpu()))
+        if (
+            epoch == 0
+            or epoch == prompt_epochs - 1
+            or (epoch + 1) % 100 == 0
+        ):
+            prompt_log.append(
+                {
+                    "epoch": epoch + 1,
+                    "source_loss_mean": float(np.mean(source_losses)),
+                    "source_losses": source_losses,
+                }
+            )
+    training_seconds = time.perf_counter() - training_started
+    checkpoint_path = directory / "checkpoint.pt"
+    atomic_torch_save(
+        checkpoint_path,
+        {
+            "encoder": encoder.state_dict(),
+            "grace_projection": {
+                "fc1": grace.fc1.state_dict(),
+                "fc2": grace.fc2.state_dict(),
+            },
+            "prompts": prompts.state_dict(),
+            "projection": projection.state_dict(),
+            "grace_optimizer": grace_optimizer.state_dict(),
+            "prompt_optimizer": prompt_optimizer.state_dict(),
+            "spec": spec.to_dict(),
+            "pretrain_epochs": pretrain_epochs,
+            "prompt_epochs": prompt_epochs,
+        },
+    )
+
+    evaluation_started = time.perf_counter()
+    target_results: dict[str, dict[str, Any]] = {}
+    reference_scores: dict[str, np.ndarray] = {}
+    encoder.eval()
+    prompts.eval()
+    projection.eval()
+    with torch.no_grad():
+        for name in spec.target_graphs:
+            graph = graphs[name]
+            modified = prompts.add(graph.x)
+            neighbor = projection(
+                encoder(modified, graph.adjacency_without_loop_norm)
+            )
+            self_embedding = projection(encoder(modified, None))
+            score_tensor = unprompt_anomaly_score(
+                neighbor, self_embedding
+            )
+            scores = score_tensor.detach().cpu().numpy().astype(np.float32)
+            query_mask = np.ones(graph.node_count, dtype=np.bool_)
+            _save_target_scores(
+                directory=directory,
+                name=name,
+                scores=scores,
+                query_mask=query_mask,
+                context_indices=np.empty(0, dtype=np.int64),
+                components=None,
+                vault=vault,
+            )
+            labels = vault.load_target_for_evaluation(name)
+            metrics = score_metrics(labels, scores)
+            target_results[name] = {
+                **metrics,
+                "nodes": int(labels.shape[0]),
+                "query_nodes": int(labels.shape[0]),
+                "context_nodes": 0,
+            }
+            reference_scores[name] = scores
+    evaluation_seconds = time.perf_counter() - evaluation_started
+
+    reloaded_encoder = UNPromptGCN().to(device)
+    reloaded_prompts = UNPromptPrompts().to(device)
+    reloaded_projection = UNPromptProjection().to(device)
+    checkpoint_payload = torch.load(
+        checkpoint_path, map_location=device, weights_only=False
+    )
+    reloaded_encoder.load_state_dict(checkpoint_payload["encoder"])
+    reloaded_prompts.load_state_dict(checkpoint_payload["prompts"])
+    reloaded_projection.load_state_dict(checkpoint_payload["projection"])
+    reloaded_encoder.eval()
+    reloaded_prompts.eval()
+    reloaded_projection.eval()
+    reload_diffs: dict[str, float] = {}
+    with torch.no_grad():
+        for name in spec.target_graphs:
+            graph = graphs[name]
+            modified = reloaded_prompts.add(graph.x)
+            neighbor = reloaded_projection(
+                reloaded_encoder(
+                    modified, graph.adjacency_without_loop_norm
+                )
+            )
+            self_embedding = reloaded_projection(
+                reloaded_encoder(modified, None)
+            )
+            actual = (
+                unprompt_anomaly_score(neighbor, self_embedding)
+                .cpu()
+                .numpy()
+            )
+            reload_diffs[name] = float(
+                np.max(np.abs(actual - reference_scores[name]))
+            )
+    reload_max_diff = max(reload_diffs.values(), default=0.0)
+    reload_passed = reload_max_diff <= 1e-5
+    if not reload_passed:
+        raise RuntimeError(
+            f"{spec.run_id}: UNPrompt reload max diff {reload_max_diff}"
+        )
+
+    peak_bytes = (
+        int(torch.cuda.max_memory_allocated(device))
+        if torch.cuda.is_available()
+        else 0
+    )
+    result = {
+        **metadata,
+        "completed_at": utc_now(),
+        "status": "smoke_complete" if smoke_epochs is not None else "complete",
+        "preparation_seconds": preparation_seconds,
+        "training_seconds": training_seconds,
+        "evaluation_seconds": evaluation_seconds,
+        "peak_gpu_memory_bytes": peak_bytes,
+        "pretrain_log": pretrain_log,
+        "prompt_log": prompt_log,
+        "target_results": target_results,
+        "dataset_hashes": {
+            name: graphs[name].raw_sha256 for name in graphs
+        },
+        "checkpoint": {
+            "path": str(checkpoint_path),
+            "sha256": sha256_file(checkpoint_path),
+            "reload_passed": reload_passed,
+            "reload_max_abs_diff": reload_max_diff,
+            "reload_target_diffs": reload_diffs,
+        },
+        "label_audit": vault.audit(),
+    }
+    atomic_json(directory / "result.json", result)
+    if smoke_epochs is None:
+        atomic_json(directory / "complete.json", result)
+    return result
+
+
+def _anomalygfm_source_calibration(
+    *,
+    spec: BaselineRunSpec,
+    graphs: dict[str, Any],
+    source_labels: dict[str, torch.Tensor],
+    model: AnomalyGFMModel,
+    grid: tuple[float, ...],
+    device: torch.device,
+) -> tuple[float, list[dict[str, Any]]]:
+    generator = torch.Generator(device=device)
+    generator.manual_seed(2026 + ord(spec.setting))
+    components: dict[str, tuple[np.ndarray, np.ndarray, np.ndarray]] = {}
+    model.eval()
+    with torch.no_grad():
+        for name in spec.source_graphs:
+            graph = graphs[name]
+            normal_raw = torch.randn(
+                400, generator=generator, device=device
+            )
+            anomaly_raw = torch.randn(
+                400, generator=generator, device=device
+            )
+            _, _, _, residual, normal_prompt, anomaly_prompt = model(
+                graph.x,
+                graph.gcn_adjacency,
+                graph.neighbor_adjacency,
+                normal_raw,
+                anomaly_raw,
+            )
+            anomaly_component, normal_component = (
+                anomalygfm_score_components(
+                    residual, normal_prompt, anomaly_prompt
+                )
+            )
+            components[name] = (
+                anomaly_component.cpu().numpy(),
+                normal_component.cpu().numpy(),
+                source_labels[name].cpu().numpy(),
+            )
+    records: list[dict[str, Any]] = []
+    for weight in grid:
+        per_dataset = []
+        for anomaly, normal, labels in components.values():
+            per_dataset.append(
+                score_metrics(labels, anomaly + weight * normal)
+            )
+        records.append(
+            {
+                "weight": weight,
+                "source_macro_AUROC": float(
+                    np.mean([value["AUROC"] for value in per_dataset])
+                ),
+                "source_macro_AUPRC": float(
+                    np.mean([value["AUPRC"] for value in per_dataset])
+                ),
+            }
+        )
+    best = max(
+        records,
+        key=lambda value: (
+            value["source_macro_AUROC"],
+            value["source_macro_AUPRC"],
+            -value["weight"],
+        ),
+    )
+    return float(best["weight"]), records
+
+
+def run_anomalygfm(
+    spec: BaselineRunSpec,
+    *,
+    dataset_dir: Path,
+    vendor_root: Path,
+    output_root: Path,
+    device: torch.device,
+    smoke_epochs: int | None = None,
+) -> dict[str, Any]:
+    directory = run_dir(output_root, spec)
+    if (directory / "complete.json").exists() and smoke_epochs is None:
+        return json.loads((directory / "complete.json").read_text())
+    directory.mkdir(parents=True, exist_ok=True)
+    epochs = smoke_epochs or 301
+    metadata = _base_run_metadata(spec, dataset_dir, vendor_root, device)
+    metadata["resolved_config"] = {
+        "method": "AnomalyGFM-ZS",
+        "feature_dims": 8,
+        "hidden_feats": 400,
+        "epochs": epochs,
+        "formal_epochs": 301,
+        "lr": 1e-4,
+        "weight_decay": 0.0,
+        "source_training_fraction": 0.3,
+        "loss": "BCE + anomalous prototype distance + 0.1 normal prototype distance",
+        "target_context": 0,
+        "score_weight_calibration": "setting A seed-0 source macro only",
+    }
+    atomic_json(directory / "run_start.json", metadata)
+
+    vault = LabelVault(dataset_dir)
+    preparation_started = time.perf_counter()
+    names = tuple(dict.fromkeys(spec.source_graphs + spec.target_graphs))
+    graphs = {
+        name: prepare_anomalygfm_graph(
+            dataset_dir,
+            output_root / "cache",
+            name,
+            device,
+        )
+        for name in names
+    }
+    preparation_seconds = time.perf_counter() - preparation_started
+    source_labels = {
+        name: torch.from_numpy(vault.load_source(name)).to(device)
+        for name in spec.source_graphs
+    }
+
+    # Official ordering samples the source split before model initialization.
+    set_seed(spec.seed)
+    source_train_indices: dict[str, torch.Tensor] = {}
+    for name in spec.source_graphs:
+        indices = list(range(graphs[name].node_count))
+        random.shuffle(indices)
+        count = int(graphs[name].node_count * 0.3)
+        source_train_indices[name] = torch.tensor(
+            indices[:count], dtype=torch.long, device=device
+        )
+
+    model = AnomalyGFMModel().to(device)
+    optimizer = torch.optim.Adam(
+        model.parameters(), lr=1e-4, weight_decay=0.0
+    )
+    binary_cross_entropy = torch.nn.BCEWithLogitsLoss(reduction="none")
+    if torch.cuda.is_available():
+        torch.cuda.reset_peak_memory_stats(device)
+    training_started = time.perf_counter()
+    loss_log: list[dict[str, Any]] = []
+    for epoch in range(epochs):
+        source_losses = []
+        for name in spec.source_graphs:
+            graph = graphs[name]
+            indices = source_train_indices[name]
+            labels = source_labels[name][indices]
+            model.train()
+            optimizer.zero_grad(set_to_none=True)
+            normal_raw = torch.randn(400, device=device)
+            anomaly_raw = torch.randn(400, device=device)
+            (
+                logits,
+                _,
+                _,
+                residual,
+                normal_prompt,
+                anomaly_prompt,
+            ) = model(
+                graph.x,
+                graph.gcn_adjacency,
+                graph.neighbor_adjacency,
+                normal_raw,
+                anomaly_raw,
+            )
+            bce = binary_cross_entropy(logits[indices], labels).mean()
+            residual_train = residual[indices]
+            normal_residual = residual_train[labels == 0]
+            anomaly_residual = residual_train[labels == 1]
+            if normal_residual.shape[0] == 0 or anomaly_residual.shape[0] == 0:
+                raise ValueError(
+                    f"{name}: source split lacks one class for AnomalyGFM"
+                )
+            normal_distance = torch.sqrt(
+                torch.sum(
+                    (normal_prompt - normal_residual) ** 2, dim=1
+                )
+            ).mean()
+            anomaly_distance = torch.sqrt(
+                torch.sum(
+                    (anomaly_prompt - anomaly_residual) ** 2, dim=1
+                )
+            ).mean()
+            loss = bce + anomaly_distance + 0.1 * normal_distance
+            loss.backward()
+            optimizer.step()
+            source_losses.append(float(loss.detach().cpu()))
+        if epoch == 0 or epoch == epochs - 1 or (epoch + 1) % 50 == 0:
+            loss_log.append(
+                {
+                    "epoch": epoch + 1,
+                    "source_loss_mean": float(np.mean(source_losses)),
+                    "source_losses": source_losses,
+                }
+            )
+    training_seconds = time.perf_counter() - training_started
+
+    grid = (0.0, 0.5, 1.0, 2.0, 4.0, 6.0)
+    locked_calibration_path = calibration_path(
+        output_root, "AnomalyGFM-ZS", spec.setting
+    )
+    if smoke_epochs is not None:
+        score_weight, calibration_records = (
+            _anomalygfm_source_calibration(
+                spec=spec,
+                graphs=graphs,
+                source_labels=source_labels,
+                model=model,
+                grid=grid,
+                device=device,
+            )
+        )
+        calibration_status = "smoke_only"
+    elif spec.seed == 0:
+        score_weight, calibration_records = (
+            _anomalygfm_source_calibration(
+                spec=spec,
+                graphs=graphs,
+                source_labels=source_labels,
+                model=model,
+                grid=grid,
+                device=device,
+            )
+        )
+        atomic_json(
+            locked_calibration_path,
+            {
+                "format": "recap_phase2_source_only_calibration_v1",
+                "method": "AnomalyGFM-ZS",
+                "setting": spec.setting,
+                "calibration_seed": 0,
+                "selected_weight": score_weight,
+                "grid_records": calibration_records,
+                "target_labels_used": False,
+                "created_at": utc_now(),
+            },
+        )
+        calibration_status = "created_and_locked"
+    else:
+        if not locked_calibration_path.exists():
+            raise FileNotFoundError(
+                f"Seed-0 calibration must run first: {locked_calibration_path}"
+            )
+        calibration = json.loads(locked_calibration_path.read_text())
+        score_weight = float(calibration["selected_weight"])
+        calibration_records = calibration["grid_records"]
+        calibration_status = "reused_seed0_lock"
+
+    checkpoint_path = directory / "checkpoint.pt"
+    atomic_torch_save(
+        checkpoint_path,
+        {
+            "model": model.state_dict(),
+            "optimizer": optimizer.state_dict(),
+            "score_weight": score_weight,
+            "source_train_indices": {
+                name: value.cpu()
+                for name, value in source_train_indices.items()
+            },
+            "spec": spec.to_dict(),
+            "epochs": epochs,
+        },
+    )
+
+    evaluation_started = time.perf_counter()
+    target_results: dict[str, dict[str, Any]] = {}
+    reference_scores: dict[str, np.ndarray] = {}
+    evaluation_prompts: dict[str, tuple[torch.Tensor, torch.Tensor]] = {}
+    model.eval()
+    with torch.no_grad():
+        for name in spec.target_graphs:
+            graph = graphs[name]
+            normal_raw = torch.randn(400, device=device)
+            anomaly_raw = torch.randn(400, device=device)
+            evaluation_prompts[name] = (
+                normal_raw.detach().clone(),
+                anomaly_raw.detach().clone(),
+            )
+            _, _, _, residual, normal_prompt, anomaly_prompt = model(
+                graph.x,
+                graph.gcn_adjacency,
+                graph.neighbor_adjacency,
+                normal_raw,
+                anomaly_raw,
+            )
+            anomaly_component, normal_component = (
+                anomalygfm_score_components(
+                    residual, normal_prompt, anomaly_prompt
+                )
+            )
+            fused = anomaly_component + score_weight * normal_component
+            scores = fused.cpu().numpy().astype(np.float32)
+            anomaly_values = (
+                anomaly_component.cpu().numpy().astype(np.float32)
+            )
+            normal_values = (
+                normal_component.cpu().numpy().astype(np.float32)
+            )
+            query_mask = np.ones(graph.node_count, dtype=np.bool_)
+            _save_target_scores(
+                directory=directory,
+                name=name,
+                scores=scores,
+                query_mask=query_mask,
+                context_indices=np.empty(0, dtype=np.int64),
+                components={
+                    "anomaly_component": anomaly_values,
+                    "normal_component": normal_values,
+                    "normal_prompt_raw": normal_raw.cpu().numpy(),
+                    "anomaly_prompt_raw": anomaly_raw.cpu().numpy(),
+                },
+                vault=vault,
+            )
+            labels = vault.load_target_for_evaluation(name)
+            metrics = score_metrics(labels, scores)
+            target_results[name] = {
+                **metrics,
+                "nodes": int(labels.shape[0]),
+                "query_nodes": int(labels.shape[0]),
+                "context_nodes": 0,
+                "score_weight": score_weight,
+            }
+            reference_scores[name] = scores
+    evaluation_seconds = time.perf_counter() - evaluation_started
+
+    reloaded = AnomalyGFMModel().to(device)
+    checkpoint_payload = torch.load(
+        checkpoint_path, map_location=device, weights_only=False
+    )
+    reloaded.load_state_dict(checkpoint_payload["model"])
+    reloaded.eval()
+    reload_diffs: dict[str, float] = {}
+    with torch.no_grad():
+        for name in spec.target_graphs:
+            graph = graphs[name]
+            normal_raw, anomaly_raw = evaluation_prompts[name]
+            _, _, _, residual, normal_prompt, anomaly_prompt = reloaded(
+                graph.x,
+                graph.gcn_adjacency,
+                graph.neighbor_adjacency,
+                normal_raw,
+                anomaly_raw,
+            )
+            anomaly_component, normal_component = (
+                anomalygfm_score_components(
+                    residual, normal_prompt, anomaly_prompt
+                )
+            )
+            actual = (
+                anomaly_component + score_weight * normal_component
+            ).cpu().numpy()
+            reload_diffs[name] = float(
+                np.max(np.abs(actual - reference_scores[name]))
+            )
+    reload_max_diff = max(reload_diffs.values(), default=0.0)
+    reload_passed = reload_max_diff <= 1e-5
+    if not reload_passed:
+        raise RuntimeError(
+            f"{spec.run_id}: AnomalyGFM reload max diff {reload_max_diff}"
+        )
+
+    peak_bytes = (
+        int(torch.cuda.max_memory_allocated(device))
+        if torch.cuda.is_available()
+        else 0
+    )
+    result = {
+        **metadata,
+        "completed_at": utc_now(),
+        "status": "smoke_complete" if smoke_epochs is not None else "complete",
+        "preparation_seconds": preparation_seconds,
+        "training_seconds": training_seconds,
+        "evaluation_seconds": evaluation_seconds,
+        "peak_gpu_memory_bytes": peak_bytes,
+        "loss_log": loss_log,
+        "score_calibration": {
+            "status": calibration_status,
+            "path": str(locked_calibration_path),
+            "selected_weight": score_weight,
+            "grid_records": calibration_records,
+            "target_labels_used": False,
+        },
+        "target_results": target_results,
+        "dataset_hashes": {
+            name: graphs[name].raw_sha256 for name in graphs
+        },
+        "checkpoint": {
+            "path": str(checkpoint_path),
+            "sha256": sha256_file(checkpoint_path),
+            "reload_passed": reload_passed,
+            "reload_max_abs_diff": reload_max_diff,
+            "reload_target_diffs": reload_diffs,
+        },
+        "label_audit": vault.audit(),
+    }
+    atomic_json(directory / "result.json", result)
+    if smoke_epochs is None:
+        atomic_json(directory / "complete.json", result)
+    return result
+
+
 def execute_spec(
     spec: BaselineRunSpec,
     *,
@@ -859,6 +1591,24 @@ def execute_spec(
         )
     if spec.method == "IA-GGAD":
         return run_ia_ggad(
+            spec,
+            dataset_dir=dataset_dir,
+            vendor_root=vendor_root,
+            output_root=output_root,
+            device=device,
+            smoke_epochs=smoke_epochs,
+        )
+    if spec.method == "UNPrompt":
+        return run_unprompt(
+            spec,
+            dataset_dir=dataset_dir,
+            vendor_root=vendor_root,
+            output_root=output_root,
+            device=device,
+            smoke_epochs=smoke_epochs,
+        )
+    if spec.method == "AnomalyGFM-ZS":
+        return run_anomalygfm(
             spec,
             dataset_dir=dataset_dir,
             vendor_root=vendor_root,
@@ -982,4 +1732,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

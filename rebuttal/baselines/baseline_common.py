@@ -288,6 +288,27 @@ class ArcGraph:
     raw_sha256: str
 
 
+@dataclass
+class UNPromptGraph:
+    name: str
+    x: torch.Tensor
+    adjacency_with_loop_raw: sp.coo_matrix
+    adjacency_with_loop_norm: torch.Tensor
+    adjacency_without_loop_norm: torch.Tensor
+    node_count: int
+    raw_sha256: str
+
+
+@dataclass
+class AnomalyGFMGraph:
+    name: str
+    x: torch.Tensor
+    gcn_adjacency: torch.Tensor
+    neighbor_adjacency: torch.Tensor
+    node_count: int
+    raw_sha256: str
+
+
 def load_arc_features(dataset_dir: Path, name: str) -> np.ndarray:
     """Load the official ARC 64-D cache without loading its embedded labels."""
 
@@ -355,6 +376,151 @@ def prepare_arc_graph(
     )
 
 
+def _unprompt_cache_path(cache_dir: Path, name: str) -> Path:
+    return cache_dir / "features" / "unprompt" / f"{name}_svd8_bn.npz"
+
+
+def load_unprompt_features(
+    dataset_dir: Path,
+    cache_dir: Path,
+    name: str,
+    device: torch.device | str,
+) -> np.ndarray:
+    """Official rank-8 torch SVD and non-affine BatchNorm preprocessing."""
+
+    raw_path = dataset_path(dataset_dir, name)
+    raw_hash = sha256_file(raw_path)
+    cache_path = _unprompt_cache_path(cache_dir, name)
+    if cache_path.exists():
+        with np.load(cache_path, allow_pickle=False) as cache:
+            version = str(cache["alignment_version"].item())
+            cached_hash = str(cache["raw_sha256"].item())
+            features = np.asarray(cache["features"], dtype=np.float32)
+        if version == UNPROMPT_ALIGNMENT_VERSION and cached_hash == raw_hash:
+            return features
+
+    raw = load_raw_features(dataset_dir, name).toarray().astype(
+        np.float32, copy=False
+    )
+    values = torch.from_numpy(raw).to(device)
+    # ``full_matrices=False`` preserves the leading singular triplets used by
+    # the release while avoiding the unused N x N tail for Questions.
+    left, singular, _ = torch.linalg.svd(values, full_matrices=False)
+    reduced = left[:, :8] * singular[:8]
+    batch_norm = torch.nn.BatchNorm1d(8, affine=False).to(device)
+    batch_norm.train()
+    normalized = batch_norm(reduced).detach().cpu().numpy().astype(np.float32)
+    if not np.isfinite(normalized).all():
+        raise ValueError(f"{name}: non-finite UNPrompt aligned features")
+    atomic_npz(
+        cache_path,
+        features=normalized,
+        alignment_version=np.array(UNPROMPT_ALIGNMENT_VERSION),
+        raw_sha256=np.array(raw_hash),
+    )
+    return normalized
+
+
+def prepare_unprompt_graph(
+    dataset_dir: Path,
+    cache_dir: Path,
+    name: str,
+    device: torch.device | str,
+) -> UNPromptGraph:
+    adjacency = load_adjacency(dataset_dir, name)
+    features = load_unprompt_features(dataset_dir, cache_dir, name, device)
+    diagonal_present = bool(np.all(adjacency.diagonal() > 0))
+    if diagonal_present:
+        with_loop = sp.coo_matrix(adjacency, dtype=np.float32)
+        without_loop = adjacency - sp.eye(
+            adjacency.shape[0], dtype=np.float32
+        )
+    else:
+        with_loop = sp.coo_matrix(
+            adjacency + sp.eye(adjacency.shape[0], dtype=np.float32),
+            dtype=np.float32,
+        )
+        without_loop = adjacency
+    with_loop_norm = row_normalize(with_loop)
+    without_loop_norm = row_normalize(without_loop)
+    return UNPromptGraph(
+        name=name,
+        x=torch.from_numpy(features).to(device),
+        adjacency_with_loop_raw=with_loop,
+        adjacency_with_loop_norm=scipy_to_torch_sparse(
+            with_loop_norm, device
+        ),
+        adjacency_without_loop_norm=scipy_to_torch_sparse(
+            without_loop_norm, device
+        ),
+        node_count=features.shape[0],
+        raw_sha256=sha256_file(dataset_path(dataset_dir, name)),
+    )
+
+
+def _anomalygfm_cache_path(cache_dir: Path, name: str) -> Path:
+    return cache_dir / "features" / "anomalygfm" / f"{name}_svd8_rownorm.npz"
+
+
+def load_anomalygfm_features(
+    dataset_dir: Path, cache_dir: Path, name: str
+) -> np.ndarray:
+    raw_path = dataset_path(dataset_dir, name)
+    raw_hash = sha256_file(raw_path)
+    cache_path = _anomalygfm_cache_path(cache_dir, name)
+    if cache_path.exists():
+        with np.load(cache_path, allow_pickle=False) as cache:
+            version = str(cache["alignment_version"].item())
+            cached_hash = str(cache["raw_sha256"].item())
+            features = np.asarray(cache["features"], dtype=np.float32)
+        if version == ANOMALYGFM_ALIGNMENT_VERSION and cached_hash == raw_hash:
+            return features
+
+    raw = load_raw_features(dataset_dir, name).toarray()
+    left, singular, _ = np.linalg.svd(raw, full_matrices=False)
+    reduced = left[:, :8] * singular[:8]
+    normalized = row_normalize_features(reduced).astype(np.float32)
+    if not np.isfinite(normalized).all():
+        raise ValueError(f"{name}: non-finite AnomalyGFM aligned features")
+    atomic_npz(
+        cache_path,
+        features=normalized,
+        alignment_version=np.array(ANOMALYGFM_ALIGNMENT_VERSION),
+        raw_sha256=np.array(raw_hash),
+    )
+    return normalized
+
+
+def prepare_anomalygfm_graph(
+    dataset_dir: Path,
+    cache_dir: Path,
+    name: str,
+    device: torch.device | str,
+) -> AnomalyGFMGraph:
+    adjacency = load_adjacency(dataset_dir, name)
+    features = load_anomalygfm_features(dataset_dir, cache_dir, name)
+    adjacency_without_loop = adjacency.copy().tolil()
+    adjacency_without_loop.setdiag(0)
+    adjacency_without_loop = adjacency_without_loop.tocsr()
+    adjacency_without_loop.eliminate_zeros()
+
+    # Released zero-shot code first normalizes A symmetrically and then adds I.
+    gcn_adjacency = symmetric_normalize(adjacency) + sp.eye(
+        adjacency.shape[0], dtype=np.float32
+    )
+    neighbor_adjacency = row_normalize(adjacency_without_loop)
+    return AnomalyGFMGraph(
+        name=name,
+        x=torch.from_numpy(features).to(device),
+        gcn_adjacency=scipy_to_torch_sparse(gcn_adjacency, device),
+        neighbor_adjacency=scipy_to_torch_sparse(
+            neighbor_adjacency, device
+        ),
+        node_count=features.shape[0],
+        raw_sha256=sha256_file(dataset_path(dataset_dir, name)),
+    )
+
+
 def environment_metadata(device: torch.device | str) -> dict[str, Any]:
     gpu_query = ""
     try:
@@ -384,4 +550,3 @@ def environment_metadata(device: torch.device | str) -> dict[str, Any]:
         "device": str(device),
         "gpu_query": gpu_query,
     }
-

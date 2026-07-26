@@ -17,6 +17,7 @@ Other observed formal-environment packages:
 - NumPy 2.1.3
 - SciPy 1.17.1
 - scikit-learn 1.8.0
+- einops 0.8.1 (pinned after the IA-GGAD import gate exposed the missing
+  dependency)
 - NVIDIA driver 595.58.03
 - GPU memory 97,887 MiB
-
