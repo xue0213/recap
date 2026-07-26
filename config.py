@@ -50,6 +50,7 @@ class ModelConfig:
     cluster_lr_multiplier: float = 10.0
     tau_s: float = 0.08
     tau_c: float = 0.3
+    tau_e: float = 1.0
     cluster_init_gain: Optional[float] = 1.5
     sim_block_size: int = 256
     knn_cache_enabled: bool = True
@@ -58,6 +59,8 @@ class ModelConfig:
 
     # RECAP loss hyperparameters
     lambda_H: float = 0.1
+    lambda_bal: float = 0.1
+    lambda_E: float = 0.0
     lambda_usage_entropy: float = 0.1
     assignment_entropy_lower: Optional[float] = 0.45
     assignment_entropy_upper: Optional[float] = 0.85
@@ -66,6 +69,7 @@ class ModelConfig:
 
     # RECAP inference scoring hyperparameters
     beta: float = 0.02
+    gamma: float = 0.01
 
     # Numerical stability
     eps: float = 1e-8

@@ -8,3 +8,5 @@ __pycache__/
 dataset/
 checkpoints/
 knn_cache/
+rebuttal/artifacts/
+rebuttal/logs/
