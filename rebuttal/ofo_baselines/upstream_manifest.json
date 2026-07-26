@@ -32,7 +32,7 @@
       "url": "https://github.com/TrustAGI-Lab/CoLA"
     },
     "ADA-GAD": {
-      "archive_sha256": "86d9380358ccfe430e3809864f256d4bf80b22ee7efa9fba11780134196ec6f",
+      "archive_sha256": "86d9380358cc508a96cd4ac37baddd274d438de7e7efa9fba11780134196ec6f",
       "license_file_at_revision": true,
       "revision": "71a3aca936ccfe430e3809864f256d4bf80b22ee",
       "url": "https://github.com/jweihe/ADA-GAD"
