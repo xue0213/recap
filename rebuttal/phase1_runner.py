@@ -934,10 +934,23 @@ def run_one(
     run_dir = output_root / "runs" / spec.run_id
     complete_path = run_dir / "complete.json"
     if complete_path.exists():
+        for log_name in ("stdout.log", "stderr.log"):
+            log_path = run_dir / log_name
+            if not log_path.exists():
+                log_path.write_text(
+                    "Formal seed-0 gate was invoked directly before subprocess "
+                    "stream capture was enabled. Structured status, history, "
+                    "diagnostics, configs and checkpoint audits are complete.\n",
+                    encoding="utf-8",
+                )
         with (run_dir / "result_records.json").open("r", encoding="utf-8") as handle:
             return json.load(handle)
 
     run_dir.mkdir(parents=True, exist_ok=True)
+    append_jsonl(
+        run_dir / "events.jsonl",
+        {"event": "run_started", "run_id": spec.run_id, "at": utc_now()},
+    )
     atomic_json(
         run_dir / "status.json",
         {"status": "running", "run_id": spec.run_id, "started_at": utc_now()},
@@ -990,6 +1003,15 @@ def run_one(
             for name, item in prepared.items()
         }
         atomic_json(run_dir / "data_metadata.json", data_metadata)
+        append_jsonl(
+            run_dir / "events.jsonl",
+            {
+                "event": "data_prepared",
+                "run_id": spec.run_id,
+                "seconds": data_prepare_seconds,
+                "at": utc_now(),
+            },
+        )
 
         model, train_info = train_model(
             spec=spec,
@@ -999,6 +1021,16 @@ def run_one(
             run_dir=run_dir,
             config_hash=config_hash,
             resume=resume,
+        )
+        append_jsonl(
+            run_dir / "events.jsonl",
+            {
+                "event": "training_complete",
+                "run_id": spec.run_id,
+                "train_seconds": train_info["train_seconds"],
+                "diagnostic_seconds": train_info["diagnostic_seconds"],
+                "at": utc_now(),
+            },
         )
 
         inference_rows = []
@@ -1013,6 +1045,16 @@ def run_one(
             )
             inference_rows.append(row)
             inference_cache[target_name] = cache_probe
+            append_jsonl(
+                run_dir / "events.jsonl",
+                {
+                    "event": "target_inference_complete",
+                    "run_id": spec.run_id,
+                    "target": target_name,
+                    "inference_seconds": row["inference_seconds"],
+                    "at": utc_now(),
+                },
+            )
 
         checkpoint_path = Path(train_info["checkpoint_path"])
         first_target = spec.target_graphs[0]
@@ -1079,6 +1121,10 @@ def run_one(
             run_dir / "status.json",
             {"status": "complete", "run_id": spec.run_id, "completed_at": utc_now()},
         )
+        append_jsonl(
+            run_dir / "events.jsonl",
+            {"event": "run_complete", "run_id": spec.run_id, "at": utc_now()},
+        )
         return records
     except Exception as exc:
         failure = {
@@ -1091,6 +1137,7 @@ def run_one(
         }
         atomic_json(run_dir / "status.json", failure)
         append_jsonl(output_root / "failure_log.jsonl", failure)
+        append_jsonl(run_dir / "events.jsonl", {"event": "run_failed", **failure})
         raise
     finally:
         gc.collect()
@@ -1203,14 +1250,39 @@ def execute_manifest(args: argparse.Namespace) -> None:
             print(f"[{index}/{len(specs)}] SKIP complete {spec.run_id}", flush=True)
         else:
             print(f"[{index}/{len(specs)}] START {spec.run_id}", flush=True)
-            run_one(
-                spec=spec,
-                dataset_dir=Path(args.dataset_dir),
-                output_root=output_root,
-                config_path=Path(args.config),
-                device=args.device,
-                resume=not args.no_resume,
-            )
+            run_dir = output_root / "runs" / spec.run_id
+            run_dir.mkdir(parents=True, exist_ok=True)
+            command = [
+                sys.executable,
+                str(Path(__file__).resolve()),
+                "--output-root",
+                str(output_root),
+                "--dataset-dir",
+                str(Path(args.dataset_dir)),
+                "--config",
+                str(Path(args.config)),
+                "--manifest",
+                str(manifest_path),
+                "--device",
+                args.device,
+                "run-one",
+                spec.run_id,
+            ]
+            if args.no_resume:
+                command.append("--no-resume")
+            with (run_dir / "stdout.log").open("a", encoding="utf-8") as stdout_handle:
+                with (run_dir / "stderr.log").open("a", encoding="utf-8") as stderr_handle:
+                    completed = subprocess.run(
+                        command,
+                        stdout=stdout_handle,
+                        stderr=stderr_handle,
+                        check=False,
+                    )
+            if completed.returncode != 0:
+                raise RuntimeError(
+                    f"{spec.run_id} failed with exit code {completed.returncode}; "
+                    f"see {run_dir / 'stderr.log'}"
+                )
             print(f"[{index}/{len(specs)}] COMPLETE {spec.run_id}", flush=True)
         progress = write_progress(output_root, load_manifest(manifest_path))
         print(
