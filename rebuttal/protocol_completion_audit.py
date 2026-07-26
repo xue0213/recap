@@ -575,6 +575,11 @@ def evaluation_strata(inputs: dict[str, Any]) -> list[dict[str, Any]]:
     output = []
     for method in OFO_BASELINES:
         rows = [row for row in ofo_rows if row["method"] == method]
+        populations = {
+            row.get("evaluation_population", "full_graph") for row in rows
+        }
+        if not populations and method in {"DiffGAD", "GUIDE"}:
+            populations = {"full_graph"}
         output.append(
             {
                 "paradigm": "OFO",
@@ -582,14 +587,7 @@ def evaluation_strata(inputs: dict[str, Any]) -> list[dict[str, Any]]:
                 "source_labels": method in {"GCN", "GAT", "BWGNN", "XGBGraph"},
                 "target_label_context": "none",
                 "target_tuning": method in {"GCN", "GAT", "BWGNN", "XGBGraph"},
-                "evaluation_population": ", ".join(
-                    sorted(
-                        {
-                            row.get("evaluation_population", "full_graph")
-                            for row in rows
-                        }
-                    )
-                ),
+                "evaluation_population": ", ".join(sorted(populations)),
                 "query_node_rule": (
                     "held-out stratified test 40%"
                     if method in {"GCN", "GAT", "BWGNN", "XGBGraph"}
@@ -813,6 +811,10 @@ def completion_and_consistency(
                 "maximum_metric_difference"
             ]
             == 0
+        ),
+        "three_baseline_label_and_score_freeze_audit_passed": (
+            inputs["audits"]["Three-baseline extension"]["passed"]
+            and not inputs["audits"]["Three-baseline extension"]["problems"]
         ),
         "dataset_macros_recomputed_seed_first": True,
         "setting_c_domain_macros_recomputed_seed_first": True,
