@@ -3,7 +3,8 @@
 ## Research Question
 
 Does RECAP remain effective and community-stable under the locked OFO and OFA
-evaluation protocol?
+evaluation protocol, including the expanded DiffGAD, GUIDE, and OWLEYE
+comparison?
 
 ## Current Understanding
 
@@ -31,9 +32,14 @@ audits, and checkpoint reloads passed. Its accounted formal-run time is
 2344.41 seconds, excluding smokes, orchestration, independent auditing, and
 report generation.
 
-The final protocol-wide audit is complete. It jointly covers 369 training runs
-and 594 final evaluations: 45/90 for RECAP, 36/216 for the OFA baselines, and
-288/288 for the OFO baselines. Every required cell has seeds 0/1/2, all five
+The three-baseline extension is complete: 81 training runs and 126 final
+evaluations for DiffGAD, GUIDE, and OWLEYE. The independent audit verified all
+126 frozen score vectors, 288 label events, checkpoint reloads, and metric
+recomputations with zero metric discrepancy.
+
+The final protocol-wide audit is complete. It jointly covers 450 training runs
+and 720 final evaluations: 45/90 for RECAP, 45/270 for the OFA baselines, and
+360/360 for the OFO baselines. Every required cell has seeds 0/1/2, all six
 source artifact audits pass, and no missing experiment or rerun remains.
 
 ## Key Results
@@ -73,6 +79,12 @@ source artifact audits pass, and no missing experiment or rerun remains.
   and ADA-GAD 0.57575/0.07172. RECAP-OFO's separately labelled post hoc
   12-dataset macro is 0.71083/0.23606 on the same full-graph, label-free
   evaluation regime.
+- The added full-graph OFO macros are DiffGAD 0.5503 ± 0.0217 AUROC /
+  0.1061 ± 0.0024 AUPRC and GUIDE 0.7519 ± 0.0014 /
+  0.3309 ± 0.0009.
+- OWLEYE's OFA dataset macros are 0.7604/0.3567 in Setting A,
+  0.7179/0.2866 in Setting B, and 0.6033/0.1801 in Setting C; its Setting-C
+  domain macro is 0.5624/0.1234.
 - Under the protocol-correct seed-pair-first aggregation, the 12-dataset
   RECAP-OFO stability macro is NMI 0.3724 ± 0.0078, ARI
   0.4151 ± 0.0166, soft co-assignment 0.6500 ± 0.0124, and score Spearman
@@ -117,10 +129,14 @@ source artifact audits pass, and no missing experiment or rerun remains.
 - XGBGraph is the strongest reproduced supervised OFO baseline but also the
   main runtime bottleneck: 1306.99 of 2344.41 accounted seconds. The locked
   100-tree configuration was retained.
-- RECAP exceeds all four reproduced full-graph unsupervised OFO baselines on
-  both 12-dataset macro metrics. This comparison is protocol-aligned within the
-  unsupervised group; it must not be conflated with the supervised methods'
-  40% test-split numbers.
+- RECAP exceeds the original DOMINANT/AnomalyDAE/CoLA/ADA-GAD full-graph
+  unsupervised set and DiffGAD, but GUIDE exceeds RECAP on both expanded
+  12-dataset macro metrics (0.7519/0.3309 versus 0.7108/0.2361). The earlier
+  leadership claim is therefore valid only for its original four-baseline
+  scope.
+- OWLEYE must not be described as fully unsupervised: its official zero-shot
+  path uses source normal/anomaly labels, while target labels remain sealed
+  until the full target score vector is frozen.
 - GAT has materially higher macro AUPRC seed variation (0.04731) than the
   other supervised baselines. The three fixed seeds were retained without
   result-dependent reruns.
@@ -167,12 +183,23 @@ source artifact audits pass, and no missing experiment or rerun remains.
   sampling with inverse-probability weighting; CoLA uses the documented PyGOD
   random-neighbor context adapter. These adaptations and their equivalence or
   smoke gates are part of the final report.
+- DiffGAD's released target-label selection over autoencoder trials and 500
+  diffusion levels was removed. Formal inference uses one preregistered
+  ten-level average and an exact non-quadratic structure identity.
+- GUIDE's nested motif enumeration was replaced by exact ORCA order-four node
+  orbits, verified against independent induced-subgraph enumeration.
+- OWLEYE uses official hash-matched 64-dimensional feature caches. Its
+  released tau=1 pair-distance multiplier cancels exactly, and chunked target
+  inference was numerically verified against the full-query path.
 
 ## Open Questions
 
 - Why is OFO below random on YelpChi under the paper-locked configuration?
 - Why do cross-domain Setting C communities change substantially across seeds
   even when final score rankings are moderately stable?
+- Why does DiffGAD have high seed variance on Facebook and Weibo?
+- Which exact GUIDE motif families account for its gain over RECAP on the
+  expanded unsupervised OFO macro?
 - These are follow-up research questions, not reasons to alter the completed
   confirmatory Phase 1.
 
@@ -201,3 +228,10 @@ were locked at the smoke stage. Formal runs then completed without scope
 reduction, parallel timing contamination, metric-driven tuning, or selective
 reruns; a final independent analyzer regenerated all 576 reported metrics from
 the frozen score vectors.
+
+The three-baseline extension began with upstream supervision and leakage
+inspection, then locked exact scalable replacements and passed numerical and
+end-to-end smokes before formal execution. Its analyzer independently
+recomputed all 126 evaluations, after which the protocol-wide consolidator was
+regenerated and deterministically verified at 450 training runs and 720 final
+evaluations.

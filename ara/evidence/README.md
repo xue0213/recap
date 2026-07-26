@@ -13,6 +13,10 @@
 - **E05**: `tables/protocol_completion_summary.md`,
   `rebuttal/artifacts/protocol_completion/analysis/consistency_audit.json`,
   and `rebuttal/reports/RECAP_EXPERIMENT_PROTOCOL_COMPLETION_REPORT.md`
+- **E06**: `tables/three_baseline_extension_summary.md`,
+  `rebuttal/gate_reports/THREE_BASELINE_EXTENSION_GATES.md`,
+  `rebuttal/artifacts/three_baseline_extension/formal/analysis/global_audit.json`,
+  and `rebuttal/reports/THREE_BASELINE_EXTENSION_REPORT.md`
 - Machine-readable Phase 2 evidence is stored on the experiment server under
   `rebuttal/artifacts/phase2_baselines/analysis/`.
 - Machine-readable B/C supplement evidence is stored under
@@ -22,3 +26,6 @@
   and frozen scores remain on the experiment server.
 - Machine-readable protocol-wide completion evidence is stored under
   `rebuttal/artifacts/protocol_completion/analysis/`.
+- Machine-readable DiffGAD/GUIDE/OWLEYE evidence is stored under
+  `rebuttal/artifacts/three_baseline_extension/formal/analysis/`; large
+  checkpoints and frozen scores remain on the experiment server.

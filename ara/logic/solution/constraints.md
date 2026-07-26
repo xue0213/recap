@@ -13,3 +13,9 @@
   ADA-GAD may use only the pre-registered weighted 1:1 non-edge estimator.
 - Weak and high-variance formal results cannot trigger target-test tuning,
   selective seed reruns, or dataset removal.
+- DiffGAD may not select autoencoder trials or diffusion levels using anomaly
+  labels; the fixed ten-level ensemble is shared by all datasets and seeds.
+- GUIDE motif inputs must be exact induced order-four counts rather than
+  approximate samples.
+- OWLEYE may use source labels and ten unlabeled target pattern nodes, but no
+  target labels; all target nodes remain in its final evaluation population.

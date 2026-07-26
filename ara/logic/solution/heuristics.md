@@ -76,3 +76,32 @@
 - **Sensitivity**: medium
 - **Code ref**: [`rebuttal/protocol_completion_audit.py`,
   `rebuttal/EXPERIMENT_PROTOCOL_COMPLETION_AUDIT.md`]
+
+## H10: Replace DiffGAD label selection with a fixed diffusion ensemble
+- **Rationale**: The released trial and timestep maxima inspect anomaly labels.
+  A preregistered ten-level average removes that leakage, while the exact
+  `ZᵀZ` structure identity eliminates dense `N×N` reconstruction without
+  changing node scores or gradients.
+- **Provenance**: ai-suggested
+- **Sensitivity**: medium
+- **Code ref**: [`rebuttal/new_baselines/diffgad.py`,
+  `rebuttal/new_baselines/test_extension.py`]
+
+## H11: Substitute exact ORCA node orbits for GUIDE motif loops
+- **Rationale**: ORCA's exact order-four induced graphlet orbits reproduce
+  GUIDE's six structural counts but scale beyond the released nested
+  Python/NetworkX enumeration.
+- **Provenance**: ai-suggested
+- **Sensitivity**: low
+- **Code ref**: [`rebuttal/new_baselines/guide.py`,
+  `rebuttal/new_baselines/test_extension.py`]
+
+## H12: Remove OWLEYE's cancelled pair distances and chunk target queries
+- **Rationale**: Under the locked released `tau=1`, the quadratic pair-distance
+  multiplier cancels to one. Computing only the effective normalization and
+  chunking the unchanged query axis preserves the released scores while
+  bounding memory.
+- **Provenance**: ai-suggested
+- **Sensitivity**: low
+- **Code ref**: [`rebuttal/new_baselines/owleye.py`,
+  `rebuttal/new_baselines/test_extension.py`]

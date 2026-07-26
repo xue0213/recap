@@ -13,3 +13,7 @@
 The authoritative matrix is `rebuttal/baselines/environment_matrix.md`.
 The isolated OFO baseline matrix is
 `rebuttal/ofo_baselines/environment_matrix.md`.
+
+DiffGAD, GUIDE, and OWLEYE use the same isolated OFO baseline environment.
+Their pinned upstream revisions, archive hashes, and ORCA revision are in
+`rebuttal/new_baselines/upstream_manifest.json`.

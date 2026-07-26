@@ -86,16 +86,20 @@
 - **Dependencies**: []
 - **Tags**: OFO, reproduction, completeness, audit
 
-## C08: RECAP leads the reproduced full-graph unsupervised OFO group
+## C08: RECAP led the original four-baseline full-graph unsupervised OFO group
 - **Statement**: RECAP-OFO has higher 12-dataset macro AUROC and AUPRC than
-  DOMINANT, AnomalyDAE, CoLA, and ADA-GAD under the label-free, full-graph
-  evaluation regime.
-- **Status**: supported
+  the original DOMINANT, AnomalyDAE, CoLA, and ADA-GAD set under the
+  label-free, full-graph evaluation regime.
+- **Status**: revised
+- **Revision**: The later extension added GUIDE, whose 75.19/33.09 macro
+  exceeds RECAP's 71.08/23.61. The statement remains true only for the
+  original four-baseline set and is no longer a claim of leadership over the
+  expanded unsupervised group.
 - **Provenance**: ai-suggested
 - **Falsification criteria**: Correct three-seed full-graph recomputation
   reverses either metric comparison against any of the four methods.
-- **Proof**: [E04]
-- **Dependencies**: [C07]
+- **Proof**: [E04, E06]
+- **Dependencies**: [C07, C11]
 - **Tags**: OFO, comparative-performance, unsupervised
 
 ## C09: XGBGraph leads the reproduced supervised OFO group
@@ -111,8 +115,8 @@
 - **Tags**: OFO, comparative-performance, supervised
 
 ## C10: The full user-revised RECAP experiment protocol is complete
-- **Statement**: The consolidated scope contains 369 successful training runs
-  and 594 final evaluations, with seeds 0/1/2 in every required
+- **Statement**: The consolidated scope contains 450 successful training runs
+  and 720 final evaluations, with seeds 0/1/2 in every required
   method-setting-dataset cell and no missing experiment or required rerun.
 - **Status**: supported
 - **Provenance**: ai-suggested
@@ -121,5 +125,43 @@
   seed-first/pair-first recomputation disagrees with the consolidated records.
 - **Proof**: [E05,
   `rebuttal/artifacts/protocol_completion/analysis/consistency_audit.json`]
-- **Dependencies**: [C01, C05, C07]
+- **Dependencies**: [C01, C05, C07, C11]
 - **Tags**: protocol-completion, consistency, aggregation, audit
+
+## C11: The three-baseline extension is complete
+- **Statement**: The locked extension contains 81 accepted training runs and
+  126 independently verified evaluations: 72 full-graph OFO runs for DiffGAD
+  and GUIDE and nine shared-source OWLEYE runs covering 54 OFA targets.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Falsification criteria**: Any missing manifest key, invalid label event,
+  mismatched score/checkpoint hash, failed reload, or independently
+  recomputed metric mismatch.
+- **Proof**: [E06,
+  `rebuttal/artifacts/three_baseline_extension/formal/analysis/global_audit.json`]
+- **Dependencies**: []
+- **Tags**: reproduction, completeness, audit, baseline-extension
+
+## C12: OWLEYE is source-label supervised and target-label-free
+- **Statement**: OWLEYE's released zero-shot path explicitly uses source
+  normal/anomaly labels for source pattern extraction and training, while the
+  reproduced target score vectors are frozen before target labels are read.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Falsification criteria**: The pinned release trains without source labels,
+  or any accepted target-label audit records access before score freeze.
+- **Proof**: [E06, `rebuttal/THREE_BASELINE_EXTENSION_PROTOCOL.md`]
+- **Dependencies**: [C11]
+- **Tags**: supervision, zero-shot, OWLEYE, label-isolation
+
+## C13: GUIDE exceeds RECAP on the expanded unsupervised OFO macro
+- **Statement**: Under the same full-node, label-free, 12-dataset evaluation
+  population, GUIDE reaches 75.19% AUROC and 33.09% AUPRC versus RECAP-OFO's
+  71.08% and 23.61%.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Falsification criteria**: Correct seed-first three-seed recomputation
+  reverses either macro comparison.
+- **Proof**: [E06, E05]
+- **Dependencies**: [C10, C11]
+- **Tags**: OFO, comparative-performance, unsupervised, GUIDE

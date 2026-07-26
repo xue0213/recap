@@ -19,3 +19,14 @@ observations:
     potential_type: observation
     promoted: false
     stale: true
+  - id: O03
+    timestamp: "2026-07-26T23:45+08:00"
+    provenance: ai-suggested
+    content: >
+      DiffGAD has substantial cross-seed AUROC variation on Facebook and
+      Weibo, even though several citation and commerce cells are nearly
+      deterministic under the same fixed diffusion-level ensemble.
+    context: "Per-dataset review after the independent three-baseline audit."
+    potential_type: observation
+    promoted: false
+    stale: false

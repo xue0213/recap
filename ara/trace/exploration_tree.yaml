@@ -271,3 +271,102 @@ tree:
               population-standard-deviation reporting. Deterministic output
               regeneration and 28 protocol/equivalence tests passed.
             evidence: [C10, E05, H09]
+
+  - id: N24
+    type: question
+    title: "Add DiffGAD, GUIDE, and OWLEYE to the completed experiment record"
+    provenance: user
+    timestamp: "2026-07-26T23:45+08:00"
+    description: >
+      Reproduce two unsupervised one-for-one baselines and one zero-shot
+      one-for-all baseline in their protocol-appropriate strata, then fill and
+      re-audit the consolidated tables.
+    children:
+      - id: N25
+        type: experiment
+        title: "Audit upstream supervision, leakage, data, and complexity"
+        provenance: ai-executed
+        timestamp: "2026-07-26T23:45+08:00"
+        result: >
+          Pinned all upstreams, proved OWLEYE uses source labels, found
+          DiffGAD's released trial/timestep label selection, verified OWLEYE's
+          twelve raw MAT files are byte-identical to RECAP, and identified
+          three quadratic paths requiring exact adaptations.
+        evidence: [C12, E06]
+        children:
+          - id: N26
+            type: dead_end
+            title: "Unmodified released DiffGAD path violates the locked protocol"
+            provenance: ai-executed
+            timestamp: "2026-07-26T23:45+08:00"
+            hypothesis: >
+              The released training and sampling script could enter formal
+              unsupervised evaluation unchanged.
+            failure_mode: >
+              It selects an autoencoder trial and one of 500 diffusion levels
+              using target anomaly labels and materializes dense N-by-N
+              structure reconstruction.
+            lesson: >
+              Freeze a result-independent diffusion grid and use the exact
+              algebraic structure error before formal execution.
+            children:
+              - id: N27
+                type: experiment
+                title: "Gate leakage-free scalable compatibility adapters"
+                provenance: ai-executed
+                timestamp: "2026-07-26T23:45+08:00"
+                result: >
+                  DiffGAD forward/gradient dense equivalence passed at
+                  5.6843e-14; GUIDE ORCA motifs matched independent induced
+                  enumeration exactly; OWLEYE chunking matched full inference
+                  at 1.1921e-7 and tau=1 normalization matched exactly.
+                evidence: [E06, H10, H11, H12]
+
+          - id: N28
+            type: dead_end
+            title: "Direct server archive download timed out"
+            provenance: ai-executed
+            timestamp: "2026-07-26T23:45+08:00"
+            hypothesis: >
+              The pinned GitHub archives could be fetched reliably from the
+              experiment server.
+            failure_mode: >
+              Server-side urllib downloads timed out before provenance
+              verification.
+            lesson: >
+              Download and hash-verify archives locally, then upload the exact
+              verified bytes to the server.
+            children:
+              - id: N29
+                type: experiment
+                title: "Upload locally verified pinned archives"
+                provenance: ai-executed
+                timestamp: "2026-07-26T23:45+08:00"
+                result: >
+                  Uploaded four verified archives and rechecked every
+                  preregistered SHA-256 before adapter gates and formal runs.
+                evidence: [E06]
+
+      - id: N30
+        type: experiment
+        title: "Execute the complete three-baseline manifest"
+        also_depends_on: [N27, N29]
+        provenance: ai-executed
+        timestamp: "2026-07-26T23:45+08:00"
+        result: >
+          Completed 81/81 training runs and 126/126 evaluations with 126
+          frozen score vectors. No weak or high-variance cell triggered
+          tuning, replacement, or selective rerun.
+        evidence: [C11, E06]
+        children:
+          - id: N31
+            type: experiment
+            title: "Independently audit and consolidate the expanded protocol"
+            provenance: ai-executed
+            timestamp: "2026-07-26T23:45+08:00"
+            result: >
+              Recomputed all 126 evaluations exactly, checked 288 label events
+              and every reload, then regenerated the complete 450-run,
+              720-evaluation protocol tables. GUIDE exceeds RECAP on both
+              expanded unsupervised OFO macro metrics.
+            evidence: [C10, C11, C13, E05, E06]
