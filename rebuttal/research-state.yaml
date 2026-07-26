@@ -91,7 +91,7 @@ workspace:
   reports_root: "rebuttal/reports/"
 
 phase2_baselines:
-  status: protocol_locked
+  status: running
   classification: confirmatory
   protocol: "rebuttal/BASELINE_OFA_REPROTOCOL.md"
   upstream_manifest: "rebuttal/baselines/upstream_manifest.json"
@@ -114,8 +114,9 @@ phase2_baselines:
     sparse_equivalence_verified: true
     label_access_guards_verified: true
     method_smokes_passed: true
+    unprompt_deterministic_reload_verified: true
     formal_manifest_complete: true
   outer_loop:
-    cycle: 2
+    cycle: 3
     last_direction: broaden
-    last_reflection: "All four method smokes, six equivalence/label tests, and checkpoint reload gates passed. Execute the full immutable 24-run manifest."
+    last_reflection: "The first formal UNPrompt attempt exposed CUDA sparse-reduction nondeterminism. The failure is retained, deterministic target aggregation passed seven tests and an eight-target zero-difference reload smoke, and all accepted runs will now share one amended protocol hash."

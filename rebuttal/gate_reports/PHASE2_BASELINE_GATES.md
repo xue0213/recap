@@ -16,7 +16,7 @@ Status: **PASS — formal baseline manifest may start**
 
 ## Automated compatibility tests
 
-Six tests passed:
+Seven tests passed:
 
 1. the manifest contains exactly 24 runs and 156 evaluations;
 2. target labels cannot be read before an immutable score freeze;
@@ -27,6 +27,8 @@ Six tests passed:
    all-negative loss;
 6. AnomalyGFM's sparse ARPACK top-8 SVD agrees with deterministic full SVD
    within `atol=2e-4, rtol=2e-4`.
+7. UNPrompt's deterministic target-inference sparse aggregation is bitwise
+   repeatable and agrees with the equivalent dense expression.
 
 ## Setting A seed-0 one-epoch smoke gates
 
@@ -49,6 +51,27 @@ SVD caches. AnomalyGFM's initial released full-dense SVD attempt was stopped as
 redundant preprocessing before producing a smoke result; direct top-8 ARPACK
 preprocessing reduced its accepted preparation time to 3.165 seconds.
 
+## UNPrompt determinism recovery gate
+
+The first formal UNPrompt seed-0 attempt was rejected before completion because
+repeated CUDA sparse reductions changed frozen min-max scores by as much as
+`1.36e-3`. The training path was unchanged. Target inference now performs only
+the sparse neighborhood aggregation on CPU, with an exact dense-equivalence
+test.
+
+A fresh Setting-A seed-0 end-to-end smoke passed all eight targets:
+
+- checkpoint reload maximum absolute difference: `0`;
+- eight score vectors frozen and SHA-256 hashed before label access;
+- label audit: PASS, with zero invalid events;
+- finite AUROC and AUPRC for all targets.
+
+The failed UNPrompt attempt was preserved under `failed_attempts/`. The three
+ARC runs completed before this method-specific protocol amendment were
+preserved under `superseded_attempts/` and will be rerun. The formal manifest
+was regenerated at 0/24 runs so every accepted run records the same protocol
+SHA-256, `ffaccb0a34a11b13c2b0ba88515dc0870aa45849bfbea393f70ae747944c588a`.
+
 ## Formal execution decision
 
 Proceed with the immutable manifest at:
@@ -57,4 +80,3 @@ Proceed with the immutable manifest at:
 
 The formal directory was empty at gate acceptance: 0/24 training runs and
 0/156 evaluations.
-
