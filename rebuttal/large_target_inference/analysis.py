@@ -30,6 +30,8 @@ from rebuttal.large_target_inference.protocol import (
 
 HASH_CHUNK = 8 * 1024 * 1024
 ARRAY_CHUNK = 500_000
+SOURCE_DIR = Path(__file__).resolve().parent
+PROTOCOL_PATH = SOURCE_DIR.parent / "LARGE_TARGET_INFERENCE_PROTOCOL.md"
 
 
 def _read_json(path: Path) -> dict:
@@ -588,6 +590,9 @@ def analyze(
 ) -> dict:
     preflight_path = output_root / "preflight" / "preflight.json"
     preflight = _read_json(preflight_path)
+    protocol_hash = sha256_file(PROTOCOL_PATH)
+    if protocol_hash != preflight["environment"]["protocol_sha256"]:
+        raise AssertionError("Protocol changed after formal preflight")
     expected_ids = [item.run_id for item in build_manifest()]
     observed_ids = sorted(
         path.name
@@ -625,6 +630,11 @@ def analyze(
         "manifest_expected": expected_ids,
         "manifest_observed": observed_ids,
         "manifest_hash": stable_hash(expected_ids),
+        "protocol_sha256": protocol_hash,
+        "adapter_source_hashes": {
+            path.name: sha256_file(path)
+            for path in sorted(SOURCE_DIR.glob("*.py"))
+        },
         "component_hash_verification": component_hashes,
         "shared_target_audits": shared_audits,
         "run_audits": run_audits,
