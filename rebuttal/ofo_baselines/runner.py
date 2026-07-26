@@ -392,11 +392,11 @@ def train_xgbgraph(
     scores = model.predict_proba(features)[:, 1].astype(np.float32)
     inference_seconds = time.perf_counter() - infer_started
     model_path.parent.mkdir(parents=True, exist_ok=True)
-    model.save_model(model_path)
+    model.get_booster().save_model(model_path)
 
-    reloaded = xgb.XGBClassifier()
+    reloaded = xgb.Booster()
     reloaded.load_model(model_path)
-    reload_scores = reloaded.predict_proba(features)[:, 1].astype(np.float32)
+    reload_scores = reloaded.predict(xgb.DMatrix(features)).astype(np.float32)
     return {
         "scores": scores,
         "checkpoint": None,
