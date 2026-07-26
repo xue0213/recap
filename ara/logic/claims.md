@@ -165,3 +165,43 @@
 - **Proof**: [E06, E05]
 - **Dependencies**: [C10, C11]
 - **Tags**: OFO, comparative-performance, unsupervised, GUIDE
+
+## C14: RECAP target-side full-graph inference is computationally scalable on the recorded hardware
+- **Statement**: The locked adapter completes finite full-node inference for
+  T-Finance, DGraph-Fin, and T-Social, including 5,781,065-node T-Social,
+  within 80.66 GiB reserved GPU memory and 14.20 minutes estimated cold
+  latency on the recorded 95.59-GiB GPU.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Falsification criteria**: Any of the nine manifest cells is missing, any
+  full-node score is non-finite, any independent hash/metric audit fails, or
+  the recorded peak resource or timing evidence cannot be reproduced from the
+  accepted artifacts.
+- **Proof**: [E07, `rebuttal/reports/LARGE_TARGET_INFERENCE_AUDIT.json`]
+- **Dependencies**: []
+- **Tags**: scalability, full-graph-inference, large-graph, RECAP
+
+## C15: Unadapted Setting-A checkpoints are not predictively effective on the three large targets
+- **Statement**: Under the locked, target-label-free scoring direction, all
+  three target mean AUROCs are below 0.5 and all mean AUPRCs are below their
+  anomaly-prevalence random-ranking references.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Falsification criteria**: Independent three-seed recomputation places any
+  target mean at or above both of its stated random-ranking references without
+  changing the pre-registered score direction or evaluation population.
+- **Proof**: [E07]
+- **Dependencies**: [C14]
+- **Tags**: negative-result, zero-shot-transfer, predictive-effectiveness
+
+## C16: Fixed-IVFPQ neighbor fidelity is limited on the million-node targets
+- **Statement**: The pre-registered 4,096-list, 16-probe ANN route reaches
+  recall@64 of 0.5735 on DGraph-Fin and 0.4338 on T-Social over 512 fixed,
+  label-blind exact-query comparisons.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Falsification criteria**: Recomputing the locked exact-query neighbor sets
+  and accepted ANN caches yields materially different recall values.
+- **Proof**: [E07]
+- **Dependencies**: [C14]
+- **Tags**: ANN, fidelity, FAISS, large-graph

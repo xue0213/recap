@@ -105,3 +105,22 @@
 - **Sensitivity**: low
 - **Code ref**: [`rebuttal/new_baselines/owleye.py`,
   `rebuttal/new_baselines/test_extension.py`]
+
+## H13: Share label-free target KNN candidates across checkpoint seeds
+- **Rationale**: Initial target residuals depend only on target features and
+  propagation, not on a trained checkpoint. Building and hashing one
+  target-only candidate cache amortizes the dominant ANN cost across all
+  immutable checkpoints without leaking labels or changing per-seed scores.
+- **Provenance**: ai-suggested
+- **Sensitivity**: low
+- **Code ref**: [`rebuttal/large_target_inference/ann.py`,
+  `rebuttal/large_target_inference/runner.py`]
+
+## H14: Factor RECAP scoring into memory-bounded exact components
+- **Rationale**: Chunked candidate scoring and algebraically equivalent
+  community terms avoid materializing `N×K×D` and `N×C×D` tensors while
+  preserving the native scorer within 7.16e-7 maximum absolute difference.
+- **Provenance**: ai-suggested
+- **Sensitivity**: low
+- **Code ref**: [`rebuttal/large_target_inference/scoring.py`,
+  `rebuttal/large_target_inference/test_large_target_inference.py`]

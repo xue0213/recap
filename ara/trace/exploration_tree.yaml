@@ -370,3 +370,83 @@ tree:
               720-evaluation protocol tables. GUIDE exceeds RECAP on both
               expanded unsupervised OFO macro metrics.
             evidence: [C10, C11, C13, E05, E06]
+
+  - id: N32
+    type: question
+    title: "Test RECAP target-side inference scalability on three large graphs"
+    provenance: user
+    timestamp: "2026-07-27T00:51+08:00"
+    description: >
+      Run and record only target-side full-graph inference scalability on
+      T-Finance, DGraph-Fin, and T-Social using the already accepted RECAP
+      checkpoints.
+    children:
+      - id: N33
+        type: decision
+        title: "Restrict the claim to target-side inference"
+        provenance: user
+        timestamp: "2026-07-27T00:51+08:00"
+        choice: >
+          Reuse accepted Setting-A checkpoints, perform zero large-target
+          training runs, and evaluate three seeds on all three full targets.
+        alternatives:
+          - "Claim or benchmark million-node target training"
+          - "Add new target-adaptation training"
+        evidence: >
+          The user explicitly requested only target-side inference
+          scalability and result recording.
+        children:
+          - id: N34
+            type: experiment
+            title: "Lock and gate the scalable inference adapter"
+            provenance: ai-executed
+            timestamp: "2026-07-27T00:51+08:00"
+            result: >
+              Canonical data/checkpoint preflight, 31 regression tests, native
+              scorer equivalence at 7.16e-7, fixed-seed FAISS determinism,
+              candidate validity, label isolation, and the T-Finance
+              end-to-end smoke all passed before formal execution.
+            evidence: [E07, H13, H14]
+            children:
+              - id: N35
+                type: experiment
+                title: "Execute nine full-node large-target evaluations"
+                provenance: ai-executed
+                timestamp: "2026-07-27T00:51+08:00"
+                result: >
+                  Completed 9/9 cells with no failure. T-Social scored
+                  5,781,065 nodes with 75.13 GiB peak allocated GPU memory;
+                  all shared setup and run phases accounted for 23.67 minutes.
+                evidence: [C14, E07]
+                children:
+                  - id: N36
+                    type: experiment
+                    title: "Independently audit hashes, labels, metrics, and ANN fidelity"
+                    provenance: ai-executed
+                    timestamp: "2026-07-27T00:51+08:00"
+                    result: >
+                      Verified every data, checkpoint, candidate, score, and
+                      mask hash; scanned all candidates; confirmed score
+                      freeze before labels; and reproduced all 18 metrics
+                      within 1e-12. Million-node recall@64 was 0.5735 and
+                      0.4338.
+                    evidence: [C14, C16, E07]
+                    children:
+                      - id: N37
+                        type: decision
+                        title: "Separate computational scalability from predictive effectiveness"
+                        provenance: ai-suggested
+                        timestamp: "2026-07-27T00:51+08:00"
+                        choice: >
+                          Accept the demonstrated target-side computational
+                          scalability but explicitly reject a predictive-
+                          effectiveness claim for the unadapted checkpoints.
+                        alternatives:
+                          - "Invert scores post hoc"
+                          - "Tune ANN or model parameters on target labels"
+                          - "Treat completion as proof of predictive quality"
+                        evidence: >
+                          All three target mean AUROCs are below 0.5, all mean
+                          AUPRCs are below anomaly prevalence, and the accepted
+                          score direction and ANN parameters were locked before
+                          results.

@@ -51,3 +51,17 @@
   normalization cancellation, and chunk-equivalent target inference
 - Acceptance: exact manifest coverage, upstream/data/score hashes, 288 label
   events, checkpoint reload, and independent AUROC/AUPRC recomputation
+
+## E07: Large-target full-graph inference scalability
+
+- Targets: T-Finance, DGraph-Fin, and T-Social
+- Checkpoints: accepted RECAP-OFA Setting-A seeds 0, 1, and 2
+- Scope: zero training runs, nine primary full-node inference evaluations
+- Routes: exact KNN for T-Finance; fixed FAISS-IVFPQ plus exact candidate
+  reranking for DGraph-Fin and T-Social
+- Metrics: AUROC, AUPRC, cold target setup, warm checkpoint inference, GPU/RSS
+  peaks, throughput, cache size, and fixed-query ANN recall@64
+- Acceptance: full manifest, finite full-node scores, immutable
+  data/checkpoint/candidate/score/mask hashes, scores frozen before label
+  unlock, independent metric recomputation, and unchanged standard-dataset
+  regression tests
