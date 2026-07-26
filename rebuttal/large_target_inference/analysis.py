@@ -309,6 +309,7 @@ def _audit_shared(output_root: Path) -> tuple[dict, list[dict]]:
             }
         records = setup["phase_records"]
         setup_seconds = _phase_seconds(records)
+        ann_metadata = setup["candidate_metadata"]["faiss_ivfpq"]
         summaries[target] = {
             "setup_seconds": setup_seconds,
             "setup_peak_gpu_allocated_gib": _bytes_to_gib(
@@ -322,6 +323,9 @@ def _audit_shared(output_root: Path) -> tuple[dict, list[dict]]:
             ),
             "candidate_cache_gib": _bytes_to_gib(cache_bytes),
             "ann_fidelity": setup["ann_fidelity"],
+            "ann_nlist": int(ann_metadata["nlist"]),
+            "ann_nprobe": int(ann_metadata["nprobe"]),
+            "ann_search_k": int(ann_metadata["search_k"]),
         }
         audits.append(
             {
@@ -424,6 +428,9 @@ def _aggregate(
                 "ann_recall_at_64_mean": shared[target]["ann_fidelity"][
                     "mean_recall"
                 ],
+                "ann_nlist": shared[target]["ann_nlist"],
+                "ann_nprobe": shared[target]["ann_nprobe"],
+                "ann_search_k": shared[target]["ann_search_k"],
             }
         )
     return output
@@ -496,8 +503,9 @@ def _report_markdown(
             "",
             "## Approximation fidelity",
             "",
-            "| Target | Fidelity population | Top-64 recall |",
-            "|---|---|---:|",
+            "| Target | Fidelity population | IVF lists / probes | "
+            "Retrieved | Top-64 recall |",
+            "|---|---|---:|---:|---:|",
         ]
     )
     for item in aggregate:
@@ -508,6 +516,8 @@ def _report_markdown(
         )
         lines.append(
             f"| {item['display']} | {population} | "
+            f"{item['ann_nlist']} / {item['ann_nprobe']} | "
+            f"{item['ann_search_k']} | "
             f"{item['ann_recall_at_64_mean']:.4f} |"
         )
     lines.extend(
@@ -520,6 +530,12 @@ def _report_markdown(
             "absolute AUPRC difference "
             f"{fidelity['absolute_auprc_difference_mean']:.6f}. Its primary "
             "results remain exact KNN.",
+            "",
+            "The million-node primary routes use the locked 4,096 IVF lists. "
+            "T-Finance's descriptive auxiliary ANN index uses 614 lists "
+            "(the adapter's predeclared 64 training vectors/list safety cap "
+            "on a 39,357-node graph); this does not affect its exact primary "
+            "result.",
             "",
             "## Per-checkpoint records",
             "",
