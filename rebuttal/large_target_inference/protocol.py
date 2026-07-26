@@ -33,7 +33,7 @@ CHECKPOINTS = {
         ),
         "sha256": (
             "def7d06e558a0897c105b021924b2a7f"
-            "bd1e52b9b547a15c01b68218311cdd"
+            "bd1e1e52b9b547a15c01b68218311cdd"
         ),
     },
 }
