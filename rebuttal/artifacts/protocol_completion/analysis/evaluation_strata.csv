@@ -1,0 +1,15 @@
+paradigm,method,source_labels,target_label_context,target_tuning,evaluation_population,query_node_rule
+OFO,GCN,True,none,True,stratified_test_40pct,held-out stratified test 40%
+OFO,GAT,True,none,True,stratified_test_40pct,held-out stratified test 40%
+OFO,BWGNN,True,none,True,stratified_test_40pct,held-out stratified test 40%
+OFO,XGBGraph,True,none,True,stratified_test_40pct,held-out stratified test 40%
+OFO,DOMINANT,False,none,False,full_graph,full graph
+OFO,AnomalyDAE,False,none,False,full_graph,full graph
+OFO,CoLA,False,none,False,full_graph,full graph
+OFO,ADA-GAD,False,none,False,full_graph,full graph
+OFO,RECAP-OFO,False,none,False,full_graph,full graph
+OFA,ARC,True,10 labeled-normal target nodes,False,all target nodes except the 10 contexts,all target nodes except the 10 contexts
+OFA,IA-GGAD,True,10 unlabeled random internal references,False,all target nodes except the 10 references,all target nodes except the 10 references
+OFA,UNPrompt,True,none,False,full target graph,full target graph
+OFA,AnomalyGFM-ZS,True,none,False,full target graph,full target graph
+OFA,RECAP,False,none,False,full target graph,full target graph

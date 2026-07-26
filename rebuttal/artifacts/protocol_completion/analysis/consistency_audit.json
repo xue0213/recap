@@ -1,0 +1,54 @@
+{
+  "checks": {
+    "all_five_source_artifact_audits_passed": true,
+    "all_metrics_finite_and_in_unit_interval": true,
+    "all_required_cells_have_seeds_0_1_2": true,
+    "cross_setting_overall_average_omitted": true,
+    "dataset_macros_recomputed_seed_first": true,
+    "evaluation_population_strata_explicit": true,
+    "no_duplicate_required_cells": true,
+    "setting_c_domain_macros_recomputed_seed_first": true,
+    "stability_recomputed_pair_macro_first": true,
+    "timing_recomputed_seed_first": true
+  },
+  "corrected_reporting_gaps": [
+    "The original protocol text names eight OFO targets; later user instructions superseded it with all 12 datasets. Consolidated OFO tables therefore use 12 datasets.",
+    "The earlier stability summary averaged per-dataset means and did not report macro standard deviations. The consolidated table uses seed-pair-first aggregation and reports population std.",
+    "The earlier timing summary did not provide the protocol Table 9 seed-first mean\u00b1std view. The consolidated table now does.",
+    "OFA results were split between a primary report and a B/C supplement. They are now combined from raw records."
+  ],
+  "interpretation_caveats": [
+    "Supervised OFO baselines report a held-out stratified 40% test population; unsupervised baselines and RECAP report the full graph.",
+    "ARC excludes 10 labeled-normal target contexts from evaluation; IA-GGAD excludes 10 randomly sampled unlabeled internal reference nodes; UNPrompt, AnomalyGFM-ZS, and RECAP score the full target graph.",
+    "Settings A, B, and C use different target sets and are not averaged into one cross-setting number."
+  ],
+  "missing_experiments": [],
+  "ofa_record_count": 270,
+  "ofo_record_count": 324,
+  "recap_artifact_counts": {
+    "checkpoint_reload_audits_passed": 45,
+    "checkpoints": 225,
+    "community_outputs": 90,
+    "diagnostic_rows": 486,
+    "stability_pair_records": 90
+  },
+  "reruns_required": [],
+  "run_and_evaluation_counts": {
+    "all_final_evaluations": 594,
+    "all_training_runs": 369,
+    "ofa_baseline_final_evaluations": 216,
+    "ofa_baseline_training_runs": 36,
+    "ofo_baseline_final_evaluations": 288,
+    "ofo_baseline_training_runs": 288,
+    "recap_final_evaluations": 90,
+    "recap_training_runs": 45
+  },
+  "source_artifact_audits": {
+    "OFA baseline B/C supplement": true,
+    "OFA baseline primary": true,
+    "OFO 12-dataset baselines": true,
+    "RECAP Questions addendum": true,
+    "RECAP original Phase 1": true
+  },
+  "status": "PASS"
+}
