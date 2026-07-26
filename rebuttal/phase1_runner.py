@@ -585,9 +585,9 @@ def rng_state() -> dict:
 def restore_rng_state(state: dict) -> None:
     random.setstate(state["python"])
     np.random.set_state(state["numpy"])
-    torch.set_rng_state(state["torch_cpu"])
+    torch.set_rng_state(state["torch_cpu"].cpu())
     if torch.cuda.is_available() and state.get("torch_cuda"):
-        torch.cuda.set_rng_state_all(state["torch_cuda"])
+        torch.cuda.set_rng_state_all([value.cpu() for value in state["torch_cuda"]])
 
 
 def atomic_torch_save(path: Path, payload: dict) -> None:

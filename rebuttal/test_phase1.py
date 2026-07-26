@@ -20,6 +20,8 @@ from rebuttal.phase1_runner import (
     label_free_graph,
     load_manifest,
     load_model_config,
+    restore_rng_state,
+    rng_state,
 )
 
 
@@ -137,6 +139,16 @@ class LabelIsolationTests(unittest.TestCase):
         model(clean)
         loss = model.get_cluster_loss()
         self.assertTrue(torch.isfinite(loss))
+
+
+class ResumeTests(unittest.TestCase):
+    def test_rng_state_round_trip(self):
+        torch.manual_seed(123)
+        state = rng_state()
+        expected = torch.rand(4)
+        restore_rng_state(state)
+        actual = torch.rand(4)
+        self.assertTrue(torch.equal(expected, actual))
 
 
 if __name__ == "__main__":
