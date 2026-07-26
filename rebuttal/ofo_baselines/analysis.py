@@ -68,7 +68,11 @@ def atomic_csv(path: Path, rows: Iterable[dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
     with temporary.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(materialized[0]))
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=list(materialized[0]),
+            lineterminator="\n",
+        )
         writer.writeheader()
         writer.writerows(materialized)
     temporary.replace(path)
