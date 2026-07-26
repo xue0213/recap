@@ -495,7 +495,7 @@ def load_anomalygfm_features(
         k=8,
         which="LM",
         solver="arpack",
-        random_state=0,
+        rng=0,
         return_singular_vectors=True,
     )
     order = np.argsort(singular)[::-1]
