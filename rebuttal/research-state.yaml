@@ -323,3 +323,33 @@ protocol_completion:
   missing_experiments: 0
   reruns_required: 0
   report: "rebuttal/reports/RECAP_EXPERIMENT_PROTOCOL_COMPLETION_REPORT.md"
+
+large_target_inference:
+  status: protocol_locked
+  classification: confirmatory_target_inference_scalability
+  claim_scope: "target-side full-graph inference only; not large-target training"
+  protocol: "rebuttal/LARGE_TARGET_INFERENCE_PROTOCOL.md"
+  checkpoints: "accepted RECAP-OFA Setting-A seeds 0/1/2"
+  targets: [tfinance, dgraphfin, tsocial]
+  planned_training_runs: 0
+  planned_primary_evaluations: 9
+  completed_primary_evaluations: 0
+  seeds: [0, 1, 2]
+  primary_knn:
+    tfinance: exact
+    dgraphfin: faiss_ivfpq
+    tsocial: faiss_ivfpq
+  label_isolation: "freeze and hash full scores/query mask before label access"
+  current_stage: protocol_locked_before_numerical_gates
+  environment:
+    python: "3.12.3"
+    torch: "2.11.0+cu128"
+    faiss: "1.14.3"
+    gpu: "NVIDIA RTX PRO 6000 Blackwell Server Edition"
+    gpu_memory_mib: 97887
+    host_memory: "approximately 1 TiB"
+    free_data_disk_gib: 66
+  outer_loop:
+    cycle: 1
+    last_direction: deepen
+    last_reflection: "The data, checkpoints, and hardware are ready. Preserve the paper-locked model and implement ANN/scoring only in an isolated inference adapter before gates."

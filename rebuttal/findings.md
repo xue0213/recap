@@ -235,3 +235,12 @@ end-to-end smokes before formal execution. Its analyzer independently
 recomputed all 126 evaluations, after which the protocol-wide consolidator was
 regenerated and deterministically verified at 450 training runs and 720 final
 evaluations.
+
+## Active Large-Target Inference Phase
+
+A new confirmatory phase is protocol-locked for target-side full-graph
+inference on T-Finance, DGraph-Fin, and T-Social. It reuses the accepted
+RECAP-OFA Setting-A checkpoints and contains no large-target training.
+T-Finance is exact-KNN primary; the two million-node targets use one fixed,
+label-free FAISS-IVFPQ candidate route. No effectiveness or scalability result
+has been accepted at this stage.
