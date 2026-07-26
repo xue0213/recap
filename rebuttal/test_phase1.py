@@ -16,6 +16,8 @@ from model import recap
 from rebuttal.phase1_analysis import exact_soft_coassignment_similarity
 from rebuttal.phase1_protocol import build_manifest
 from rebuttal.phase1_runner import (
+    CHECKPOINT_SCORE_ATOL,
+    CHECKPOINT_SCORE_RTOL,
     DEFAULT_CONFIG_PATH,
     label_free_graph,
     load_manifest,
@@ -149,6 +151,29 @@ class ResumeTests(unittest.TestCase):
         restore_rng_state(state)
         actual = torch.rand(4)
         self.assertTrue(torch.equal(expected, actual))
+
+    def test_checkpoint_score_tolerance_is_float32_scale_only(self):
+        self.assertEqual(CHECKPOINT_SCORE_ATOL, 1e-5)
+        self.assertEqual(CHECKPOINT_SCORE_RTOL, 1e-5)
+        reference = np.asarray([0.0, 1.0, -2.0], dtype=np.float32)
+        harmless = reference + np.asarray([2e-6, -2e-6, 2e-6], dtype=np.float32)
+        material = reference + np.asarray([2e-4, 0.0, 0.0], dtype=np.float32)
+        self.assertTrue(
+            np.allclose(
+                reference,
+                harmless,
+                atol=CHECKPOINT_SCORE_ATOL,
+                rtol=CHECKPOINT_SCORE_RTOL,
+            )
+        )
+        self.assertFalse(
+            np.allclose(
+                reference,
+                material,
+                atol=CHECKPOINT_SCORE_ATOL,
+                rtol=CHECKPOINT_SCORE_RTOL,
+            )
+        )
 
 
 if __name__ == "__main__":

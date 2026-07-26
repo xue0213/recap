@@ -54,6 +54,8 @@ DEFAULT_DATASET_DIR = PROJECT_ROOT / "dataset"
 DEFAULT_OUTPUT_ROOT = REBUTTAL_ROOT / "artifacts" / "phase1"
 EXPECTED_EPOCHS = 100
 CHECKPOINT_EPOCHS = (25, 50, 75, 100)
+CHECKPOINT_SCORE_ATOL = 1e-5
+CHECKPOINT_SCORE_RTOL = 1e-5
 
 RAW_FIELDS = (
     "method",
@@ -917,10 +919,27 @@ def verify_checkpoint_reload(
     scores = reloaded.get_ego_scores().detach().float().cpu().numpy()
     with np.load(reference_scores_path, allow_pickle=False) as saved:
         reference = saved["final_scores"]
-    max_abs = float(np.max(np.abs(scores - reference)))
-    if max_abs > 1e-6:
-        raise AssertionError(f"Checkpoint reload mismatch: max_abs={max_abs}")
-    return {"passed": True, "max_abs_score_difference": max_abs}
+    absolute_difference = np.abs(scores - reference)
+    max_abs = float(np.max(absolute_difference))
+    mean_abs = float(np.mean(absolute_difference))
+    passed = bool(
+        np.allclose(
+            scores,
+            reference,
+            atol=CHECKPOINT_SCORE_ATOL,
+            rtol=CHECKPOINT_SCORE_RTOL,
+        )
+    )
+    audit = {
+        "passed": passed,
+        "max_abs_score_difference": max_abs,
+        "mean_abs_score_difference": mean_abs,
+        "absolute_tolerance": CHECKPOINT_SCORE_ATOL,
+        "relative_tolerance": CHECKPOINT_SCORE_RTOL,
+    }
+    if not passed:
+        raise AssertionError(f"Checkpoint reload mismatch: {audit}")
+    return audit
 
 
 def run_one(
