@@ -722,7 +722,7 @@ In Phase 1, fill only the `RECAP` row.
 | IA-GGAD | ✓ | ✗ | ✗ | — | — | — | — | — | — | — | — | — |
 | **Context/Prompt-assisted OFA** |||||||||||||
 | ARC | ✓ | ✓ | ✗ | — | — | — | — | — | — | — | — | — |
-| UNPrompt | ✓ | ✓ | ✗ | — | — | — | — | — | — | — | — | — |
+| UNPrompt | ✓ | ✗ | ✗ | — | — | — | — | — | — | — | — | — |
 | **Label-free Zero-shot OFA** |||||||||||||
 | **RECAP** | ✗ | ✗ | ✗ | RECAP-TBD | RECAP-TBD | RECAP-TBD | RECAP-TBD | RECAP-TBD | RECAP-TBD | RECAP-TBD | RECAP-TBD | RECAP-TBD |
 
@@ -735,7 +735,7 @@ In Phase 1, fill only the `RECAP` row.
 | IA-GGAD | ✓ | ✗ | ✗ | — | — | — | — | — | — | — | — | — |
 | **Context/Prompt-assisted OFA** |||||||||||||
 | ARC | ✓ | ✓ | ✗ | — | — | — | — | — | — | — | — | — |
-| UNPrompt | ✓ | ✓ | ✗ | — | — | — | — | — | — | — | — | — |
+| UNPrompt | ✓ | ✗ | ✗ | — | — | — | — | — | — | — | — | — |
 | **Label-free Zero-shot OFA** |||||||||||||
 | **RECAP** | ✗ | ✗ | ✗ | RECAP-TBD | RECAP-TBD | RECAP-TBD | RECAP-TBD | RECAP-TBD | RECAP-TBD | RECAP-TBD | RECAP-TBD | RECAP-TBD |
 

@@ -1,7 +1,7 @@
 project:
-  title: "RECAP Phase 1 rebuttal experiments"
-  question: "Does RECAP remain effective and community-stable under the locked OFO and OFA evaluation protocol?"
-  status: complete
+  title: "RECAP rebuttal experiments"
+  question: "Does RECAP remain effective under the locked OFO/OFA protocol, and do supervised OFA baselines reproduce fairly under the same A/B/C splits?"
+  status: active
   started: "2026-07-26"
   domain: "graph anomaly detection"
 
@@ -89,3 +89,33 @@ workspace:
   run_root: "rebuttal/artifacts/phase1/runs/"
   artifacts_root: "rebuttal/artifacts/phase1/"
   reports_root: "rebuttal/reports/"
+
+phase2_baselines:
+  status: protocol_locked
+  classification: confirmatory
+  protocol: "rebuttal/BASELINE_OFA_REPROTOCOL.md"
+  upstream_manifest: "rebuttal/baselines/upstream_manifest.json"
+  environment_matrix: "rebuttal/baselines/environment_matrix.md"
+  methods: [ARC, UNPrompt, AnomalyGFM-ZS, IA-GGAD]
+  settings:
+    A: [ARC, UNPrompt, AnomalyGFM-ZS, IA-GGAD]
+    B: [ARC, IA-GGAD]
+    C: [ARC, IA-GGAD]
+  seeds: [0, 1, 2]
+  planned_training_runs: 24
+  planned_final_evaluations: 156
+  completed_training_runs: 0
+  completed_final_evaluations: 0
+  current_stage: adapter_implementation
+  quality_gates:
+    upstream_archives_verified: true
+    dataset_identity_verified: true
+    gpu_environment_selected: true
+    sparse_equivalence_verified: false
+    label_access_guards_verified: false
+    method_smokes_passed: false
+    formal_manifest_complete: false
+  outer_loop:
+    cycle: 1
+    last_direction: deepen
+    last_reflection: "Resolve official-paper/code conflicts and prove compatibility equivalence before formal baseline runs."
