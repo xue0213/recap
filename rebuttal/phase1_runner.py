@@ -21,6 +21,8 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+import scipy.io as sio
+import scipy.sparse as sp
 import torch
 from sklearn.metrics import average_precision_score, roc_auc_score
 from torch_geometric.data import Data
@@ -191,6 +193,102 @@ def hardware_metadata(device: str) -> dict:
         "cpu_model": cpu_model,
         "gpu_query": gpu_query,
         "base_commit": BASE_COMMIT,
+    }
+
+
+def raw_dataset_statistics(path: Path) -> dict:
+    raw = sio.loadmat(path)
+    adjacency = raw["Network"] if "Network" in raw else raw["A"]
+    features = raw["Attributes"]
+    labels = raw["Label"] if "Label" in raw else raw["gnd"]
+    adjacency = sp.csr_matrix(adjacency)
+    undirected = adjacency.maximum(adjacency.T).tocsr()
+    undirected.setdiag(0)
+    undirected.eliminate_zeros()
+    unique_undirected_edges = int(sp.triu(undirected, k=1).nnz)
+    labels = np.asarray(labels).reshape(-1)
+    return {
+        "nodes": int(adjacency.shape[0]),
+        "raw_adjacency_nnz": int(adjacency.nnz),
+        "unique_undirected_edges": unique_undirected_edges,
+        "raw_feature_count": int(features.shape[1]),
+        "anomalies": int(labels.sum()),
+    }
+
+
+def run_preflight(
+    dataset_dir: Path,
+    output_root: Path,
+    config_path: Path,
+    device: str,
+    data_manifest_path: Path,
+) -> dict:
+    model_config = load_model_config(
+        config_path,
+        output_root / "cache" / "exact_knn",
+    )
+    prepared, data_prepare_seconds = prepare_graphs(
+        names=list(DATASETS),
+        dataset_dir=dataset_dir,
+        dims=model_config.dims,
+        num_hops=model_config.num_hops,
+        device=device,
+    )
+    assert_training_graphs_label_free(prepared)
+    rows = {}
+    for name, definition in DATASETS.items():
+        raw_path = dataset_dir / str(definition["file"])
+        statistics = raw_dataset_statistics(raw_path)
+        item = prepared[name]
+        if statistics["nodes"] != item.node_count:
+            raise ValueError(f"{name}: raw/prepared node count mismatch")
+        if statistics["anomalies"] != item.anomaly_count:
+            raise ValueError(f"{name}: raw/prepared anomaly count mismatch")
+        rows[name] = {
+            "display_name": display_name(name),
+            "domain": dataset_domain(name),
+            "file": str(definition["file"]),
+            "sha256": item.raw_sha256,
+            "aligned_feature_count": item.feature_count,
+            "feature_alignment_cache_state": item.feature_cache_state,
+            **statistics,
+        }
+    if rows["Amazon"]["nodes"] != 10224:
+        raise ValueError(
+            f"Amazon actual-data decision violated: {rows['Amazon']['nodes']} nodes"
+        )
+    if rows["questions"]["nodes"] != 48921:
+        raise ValueError(
+            f"Questions dataset mismatch: {rows['questions']['nodes']} nodes"
+        )
+    if (PROJECT_ROOT / "large_graph_knn.py").exists():
+        raise ValueError("ANN module must not exist in the clean Phase 1 worktree")
+    metadata = {
+        "format": "recap_phase1_data_manifest_v1",
+        "locked_at": utc_now(),
+        "base_commit": BASE_COMMIT,
+        "dataset_dir": str(dataset_dir.resolve()),
+        "paper_config_sha256": sha256_file(config_path),
+        "data_prepare_seconds": data_prepare_seconds,
+        "datasets": rows,
+        "amazon_count_decision": (
+            "Use actual 10,224-node file; manuscript 10,244 is a documented likely typo."
+        ),
+    }
+    atomic_json(data_manifest_path, metadata)
+    hardware = hardware_metadata(device)
+    atomic_json(output_root / "preflight" / "hardware.json", hardware)
+    atomic_json(output_root / "preflight" / "data_manifest.json", metadata)
+    del prepared
+    gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+    return {
+        "passed": True,
+        "dataset_count": len(rows),
+        "data_prepare_seconds": data_prepare_seconds,
+        "data_manifest_path": str(data_manifest_path.resolve()),
+        "hardware_path": str((output_root / "preflight" / "hardware.json").resolve()),
     }
 
 
@@ -1132,6 +1230,7 @@ def parse_args() -> argparse.Namespace:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     subparsers.add_parser("manifest")
+    subparsers.add_parser("preflight")
 
     run_parser = subparsers.add_parser("run-one")
     run_parser.add_argument("run_id")
@@ -1154,6 +1253,15 @@ def main() -> None:
     if args.command == "manifest":
         write_manifest(manifest_path)
         print(manifest_path)
+    elif args.command == "preflight":
+        result = run_preflight(
+            dataset_dir=Path(args.dataset_dir),
+            output_root=output_root,
+            config_path=Path(args.config),
+            device=args.device,
+            data_manifest_path=REBUTTAL_ROOT / "data_manifest.json",
+        )
+        print(json.dumps(result, indent=2, sort_keys=True))
     elif args.command == "hardware":
         metadata = hardware_metadata(args.device)
         atomic_json(output_root / "hardware.json", metadata)
