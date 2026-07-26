@@ -10,3 +10,8 @@ The Phase 2 harness separates:
 
 The final analyzer reads only completed formal run directories. Failed and
 superseded attempts remain outside that directory and cannot enter aggregates.
+
+The 12-dataset OFO harness adds a declarative 288-run Cartesian manifest,
+method-specific supervised/unsupervised label vaults, deterministic split and
+large-graph adapters, one atomic result directory per run, and an analyzer
+that independently requires exactly the complete manifest before aggregation.

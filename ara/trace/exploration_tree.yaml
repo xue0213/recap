@@ -141,3 +141,99 @@ tree:
                                                   locks. RECAP exceeds both
                                                   added baselines in B/C.
                                                 evidence: [C05, C06, E03]
+
+  - id: N13
+    type: question
+    title: "Reproduce eight OFO baselines on all twelve RECAP datasets"
+    provenance: user
+    timestamp: "2026-07-26T20:10+08:00"
+    description: >
+      Run GCN, GAT, BWGNN, XGBGraph, DOMINANT, AnomalyDAE, CoLA, and ADA-GAD
+      independently on every RECAP-OFO dataset, including Questions, with
+      three seeds, periodic supervision, and completion-level validation.
+    children:
+      - id: N14
+        type: experiment
+        title: "Lock and gate the 288-run OFO protocol"
+        provenance: ai-executed
+        timestamp: "2026-07-26T20:10+08:00"
+        result: >
+          Locked supervision rights, evaluation populations, method settings,
+          scalable structure adaptations, and persistence rules. Eight
+          equivalence tests, all preprocessing/split gates, and 16
+          Cora/Questions method smokes passed.
+        evidence: [E04]
+        children:
+          - id: N15
+            type: dead_end
+            title: "XGBoost sklearn-wrapper persistence was incompatible"
+            provenance: ai-executed
+            timestamp: "2026-07-26T20:10+08:00"
+            hypothesis: >
+              The sklearn wrapper would persist and reload formal XGBGraph
+              scores under XGBoost 3.0.2 and scikit-learn 1.8.
+            failure_mode: >
+              Wrapper persistence failed during the pre-formal smoke gate.
+            lesson: >
+              Use XGBoost's native Booster JSON persistence without changing
+              features, trees, predictions, or the experimental objective.
+            children:
+              - id: N16
+                type: experiment
+                title: "Verify native XGBoost Booster reload"
+                provenance: ai-executed
+                timestamp: "2026-07-26T20:10+08:00"
+                result: >
+                  Native JSON persistence reproduced smoke and all 36 formal
+                  XGBGraph score vectors with zero reload difference.
+                evidence: [E04]
+
+          - id: N17
+            type: dead_end
+            title: "Fixed absolute reload tolerance rejected CUDA last bits"
+            provenance: ai-executed
+            timestamp: "2026-07-26T20:10+08:00"
+            hypothesis: >
+              Every AnomalyDAE score vector would reload within a fixed
+              1e-5 absolute threshold.
+            failure_mode: >
+              Questions reconstruction scores amplified harmless CUDA scatter
+              last-bit differences during the smoke gate.
+            lesson: >
+              Lock a scale-aware threshold before formal results and retain
+              exact metric recomputation as the independent acceptance check.
+            children:
+              - id: N18
+                type: experiment
+                title: "Gate scale-aware checkpoint reload threshold"
+                provenance: ai-executed
+                timestamp: "2026-07-26T20:10+08:00"
+                result: >
+                  The pre-result threshold passed all method smokes and all 288
+                  formal reloads; the largest difference was 1.75e-4.
+                evidence: [E04, H07]
+
+          - id: N19
+            type: experiment
+            title: "Execute and block-audit all OFO runs"
+            also_depends_on: [N16, N18]
+            provenance: ai-executed
+            timestamp: "2026-07-26T20:10+08:00"
+            result: >
+              Completed 288/288 runs method by method, auditing every 12-run
+              seed block and reflecting after every 36-run method. Questions
+              was retained throughout; no weak result triggered tuning.
+            evidence: [C07, E04]
+            children:
+              - id: N20
+                type: experiment
+                title: "Independently audit and aggregate the complete manifest"
+                provenance: ai-executed
+                timestamp: "2026-07-26T20:10+08:00"
+                result: >
+                  Recomputed all 576 metrics and verified all models, data,
+                  score/mask hashes, label events, reloads, dataset/domain
+                  macros, timing, and resources. XGBGraph leads the supervised
+                  test-split group; RECAP leads the full-graph unsupervised
+                  group.
+                evidence: [C07, C08, C09, E04]

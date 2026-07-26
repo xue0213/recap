@@ -7,3 +7,7 @@ sessions:
     path: "trace/sessions/2026-07-26_002.yaml"
     timestamp: "2026-07-26T18:01+08:00"
     summary: "Completed UNPrompt and AnomalyGFM-ZS in Settings B/C under an isolated user-revised supplement."
+  - id: "2026-07-26_003"
+    path: "trace/sessions/2026-07-26_003.yaml"
+    timestamp: "2026-07-26T20:10+08:00"
+    summary: "Completed and audited 288 runs for eight OFO baselines on all twelve datasets."

@@ -71,3 +71,41 @@
 - **Proof**: [E03]
 - **Dependencies**: [C05]
 - **Tags**: comparative-performance, zero-context, cross-domain-transfer
+
+## C07: The eight-method 12-dataset OFO reproduction is complete
+- **Statement**: The locked OFO scope contains 288 accepted
+  method-dataset-seed training/inference runs and 576 independently
+  recomputed AUROC/AUPRC values, with complete saved-model, hash, label-access,
+  and reload evidence.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Falsification criteria**: Any missing Cartesian-product key, invalid
+  pre-freeze label access, raw/score/mask hash mismatch, missing model, failed
+  reload threshold, or recomputed metric mismatch.
+- **Proof**: [E04, `rebuttal/artifacts/ofo_12_baselines/formal/analysis/global_audit.json`]
+- **Dependencies**: []
+- **Tags**: OFO, reproduction, completeness, audit
+
+## C08: RECAP leads the reproduced full-graph unsupervised OFO group
+- **Statement**: RECAP-OFO has higher 12-dataset macro AUROC and AUPRC than
+  DOMINANT, AnomalyDAE, CoLA, and ADA-GAD under the label-free, full-graph
+  evaluation regime.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Falsification criteria**: Correct three-seed full-graph recomputation
+  reverses either metric comparison against any of the four methods.
+- **Proof**: [E04]
+- **Dependencies**: [C07]
+- **Tags**: OFO, comparative-performance, unsupervised
+
+## C09: XGBGraph leads the reproduced supervised OFO group
+- **Statement**: XGBGraph has the highest 12-dataset macro AUROC and AUPRC
+  among GCN, GAT, BWGNN, and XGBGraph on their stratified 40% target-test
+  populations.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Falsification criteria**: Correct three-seed test-split recomputation
+  places another supervised method above XGBGraph on either macro metric.
+- **Proof**: [E04]
+- **Dependencies**: [C07]
+- **Tags**: OFO, comparative-performance, supervised
