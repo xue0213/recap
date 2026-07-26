@@ -450,6 +450,9 @@ def _report_markdown(
     audit_hash: str,
     preflight_hash: str,
 ) -> str:
+    formal_accounted_seconds = sum(
+        item["setup_seconds"] for item in aggregate
+    ) + sum(row["total_run_phase_seconds"] for row in rows)
     lines = [
         "# RECAP Large-Target Full-Graph Inference Results",
         "",
@@ -514,6 +517,10 @@ def _report_markdown(
             "construction and score serialization; it excludes metric "
             "calculation. Peak memory is the maximum observed in setup or any "
             "checkpoint run.",
+            f"All three shared setups plus all nine checkpoint runs account "
+            f"for {formal_accounted_seconds:.2f} seconds "
+            f"({formal_accounted_seconds / 60:.2f} minutes), excluding "
+            "preflight, gates, orchestration and independent auditing.",
             "",
             "## Approximation fidelity",
             "",
@@ -666,6 +673,10 @@ def analyze(
         "created_at": utc_now(),
         "status": "pass",
         "completed_primary_cells": len(rows),
+        "formal_accounted_seconds": (
+            sum(item["setup_seconds"] for item in aggregate)
+            + sum(row["total_run_phase_seconds"] for row in rows)
+        ),
         "aggregate": aggregate,
         "tfinance_paired_ann_fidelity": fidelity,
         "preflight_sha256": sha256_file(preflight_path),
