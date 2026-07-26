@@ -90,3 +90,54 @@ tree:
                                   dataset-macro AUROC but slightly lower AUPRC,
                                   and exceeds UNPrompt/AnomalyGFM-ZS in A.
                                 evidence: [C02, C03, E01]
+                                children:
+                                  - id: N09
+                                    type: decision
+                                    title: "Require all four baselines in B/C"
+                                    provenance: user-revised
+                                    timestamp: "2026-07-26T18:01+08:00"
+                                    choice: >
+                                      Add UNPrompt and AnomalyGFM-ZS to
+                                      Settings B and C.
+                                    alternatives:
+                                      - "Retain the original ARC/IA-only B/C scope"
+                                    evidence: >
+                                      The user explicitly corrected the
+                                      completed protocol scope.
+                                    children:
+                                      - id: N10
+                                        type: experiment
+                                        title: "Gate isolated B/C supplement"
+                                        provenance: ai-executed
+                                        timestamp: "2026-07-26T18:01+08:00"
+                                        result: >
+                                          Ten tests and four method-setting
+                                          smokes passed with 20/20 finite
+                                          frozen scores and zero invalid label
+                                          events.
+                                        evidence: [E03]
+                                        children:
+                                          - id: N11
+                                            type: experiment
+                                            title: "Run B/C baseline supplement"
+                                            provenance: ai-executed
+                                            timestamp: "2026-07-26T18:01+08:00"
+                                            result: >
+                                              Completed 12/12 runs and 60/60
+                                              evaluations. AnomalyGFM source
+                                              calibration selected weights
+                                              2.0 for B and 4.0 for C.
+                                            evidence: [C05, E03]
+                                            children:
+                                              - id: N12
+                                                type: experiment
+                                                title: "Audit complete four-baseline comparison"
+                                                provenance: ai-executed
+                                                timestamp: "2026-07-26T18:01+08:00"
+                                                result: >
+                                                  Verified all supplementary
+                                                  checkpoints, scores, metrics,
+                                                  label events, and calibration
+                                                  locks. RECAP exceeds both
+                                                  added baselines in B/C.
+                                                evidence: [C05, C06, E03]

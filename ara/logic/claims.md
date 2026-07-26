@@ -47,3 +47,27 @@
 - **Proof**: [E02, `rebuttal/gate_reports/PHASE2_BASELINE_GATES.md`]
 - **Dependencies**: []
 - **Tags**: determinism, compatibility, UNPrompt
+
+## C05: The user-revised four-baseline A/B/C comparison is complete
+- **Statement**: UNPrompt and AnomalyGFM-ZS now have independently verified
+  three-seed results in Settings B/C, adding 12 training runs and 60
+  evaluations without modifying the original primary artifacts.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Falsification criteria**: Any supplementary manifest key, checkpoint,
+  frozen score, label event, calibration lock, or recomputed metric fails
+  independent validation.
+- **Proof**: [E03, `rebuttal/artifacts/phase2_bc_supplement/analysis/artifact_audit.json`]
+- **Dependencies**: [C01]
+- **Tags**: scope-completion, reproduction, audit
+
+## C06: RECAP exceeds the added zero-context baselines in B/C
+- **Statement**: RECAP has higher dataset-macro AUROC and AUPRC than UNPrompt
+  and AnomalyGFM-ZS in both Settings B and C under the locked splits.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Falsification criteria**: Correct three-seed recomputation reverses any of
+  the four metric comparisons.
+- **Proof**: [E03]
+- **Dependencies**: [C05]
+- **Tags**: comparative-performance, zero-context, cross-domain-transfer

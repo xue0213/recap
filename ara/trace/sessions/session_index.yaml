@@ -3,3 +3,7 @@ sessions:
     path: "trace/sessions/2026-07-26_001.yaml"
     timestamp: "2026-07-26T17:07+08:00"
     summary: "Completed and independently audited the RECAP-OFA A/B/C baseline reproduction."
+  - id: "2026-07-26_002"
+    path: "trace/sessions/2026-07-26_002.yaml"
+    timestamp: "2026-07-26T18:01+08:00"
+    summary: "Completed UNPrompt and AnomalyGFM-ZS in Settings B/C under an isolated user-revised supplement."

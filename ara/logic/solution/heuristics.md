@@ -21,3 +21,12 @@
 - **Provenance**: ai-suggested
 - **Sensitivity**: medium
 - **Code ref**: [`rebuttal/baselines/baseline_runner.py`]
+
+## H04: Expand a completed protocol through an isolated supplement
+- **Rationale**: A separate manifest, artifact root, and protocol preserve the
+  forensic integrity of already accepted results while allowing a
+  user-requested scope revision.
+- **Provenance**: ai-suggested
+- **Sensitivity**: low
+- **Code ref**: [`rebuttal/baselines/baseline_bc_runner.py`,
+  `rebuttal/baselines/baseline_bc_analysis.py`]

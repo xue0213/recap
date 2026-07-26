@@ -4,10 +4,12 @@ observations:
     provenance: ai-suggested
     content: >
       UNPrompt and AnomalyGFM-ZS transfer weakly under the locked multi-source
-      Setting A relative to RECAP, ARC, and IA-GGAD.
-    context: "Post-audit comparison of Setting-A dataset macros."
+      Settings A/B/C relative to RECAP; the B/C supplement confirms the
+      pattern with independently audited results.
+    context: "Post-audit comparison of all A/B/C dataset macros."
     potential_type: claim
-    promoted: false
+    promoted: true
+    promoted_to: C06
   - id: O02
     timestamp: "2026-07-26T17:07+08:00"
     provenance: ai-suggested
