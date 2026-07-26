@@ -236,11 +236,34 @@ recomputed all 126 evaluations, after which the protocol-wide consolidator was
 regenerated and deterministically verified at 450 training runs and 720 final
 evaluations.
 
-## Active Large-Target Inference Phase
+## Large-Target Inference Findings
 
-A new confirmatory phase is protocol-locked for target-side full-graph
-inference on T-Finance, DGraph-Fin, and T-Social. It reuses the accepted
-RECAP-OFA Setting-A checkpoints and contains no large-target training.
-T-Finance is exact-KNN primary; the two million-node targets use one fixed,
-label-free FAISS-IVFPQ candidate route. No effectiveness or scalability result
-has been accepted at this stage.
+The confirmatory target-side full-graph inference phase is complete: zero new
+training runs and nine evaluations from the accepted RECAP-OFA Setting-A
+checkpoints. Every run produced a finite score for every target node. The
+independent audit verified all data, checkpoint, candidate, score and mask
+hashes, confirmed that scores froze before labels were unlocked, and
+recomputed all 18 metrics with no discrepancy.
+
+- T-Finance exact-primary AUROC/AUPRC is
+  0.25566 ± 0.02002 / 0.02801 ± 0.00077.
+- DGraph-Fin ANN-primary AUROC/AUPRC is
+  0.36747 ± 0.00651 / 0.00904 ± 0.00009.
+- T-Social ANN-primary AUROC/AUPRC is
+  0.43785 ± 0.00515 / 0.02595 ± 0.00012.
+- Shared cold setup takes 9.71, 503.73 and 841.69 seconds, respectively.
+  Warm per-checkpoint inference averages 0.16, 6.61 and 10.51 seconds.
+- Peak GPU allocation is 0.98, 48.10 and 75.13 GiB; peak reserved memory on
+  T-Social is 80.66 GiB against the 95.59-GiB device.
+- ANN recall@64 is 0.8934 over all T-Finance nodes and 0.5735/0.4338 over the
+  fixed 512-query DGraph-Fin/T-Social samples. The million-node approximation
+  is therefore computationally useful but only moderately faithful.
+
+The accepted conclusion is deliberately narrow. These results establish that
+the isolated adapter can complete target-side inference on graphs up to
+5.78 million nodes and 146.21 million stored adjacency entries under the
+recorded hardware. They do not test large-target training. All three mean
+AUROCs are below 0.5 and all mean AUPRCs are below their anomaly-prevalence
+references, so the experiment does not support predictive effectiveness of
+the unadapted Setting-A checkpoints on these large targets. No score inversion,
+target-label tuning, or selective rerun was used to hide that negative result.

@@ -325,7 +325,7 @@ protocol_completion:
   report: "rebuttal/reports/RECAP_EXPERIMENT_PROTOCOL_COMPLETION_REPORT.md"
 
 large_target_inference:
-  status: protocol_locked
+  status: complete
   classification: confirmatory_target_inference_scalability
   claim_scope: "target-side full-graph inference only; not large-target training"
   protocol: "rebuttal/LARGE_TARGET_INFERENCE_PROTOCOL.md"
@@ -333,14 +333,43 @@ large_target_inference:
   targets: [tfinance, dgraphfin, tsocial]
   planned_training_runs: 0
   planned_primary_evaluations: 9
-  completed_primary_evaluations: 0
+  completed_primary_evaluations: 9
   seeds: [0, 1, 2]
   primary_knn:
     tfinance: exact
     dgraphfin: faiss_ivfpq
     tsocial: faiss_ivfpq
   label_isolation: "freeze and hash full scores/query mask before label access"
-  current_stage: protocol_locked_before_numerical_gates
+  current_stage: completed_and_independently_audited
+  results:
+    tfinance: {auroc_mean: 0.2556559088, auroc_std: 0.0200247884, auprc_mean: 0.0280124715, auprc_std: 0.0007657334}
+    dgraphfin: {auroc_mean: 0.3674655592, auroc_std: 0.0065073943, auprc_mean: 0.0090436456, auprc_std: 0.0000885418}
+    tsocial: {auroc_mean: 0.4378514881, auroc_std: 0.0051522914, auprc_mean: 0.0259523938, auprc_std: 0.0001160948}
+  scalability:
+    formal_accounted_seconds: 1420.2915887497
+    tfinance: {setup_seconds: 9.7069, warm_inference_seconds: 0.1589, peak_gpu_allocated_gib: 0.9840, peak_gpu_reserved_gib: 1.2539, peak_rss_gib: 3.1785}
+    dgraphfin: {setup_seconds: 503.7273, warm_inference_seconds: 6.6075, peak_gpu_allocated_gib: 48.0972, peak_gpu_reserved_gib: 65.7539, peak_rss_gib: 4.9684}
+    tsocial: {setup_seconds: 841.6924, warm_inference_seconds: 10.5141, peak_gpu_allocated_gib: 75.1327, peak_gpu_reserved_gib: 80.6641, peak_rss_gib: 9.2554}
+  ann_fidelity_recall_at_64:
+    tfinance_all_nodes: 0.893414
+    dgraphfin_512_queries: 0.573547
+    tsocial_512_queries: 0.433777
+  quality_gates:
+    protocol_committed_before_results: true
+    canonical_data_and_checkpoint_preflight_passed: true
+    native_chunked_numerical_equivalence_passed: true
+    fixed_seed_faiss_determinism_passed: true
+    tfinance_end_to_end_smoke_passed: true
+    unit_regression_tests: "31 passed, 1 skipped"
+    formal_manifest_complete: true
+    score_and_mask_hashes_verified: true
+    label_isolation_verified: true
+    independent_metrics_recomputed: true
+    final_report_generated: true
+  interpretation:
+    computational_target_inference_scalability: supported
+    million_node_training_scalability: not_tested
+    unadapted_checkpoint_predictive_effectiveness: not_supported
   environment:
     python: "3.12.3"
     torch: "2.11.0+cu128"
@@ -349,7 +378,14 @@ large_target_inference:
     gpu_memory_mib: 97887
     host_memory: "approximately 1 TiB"
     free_data_disk_gib: 66
+  artifacts:
+    report: "rebuttal/reports/LARGE_TARGET_INFERENCE_REPORT.md"
+    per_run_results: "rebuttal/reports/LARGE_TARGET_INFERENCE_RESULTS.csv"
+    aggregate_results: "rebuttal/reports/LARGE_TARGET_INFERENCE_AGGREGATE.csv"
+    summary: "rebuttal/reports/LARGE_TARGET_INFERENCE_SUMMARY.json"
+    audit: "rebuttal/reports/LARGE_TARGET_INFERENCE_AUDIT.json"
+    independent_audit_sha256: "a060c0f654da78973a8e2e477070a436b0f741393dee28b1a3058b95e9c9dac6"
   outer_loop:
-    cycle: 1
-    last_direction: deepen
-    last_reflection: "The data, checkpoints, and hardware are ready. Preserve the paper-locked model and implement ANN/scoring only in an isolated inference adapter before gates."
+    cycle: 4
+    last_direction: conclude
+    last_reflection: "All nine full-node score vectors and independent audits pass. The adapter establishes target-side computational scalability on the recorded hardware, but every target mean is below its random-ranking AUROC/AUPRC reference, so predictive effectiveness of the unadapted checkpoints is not supported."
