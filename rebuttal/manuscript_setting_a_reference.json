@@ -1,0 +1,55 @@
+{
+  "source": "11192_RECAP_Residual_Community.pdf, Setting A tables",
+  "units": "percent",
+  "standard_deviation_convention": "as reported in manuscript",
+  "datasets": {
+    "cora": {
+      "auroc_mean": 82.17,
+      "auroc_std": 0.41,
+      "auprc_mean": 40.56,
+      "auprc_std": 1.69
+    },
+    "citeseer": {
+      "auroc_mean": 90.30,
+      "auroc_std": 0.19,
+      "auprc_mean": 45.63,
+      "auprc_std": 0.71
+    },
+    "ACM": {
+      "auroc_mean": 78.48,
+      "auroc_std": 0.19,
+      "auprc_mean": 36.87,
+      "auprc_std": 0.22
+    },
+    "BlogCatalog": {
+      "auroc_mean": 73.28,
+      "auroc_std": 0.43,
+      "auprc_mean": 33.56,
+      "auprc_std": 0.45
+    },
+    "Facebook": {
+      "auroc_mean": 59.47,
+      "auroc_std": 0.47,
+      "auprc_mean": 4.72,
+      "auprc_std": 0.61
+    },
+    "weibo": {
+      "auroc_mean": 80.00,
+      "auroc_std": 2.88,
+      "auprc_mean": 33.36,
+      "auprc_std": 1.30
+    },
+    "Reddit": {
+      "auroc_mean": 59.46,
+      "auroc_std": 0.50,
+      "auprc_mean": 4.71,
+      "auprc_std": 0.15
+    },
+    "Amazon": {
+      "auroc_mean": 72.06,
+      "auroc_std": 1.51,
+      "auprc_mean": 12.86,
+      "auprc_std": 0.54
+    }
+  }
+}

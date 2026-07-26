@@ -24,7 +24,12 @@ if str(PROJECT_ROOT) not in sys.path:
 if str(REBUTTAL_ROOT) not in sys.path:
     sys.path.insert(0, str(REBUTTAL_ROOT))
 
-from rebuttal.phase1_protocol import RunSpec, build_manifest, dataset_domain  # noqa: E402
+from rebuttal.phase1_protocol import (  # noqa: E402
+    DIAGNOSTIC_EPOCHS,
+    RunSpec,
+    build_manifest,
+    dataset_domain,
+)
 from rebuttal.phase1_runner import (  # noqa: E402
     DEFAULT_OUTPUT_ROOT,
     RAW_FIELDS,
@@ -357,6 +362,348 @@ def validate_records(records: list[dict], manifest: list[RunSpec]) -> dict:
     }
 
 
+def validate_run_artifacts(
+    output_root: Path,
+    manifest: list[RunSpec],
+    records: list[dict],
+) -> dict:
+    """Audit every formal run artifact against the locked execution protocol."""
+    problems: list[str] = []
+    warnings: list[str] = []
+    actual_diagnostic_rows = 0
+    actual_checkpoints = 0
+    actual_logs = 0
+    passed_reload_audits = 0
+    exact_knn_runs = 0
+
+    expected_run_ids = {spec.run_id for spec in manifest}
+    runs_root = output_root / "runs"
+    actual_run_ids = {
+        path.name for path in runs_root.iterdir() if path.is_dir()
+    } if runs_root.exists() else set()
+    if actual_run_ids != expected_run_ids:
+        problems.append(
+            "run directory mismatch: "
+            f"missing={sorted(expected_run_ids - actual_run_ids)}, "
+            f"extra={sorted(actual_run_ids - expected_run_ids)}"
+        )
+
+    records_by_run: dict[str, list[dict]] = defaultdict(list)
+    for record in records:
+        records_by_run[str(record["run_id"])].append(record)
+
+    expected_model_values = {
+        "dims": 32,
+        "num_hops": 4,
+        "num_clusters": 36,
+        "knn_k": 64,
+        "lr": 5e-5,
+        "weight_decay": 5e-5,
+        "tau_s": 0.3,
+        "tau_c": 0.3,
+        "tau_e": 1.0,
+        "lambda_H": 0.1,
+        "lambda_usage_entropy": 0.1,
+        "lambda_bal": 0.1,
+        "lambda_E": 0.0,
+        "beta": 0.02,
+        "gamma": 0.01,
+        "knn_cache_enabled": True,
+    }
+
+    for spec in manifest:
+        prefix = spec.run_id
+        run_dir = runs_root / spec.run_id
+        required_files = (
+            "complete.json",
+            "status.json",
+            "resolved_config.json",
+            "data_metadata.json",
+            "training_history.json",
+            "training_diagnostics.csv",
+            "result_records.json",
+            "result_records.csv",
+            "checkpoint_reload_audit.json",
+            "stdout.log",
+            "stderr.log",
+        )
+        missing_files = [name for name in required_files if not (run_dir / name).exists()]
+        if missing_files:
+            problems.append(f"{prefix}: missing files {missing_files}")
+            continue
+        actual_logs += 2
+
+        try:
+            complete = json.loads((run_dir / "complete.json").read_text())
+            status = json.loads((run_dir / "status.json").read_text())
+            config = json.loads((run_dir / "resolved_config.json").read_text())
+            history = json.loads((run_dir / "training_history.json").read_text())
+            reload_audit = json.loads(
+                (run_dir / "checkpoint_reload_audit.json").read_text()
+            )
+            result_records = json.loads((run_dir / "result_records.json").read_text())
+        except (OSError, json.JSONDecodeError) as error:
+            problems.append(f"{prefix}: invalid JSON artifact: {error}")
+            continue
+
+        if complete.get("status") != "complete" or status.get("status") != "complete":
+            problems.append(f"{prefix}: non-complete status")
+        if complete.get("run_id") != spec.run_id or status.get("run_id") != spec.run_id:
+            problems.append(f"{prefix}: run ID mismatch in status artifacts")
+        if int(complete.get("record_count", -1)) != len(spec.target_graphs):
+            problems.append(f"{prefix}: wrong complete.json record_count")
+        if complete.get("config_hash") != config.get("config_hash"):
+            problems.append(f"{prefix}: config hash mismatch")
+        if config.get("base_commit") != "c94c4d7985d2cb1438c430173ad868d68d0c1efe":
+            problems.append(f"{prefix}: wrong scientific base commit")
+        if config.get("standard_deviation_ddof") != 0:
+            problems.append(f"{prefix}: standard deviation convention is not ddof=0")
+        if config.get("label_isolation") != (
+            "sanitized Data objects; labels accessed after scores"
+        ):
+            problems.append(f"{prefix}: label-isolation declaration mismatch")
+        if tuple(config.get("diagnostic_epochs", ())) != DIAGNOSTIC_EPOCHS:
+            problems.append(f"{prefix}: diagnostic epoch lock mismatch")
+        if tuple(config.get("checkpoint_epochs", ())) != (25, 50, 75, 100):
+            problems.append(f"{prefix}: checkpoint epoch lock mismatch")
+
+        run_spec = config.get("run_spec", {})
+        if (
+            run_spec.get("run_id") != spec.run_id
+            or int(run_spec.get("seed", -1)) != spec.seed
+            or tuple(run_spec.get("source_graphs", ())) != spec.source_graphs
+            or tuple(run_spec.get("target_graphs", ())) != spec.target_graphs
+        ):
+            problems.append(f"{prefix}: resolved run specification mismatch")
+
+        train_config = config.get("train_config", {})
+        if (
+            int(train_config.get("epochs", -1)) != 100
+            or bool(train_config.get("early_stop", True))
+            or int(train_config.get("seed", -1)) != spec.seed
+        ):
+            problems.append(f"{prefix}: training lock mismatch")
+        model_config = config.get("model_config", {})
+        for key, expected in expected_model_values.items():
+            if model_config.get(key) != expected:
+                problems.append(
+                    f"{prefix}: model_config.{key}={model_config.get(key)!r}, "
+                    f"expected {expected!r}"
+                )
+        if "ann" in json.dumps(model_config).lower():
+            problems.append(f"{prefix}: ANN field found in formal model config")
+
+        checkpoint_names = (
+            "resume_epoch_25.pt",
+            "resume_epoch_50.pt",
+            "resume_epoch_75.pt",
+            "resume_epoch_100.pt",
+            "final.pt",
+        )
+        for name in checkpoint_names:
+            checkpoint = run_dir / "checkpoints" / name
+            if checkpoint.exists() and checkpoint.stat().st_size > 0:
+                actual_checkpoints += 1
+            else:
+                problems.append(f"{prefix}: missing or empty checkpoint {name}")
+
+        losses = history.get("losses", [])
+        if int(history.get("epochs", -1)) != 100 or len(losses) != 100:
+            problems.append(f"{prefix}: expected 100 recorded training losses")
+        elif not all(math.isfinite(float(loss)) for loss in losses):
+            problems.append(f"{prefix}: non-finite training loss")
+        knn_cache = history.get("knn_cache", {})
+        if set(knn_cache) != set(spec.source_graphs):
+            problems.append(f"{prefix}: training exact-KNN provenance mismatch")
+        elif all(
+            "exact_knn" in str(value.get("path", ""))
+            and value.get("key_sha256")
+            for value in knn_cache.values()
+        ):
+            exact_knn_runs += 1
+        else:
+            problems.append(f"{prefix}: incomplete exact-KNN cache provenance")
+
+        if bool(reload_audit.get("passed")) and math.isfinite(
+            float(reload_audit.get("max_abs_score_difference", math.nan))
+        ):
+            passed_reload_audits += 1
+        else:
+            problems.append(f"{prefix}: checkpoint-reload audit failed")
+        if complete.get("checkpoint_reload_audit") != reload_audit:
+            problems.append(f"{prefix}: checkpoint audit copy mismatch")
+
+        try:
+            with (run_dir / "training_diagnostics.csv").open(newline="") as handle:
+                diagnostics = list(csv.DictReader(handle))
+        except OSError as error:
+            problems.append(f"{prefix}: cannot read diagnostics: {error}")
+            diagnostics = []
+        expected_per_epoch = len(spec.source_graphs) + (
+            1 if spec.paradigm == "one-for-all" else 0
+        )
+        expected_rows = len(DIAGNOSTIC_EPOCHS) * expected_per_epoch
+        actual_diagnostic_rows += len(diagnostics)
+        if len(diagnostics) != expected_rows:
+            problems.append(
+                f"{prefix}: diagnostic rows={len(diagnostics)}, expected={expected_rows}"
+            )
+        for epoch in DIAGNOSTIC_EPOCHS:
+            epoch_rows = [
+                row for row in diagnostics if int(float(row.get("epoch", -1))) == epoch
+            ]
+            sources = {
+                row.get("dataset")
+                for row in epoch_rows
+                if row.get("row_type") == "source"
+            }
+            macros = [
+                row for row in epoch_rows if row.get("row_type") == "macro"
+            ]
+            if sources != set(spec.source_graphs):
+                problems.append(f"{prefix}: source diagnostics mismatch at epoch {epoch}")
+            if spec.paradigm == "one-for-all":
+                if len(macros) != 1 or macros[0].get("dataset") != "__source_macro__":
+                    problems.append(
+                        f"{prefix}: source-macro diagnostic mismatch at epoch {epoch}"
+                    )
+            elif macros:
+                problems.append(f"{prefix}: unexpected macro diagnostic at epoch {epoch}")
+        numeric_diagnostic_fields = (
+            "total_loss",
+            "optimizer_step_loss",
+            "assignment_entropy",
+            "effective_communities",
+        )
+        for row in diagnostics:
+            if any(
+                not math.isfinite(float(row.get(field, math.nan)))
+                for field in numeric_diagnostic_fields
+            ):
+                problems.append(f"{prefix}: non-finite diagnostic value")
+                break
+
+        expected_targets = set(spec.target_graphs)
+        actual_targets = {str(row.get("target_graph")) for row in result_records}
+        if len(result_records) != len(spec.target_graphs) or actual_targets != expected_targets:
+            problems.append(f"{prefix}: result-record targets mismatch")
+        if len(records_by_run.get(spec.run_id, ())) != len(spec.target_graphs):
+            problems.append(f"{prefix}: raw aggregate target count mismatch")
+
+    expected_diagnostic_rows = sum(
+        len(DIAGNOSTIC_EPOCHS)
+        * (len(spec.source_graphs) + (1 if spec.paradigm == "one-for-all" else 0))
+        for spec in manifest
+    )
+    failure_log = output_root / "failure_log.jsonl"
+    historical_failure_entries = 0
+    if failure_log.exists():
+        historical_failure_entries = sum(
+            1 for line in failure_log.read_text().splitlines() if line.strip()
+        )
+    if historical_failure_entries:
+        warnings.append(
+            f"{historical_failure_entries} historical tooling failure entries retained; "
+            "all corresponding formal run statuses are now complete"
+        )
+
+    summary = {
+        "passed": not problems,
+        "formal_runs_expected": len(manifest),
+        "formal_run_directories": len(actual_run_ids),
+        "final_evaluations_expected": 87,
+        "final_evaluations_actual": len(records),
+        "diagnostic_rows_expected": expected_diagnostic_rows,
+        "diagnostic_rows_actual": actual_diagnostic_rows,
+        "checkpoints_expected": len(manifest) * 5,
+        "checkpoints_actual": actual_checkpoints,
+        "log_files_expected": len(manifest) * 2,
+        "log_files_actual": actual_logs,
+        "checkpoint_reload_audits_expected": len(manifest),
+        "checkpoint_reload_audits_passed": passed_reload_audits,
+        "exact_knn_provenance_runs_expected": len(manifest),
+        "exact_knn_provenance_runs_actual": exact_knn_runs,
+        "active_failures": sum(
+            1
+            for spec in manifest
+            if not (runs_root / spec.run_id / "complete.json").exists()
+        ),
+        "historical_failure_entries": historical_failure_entries,
+        "problems": problems,
+        "warnings": warnings,
+    }
+    return summary
+
+
+def detailed_timing_summary(records: list[dict]) -> tuple[dict, list[dict]]:
+    """Return protocol-aware timing totals without repeating OFA training costs."""
+    by_run: dict[str, list[dict]] = defaultdict(list)
+    for record in records:
+        by_run[str(record["run_id"])].append(record)
+
+    rows: list[dict] = []
+    for setting in ("OFO", "A", "B", "C"):
+        run_rows = [
+            group[0]
+            for group in by_run.values()
+            if str(group[0]["setting"]) == setting
+        ]
+        evaluation_rows = [
+            record for record in records if str(record["setting"]) == setting
+        ]
+        train_values = [float(row["train_seconds"]) for row in run_rows]
+        prepare_values = [float(row["data_prepare_seconds"]) for row in run_rows]
+        diagnostic_values = [float(row["diagnostic_seconds"]) for row in run_rows]
+        inference_values = [
+            float(row["inference_seconds"]) for row in evaluation_rows
+        ]
+        peak_values = [float(row["peak_gpu_memory_mb"]) for row in run_rows]
+        rows.append(
+            {
+                "setting": setting,
+                "training_runs": len(run_rows),
+                "evaluations": len(evaluation_rows),
+                "data_prepare_seconds_total": float(sum(prepare_values)),
+                "train_seconds_total": float(sum(train_values)),
+                "diagnostic_seconds_total": float(sum(diagnostic_values)),
+                "inference_seconds_total": float(sum(inference_values)),
+                "train_seconds_mean": population_stats(train_values)[0],
+                "train_seconds_std": population_stats(train_values)[1],
+                "inference_seconds_mean": population_stats(inference_values)[0],
+                "inference_seconds_std": population_stats(inference_values)[1],
+                "peak_gpu_memory_mb_mean": population_stats(peak_values)[0],
+                "peak_gpu_memory_mb_max": float(max(peak_values)),
+            }
+        )
+
+    overall = {
+        "formal_training_runs": len(by_run),
+        "final_evaluations": len(records),
+        "data_prepare_seconds_total": float(
+            sum(float(group[0]["data_prepare_seconds"]) for group in by_run.values())
+        ),
+        "train_seconds_total": float(
+            sum(float(group[0]["train_seconds"]) for group in by_run.values())
+        ),
+        "diagnostic_seconds_total": float(
+            sum(float(group[0]["diagnostic_seconds"]) for group in by_run.values())
+        ),
+        "inference_seconds_total": float(
+            sum(float(record["inference_seconds"]) for record in records)
+        ),
+        "peak_gpu_memory_mb_max": float(
+            max(float(group[0]["peak_gpu_memory_mb"]) for group in by_run.values())
+        ),
+    }
+    overall["accounted_seconds_total"] = float(
+        overall["data_prepare_seconds_total"]
+        + overall["train_seconds_total"]
+        + overall["diagnostic_seconds_total"]
+        + overall["inference_seconds_total"]
+    )
+    return overall, rows
+
+
 def analyze(output_root: Path, manifest_path: Path, allow_partial: bool) -> dict:
     manifest = load_manifest(manifest_path)
     records = collect_records(output_root, manifest)
@@ -370,6 +717,10 @@ def analyze(output_root: Path, manifest_path: Path, allow_partial: bool) -> dict
     dataset_rows, macro_rows = metric_summaries(records)
     pair_rows, stability_summary = stability_rows(records)
     analysis_dir = output_root / "analysis"
+    artifact_validation = validate_run_artifacts(output_root, manifest, records)
+    atomic_json(analysis_dir / "artifact_validation.json", artifact_validation)
+    if not artifact_validation["passed"]:
+        raise ValueError(f"Run artifact validation failed: {artifact_validation}")
     atomic_csv(
         analysis_dir / "metrics_by_dataset.csv",
         dataset_rows,
@@ -390,6 +741,12 @@ def analyze(output_root: Path, manifest_path: Path, allow_partial: bool) -> dict
         stability_summary,
         list(stability_summary[0]),
     )
+    timing_overall, timing_by_setting = detailed_timing_summary(records)
+    atomic_csv(
+        analysis_dir / "timing_by_setting.csv",
+        timing_by_setting,
+        list(timing_by_setting[0]),
+    )
     timing_records = [row for row in records if not bool(row.get("resumed", False))]
     timing_summary = {
         "records_included": len(timing_records),
@@ -403,10 +760,11 @@ def analyze(output_root: Path, manifest_path: Path, allow_partial: bool) -> dict
         "inference_seconds_total": float(
             sum(float(row["inference_seconds"]) for row in timing_records)
         ),
+        **timing_overall,
     }
     atomic_json(analysis_dir / "timing_summary.json", timing_summary)
     final_validation = {
-        "passed": True,
+        "passed": validation["passed"] and artifact_validation["passed"],
         "training_runs": 42,
         "final_evaluations": len(records),
         "stability_pair_rows": len(pair_rows),
@@ -414,10 +772,12 @@ def analyze(output_root: Path, manifest_path: Path, allow_partial: bool) -> dict
         "dataset_metric_rows": len(dataset_rows),
         "macro_metric_rows": len(macro_rows),
         "ddof": 0,
+        "artifact_validation": "analysis/artifact_validation.json",
     }
     atomic_json(analysis_dir / "final_validation.json", final_validation)
     return {
         "record_validation": validation,
+        "artifact_validation": artifact_validation,
         "final_validation": final_validation,
         "timing_summary": timing_summary,
     }
