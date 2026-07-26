@@ -600,9 +600,14 @@ def completion_and_consistency(
     stability_rows: list[dict[str, Any]],
     timing_rows: list[dict[str, Any]],
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    def audit_passed(value: dict[str, Any]) -> bool:
+        if "passed" in value:
+            return bool(value["passed"])
+        return str(value.get("status", "")).upper() == "PASS"
+
     recap_records = [*inputs["phase1_raw"], *inputs["questions_raw"]]
     ofa_baseline_records = [*inputs["ofa_primary"], *inputs["ofa_supplement"]]
-    audits_passed = all(bool(value["passed"]) for value in inputs["audits"].values())
+    audits_passed = all(audit_passed(value) for value in inputs["audits"].values())
     counts = {
         "recap_training_runs": len({row["run_id"] for row in recap_records}),
         "recap_final_evaluations": len(recap_records),
@@ -751,7 +756,7 @@ def completion_and_consistency(
         "run_and_evaluation_counts": counts,
         "recap_artifact_counts": artifact_counts,
         "source_artifact_audits": {
-            name: bool(value["passed"]) for name, value in inputs["audits"].items()
+            name: audit_passed(value) for name, value in inputs["audits"].items()
         },
         "checks": checks,
         "corrected_reporting_gaps": [
