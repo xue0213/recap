@@ -210,6 +210,11 @@ Every run must save:
 - label-access audit and environment metadata;
 - checkpoint-reload score-difference audit.
 
+Checkpoint reloads pass when the maximum absolute score difference is at most
+`1e-5 + 5e-6 * max(abs(score))`. The relative term accounts for nondeterministic
+last-bit CUDA scatter accumulation on large GAT graphs while remaining far below
+any reported metric precision.
+
 Formal execution may start only after:
 
 - protocol and 288-run manifest are committed;

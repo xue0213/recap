@@ -1132,10 +1132,14 @@ def run_one(
             )
         if not np.isfinite(scores).all():
             raise ValueError(f"{spec.run_id}: non-finite scores")
-        if training["reload_max_abs_diff"] > 1e-5:
+        reload_tolerance = float(
+            1e-5 + 5e-6 * np.max(np.abs(scores), initial=0.0)
+        )
+        training["reload_tolerance"] = reload_tolerance
+        if training["reload_max_abs_diff"] > reload_tolerance:
             raise ValueError(
                 f"{spec.run_id}: checkpoint reload drift "
-                f"{training['reload_max_abs_diff']}"
+                f"{training['reload_max_abs_diff']} > {reload_tolerance}"
             )
 
         if spec.supervised:
