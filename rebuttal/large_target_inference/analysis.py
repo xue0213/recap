@@ -486,8 +486,9 @@ def _report_markdown(
             "",
             "| Target | Shared cold setup (s) | Warm checkpoint inference (s) | "
             "Estimated cold latency (s) | Nodes/s | Adjacency nnz/s | "
-            "Peak GPU alloc. (GiB) | Peak RSS (GiB) | KNN cache (GiB) |",
-            "|---|---:|---:|---:|---:|---:|---:|---:|---:|",
+            "Peak GPU alloc. (GiB) | Peak GPU reserved (GiB) | "
+            "Peak RSS (GiB) | KNN cache (GiB) |",
+            "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
         ]
     )
     for item in aggregate:
@@ -499,6 +500,7 @@ def _report_markdown(
             f"{item['node_throughput_mean']:,.0f} | "
             f"{item['adjacency_nnz_throughput']:,.0f} | "
             f"{item['peak_gpu_allocated_gib']:.2f} | "
+            f"{item['peak_gpu_reserved_gib']:.2f} | "
             f"{item['peak_rss_gib']:.2f} | "
             f"{item['candidate_cache_gib']:.2f} |"
         )
@@ -582,8 +584,12 @@ def _report_markdown(
             "does not establish million-node training scalability, and "
             "predictive quality must be read from the primary table rather "
             "than inferred from successful completion.",
+            "- All three target means are below the random-ranking references "
+            "(AUROC 50%; AUPRC equal to anomaly prevalence). The experiment "
+            "therefore does **not** support predictive effectiveness of the "
+            "unadapted Setting-A checkpoints on these targets.",
             "",
-            f"Preflight hash: `{preflight_hash}`  ",
+            f"Preflight file SHA-256: `{preflight_hash}`  ",
             f"Independent audit hash: `{audit_hash}`",
             "",
         ]
