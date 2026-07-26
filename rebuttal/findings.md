@@ -20,6 +20,10 @@ frozen score, metric, checkpoint, label event, source-only calibration, and
 protocol hash. Its accounted preparation, training, and evaluation time was
 957.48 seconds.
 
+The user-revised B/C completion supplement is complete as a separate immutable
+artifact: 12 additional training runs and 60 evaluations for UNPrompt and
+AnomalyGFM-ZS. Its independently audited accounted time was 971.17 seconds.
+
 ## Key Results
 
 - OFO 11-dataset macro: AUROC 0.717747 ± 0.003883 and AUPRC
@@ -44,6 +48,10 @@ protocol hash. Its accounted preparation, training, and evaluation time was
 - Setting B macros are ARC 0.7276/0.2949 and IA-GGAD 0.7284/0.3074.
 - Setting C dataset macros are ARC 0.6618/0.1886 and IA-GGAD
   0.6303/0.1774.
+- The completed Setting B zero-context baseline macros are UNPrompt
+  0.5792/0.1169 and AnomalyGFM-ZS 0.4964/0.0843.
+- The completed Setting C zero-context baseline macros are UNPrompt
+  0.5925/0.1137 and AnomalyGFM-ZS 0.5103/0.0557.
 
 ## Patterns and Insights
 
@@ -71,6 +79,9 @@ protocol hash. Its accounted preparation, training, and evaluation time was
 - In Setting A, RECAP exceeds the target-context-free UNPrompt and
   AnomalyGFM-ZS reproductions on both macro metrics. This negative baseline
   evidence is retained without target-driven tuning.
+- The same ordering holds in Settings B/C: RECAP exceeds both UNPrompt and
+  AnomalyGFM-ZS on dataset-macro AUROC and AUPRC. This completes the symmetric
+  four-baseline A/B/C comparison requested by the user.
 - IA-GGAD's Setting-A Amazon result is high variance
   (AUROC standard deviation 0.1171 and AUPRC standard deviation 0.1571);
   it must not be summarized as uniformly stable.
@@ -96,7 +107,7 @@ protocol hash. Its accounted preparation, training, and evaluation time was
   use no target context.
 - IA-GGAD's released target-specific weights were not used. Source-only seed-0
   selection froze weights 0.1/0.3/0.5 for A/B/C. AnomalyGFM-ZS froze weight
-  6.0 for A.
+  6.0 for A and independently froze source-only weights 2.0/4.0 for B/C.
 - The rejected UNPrompt CUDA sparse-reduction attempt and the three
   pre-amendment ARC runs remain preserved outside the accepted formal run
   directory. They are excluded from every reported aggregate.
@@ -122,3 +133,7 @@ versus sparse equivalence gates, four method smokes, a deterministic UNPrompt
 recovery gate, then the immutable 24-run manifest and an independent 156-score
 recomputation. Direct top-8 ARPACK SVD and feature-cache reuse removed redundant
 work without changing the retained feature subspace or formal objectives.
+
+The B/C completion was pre-registered as a user-revised supplement rather than
+rewriting the original manifest. Ten tests and four method-setting smokes
+preceded its 12 formal runs; all 60 metrics were recomputed independently.
