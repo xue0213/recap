@@ -21,17 +21,17 @@
     "status": "PASS"
   },
   {
-    "actual": "288 evaluations / 288 training runs",
-    "evidence": "OFO 12-dataset global audit",
-    "expected": "8 methods \u00d7 12 datasets \u00d7 3 seeds",
-    "requirement": "8 OFO baselines",
+    "actual": "360 evaluations / 360 training runs",
+    "evidence": "OFO global audit + three-baseline extension audit",
+    "expected": "10 methods \u00d7 12 datasets \u00d7 3 seeds",
+    "requirement": "10 OFO baselines",
     "status": "PASS"
   },
   {
-    "actual": "216 evaluations / 36 training runs",
-    "evidence": "Phase 2 primary + B/C supplement audits",
-    "expected": "4 methods \u00d7 (8+5+5) targets \u00d7 3 seeds",
-    "requirement": "4 OFA baselines in A/B/C",
+    "actual": "270 evaluations / 45 training runs",
+    "evidence": "Phase 2 audits + three-baseline extension audit",
+    "expected": "5 methods \u00d7 (8+5+5) targets \u00d7 3 seeds",
+    "requirement": "5 OFA baselines in A/B/C",
     "status": "PASS"
   },
   {

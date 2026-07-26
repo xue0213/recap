@@ -2,7 +2,7 @@
 
 ## Conclusion
 
-**PASS. No requested training or inference cell is missing, and no rerun is required.** After the DiffGAD/GUIDE/OWLEYE extension, the revised scope contains 450 successful training runs and 720 final evaluations. All consolidated values below were recomputed from unrounded seed-level or seed-pair-level records using population standard deviation (`ddof=0`).
+**PASS. No requested training or inference cell is missing, and no rerun is required.** The revised scope contains 450 successful training runs and 720 final evaluations. All consolidated values below were recomputed from unrounded seed-level or seed-pair-level records using population standard deviation (`ddof=0`).
 
 ## Completion matrix
 
@@ -11,10 +11,8 @@
 | 12 datasets load and have immutable raw hashes | 12 datasets | 12 | PASS |
 | RECAP-OFO | 12 datasets × 3 seeds | 36 evaluations / 36 training runs | PASS |
 | RECAP-OFA A/B/C | 3 settings × 3 seeds | 54 evaluations / 9 training runs | PASS |
-| 8 OFO baselines | 8 methods × 12 datasets × 3 seeds | 288 evaluations / 288 training runs | PASS |
-| 4 OFA baselines in A/B/C | 4 methods × (8+5+5) targets × 3 seeds | 216 evaluations / 36 training runs | PASS |
-| DiffGAD and GUIDE OFO extension | 2 methods × 12 datasets × 3 seeds | 72 evaluations / 72 training runs | PASS |
-| OWLEYE OFA A/B/C extension | (8+5+5) targets × 3 seeds | 54 evaluations / 9 training runs | PASS |
+| 10 OFO baselines | 10 methods × 12 datasets × 3 seeds | 360 evaluations / 360 training runs | PASS |
+| 5 OFA baselines in A/B/C | 5 methods × (8+5+5) targets × 3 seeds | 270 evaluations / 45 training runs | PASS |
 | Community stability | 30 scopes × 3 seed pairs | 90 pair records | PASS |
 | Training diagnostics | 486 rows after Questions addendum | 486 | PASS |
 | Checkpoints and reload gates | 225 checkpoints / 45 final reload gates | 225 / 45 | PASS |
@@ -136,10 +134,11 @@
 | all required cells have seeds 0 1 2 | PASS |
 | no duplicate required cells | PASS |
 | all metrics finite and in unit interval | PASS |
-| three-baseline extension 81/81 runs and 126/126 evaluations | PASS |
-| three-baseline metric recomputation maximum difference is zero | PASS |
-| OWLEYE target labels loaded only after per-target score freeze | PASS |
-| all five source artifact audits passed | PASS |
+| all six source artifact audits passed | PASS |
+| three baseline extension 81 of 81 runs | PASS |
+| three baseline extension 126 of 126 evaluations | PASS |
+| three baseline metric recomputation exact | PASS |
+| three baseline label and score freeze audit passed | PASS |
 | dataset macros recomputed seed first | PASS |
 | setting c domain macros recomputed seed first | PASS |
 | stability recomputed pair macro first | PASS |
@@ -157,10 +156,7 @@
 ### Interpretation boundaries
 
 - Supervised OFO baselines report a held-out stratified 40% test population; unsupervised baselines and RECAP report the full graph.
-- ARC excludes 10 labeled-normal target contexts from evaluation; IA-GGAD
-  excludes 10 randomly sampled unlabeled internal reference nodes. UNPrompt,
-  AnomalyGFM-ZS, OWLEYE, and RECAP score the full target graph. OWLEYE samples
-  10 unlabeled target pattern nodes but retains them in that population.
+- ARC excludes 10 labeled-normal target contexts from evaluation; IA-GGAD excludes 10 randomly sampled unlabeled internal reference nodes; UNPrompt, AnomalyGFM-ZS, OWLEYE, and RECAP score the full target graph. OWLEYE's 10 unlabeled target patterns remain in the evaluation population.
 - Settings A, B, and C use different target sets and are not averaged into one cross-setting number.
 
 ### Evaluation strata
@@ -195,5 +191,4 @@
 - `recap_timing_by_seed.csv` and `recap_timing_summary.csv`
 - `evaluation_strata.csv`
 - `THREE_BASELINE_EXTENSION_REPORT.md`
-- Three-baseline machine-readable audit and summaries under
-  `rebuttal/artifacts/three_baseline_extension/analysis/`
+- Three-baseline audit and summaries under `rebuttal/artifacts/three_baseline_extension/analysis/`
