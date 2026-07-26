@@ -1,4 +1,4 @@
-# RECAP Phase 1 Findings
+# RECAP Phase 1–2 Findings
 
 ## Research Question
 
@@ -13,6 +13,12 @@ cache-equivalence, data-manifest, checkpoint-reload, raw-record, and artifact
 gates passed. The complete accounted data preparation, training, diagnostics,
 and inference time was 313.59 seconds; this excludes orchestration pauses and
 tooling fixes.
+
+The locked Phase 2 supervised OFA baseline reproduction is also complete:
+24 training runs, 156 final evaluations, and an independent audit of every
+frozen score, metric, checkpoint, label event, source-only calibration, and
+protocol hash. Its accounted preparation, training, and evaluation time was
+957.48 seconds.
 
 ## Key Results
 
@@ -32,6 +38,12 @@ tooling fixes.
   differences are 0.37 AUROC percentage points and 0.65 AUPRC points.
 - The full 12-dataset preflight completed in 27.87 seconds. All file hashes and
   actual graph statistics are locked in `data_manifest.json`.
+- Setting A supervised baseline macros (AUROC/AUPRC) are ARC
+  0.7869/0.3649, IA-GGAD 0.7722/0.3551, UNPrompt 0.5802/0.1022, and
+  AnomalyGFM-ZS 0.5307/0.0802.
+- Setting B macros are ARC 0.7276/0.2949 and IA-GGAD 0.7284/0.3074.
+- Setting C dataset macros are ARC 0.6618/0.1886 and IA-GGAD
+  0.6303/0.1774.
 
 ## Patterns and Insights
 
@@ -53,6 +65,15 @@ tooling fixes.
 - Questions OFO is highly stable in final anomaly ranking across seeds
   (Spearman 0.993) and reasonably stable in soft community structure (0.848),
   even though its AUPRC is low because of the difficult, imbalanced target.
+- ARC and IA-GGAD lead label-free RECAP in Settings A/B. With citation-only
+  sources in Setting C, RECAP has higher dataset-macro AUROC than both, while
+  its AUPRC is slightly below both.
+- In Setting A, RECAP exceeds the target-context-free UNPrompt and
+  AnomalyGFM-ZS reproductions on both macro metrics. This negative baseline
+  evidence is retained without target-driven tuning.
+- IA-GGAD's Setting-A Amazon result is high variance
+  (AUROC standard deviation 0.1171 and AUPRC standard deviation 0.1571);
+  it must not be summarized as uniformly stable.
 
 ## Lessons and Constraints
 
@@ -70,6 +91,15 @@ tooling fixes.
 - Questions was added only after the original 11-dataset Phase 1 completed.
   The combined 12-dataset macro is therefore a transparent post hoc scope
   addition and must not be presented as part of the original locked scope.
+- ARC alone uses 10 labeled-normal target contexts. IA-GGAD's 10 internal
+  target references are sampled without labels; UNPrompt and AnomalyGFM-ZS
+  use no target context.
+- IA-GGAD's released target-specific weights were not used. Source-only seed-0
+  selection froze weights 0.1/0.3/0.5 for A/B/C. AnomalyGFM-ZS froze weight
+  6.0 for A.
+- The rejected UNPrompt CUDA sparse-reduction attempt and the three
+  pre-amendment ARC runs remain preserved outside the accepted formal run
+  directory. They are excluded from every reported aggregate.
 
 ## Open Questions
 
@@ -86,3 +116,9 @@ broadened to all 42 locked runs. No metric-driven hyperparameter changes were
 made. Exact feature/KNN cache reuse and the exact C×C soft co-assignment
 identity reduced redundant work without changing the experiment definition or
 outputs.
+
+Phase 2 followed the same pattern: upstream/data/environment provenance, dense
+versus sparse equivalence gates, four method smokes, a deterministic UNPrompt
+recovery gate, then the immutable 24-run manifest and an independent 156-score
+recomputation. Direct top-8 ARPACK SVD and feature-cache reuse removed redundant
+work without changing the retained feature subspace or formal objectives.

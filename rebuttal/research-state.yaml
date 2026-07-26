@@ -91,7 +91,7 @@ workspace:
   reports_root: "rebuttal/reports/"
 
 phase2_baselines:
-  status: running
+  status: complete
   classification: confirmatory
   protocol: "rebuttal/BASELINE_OFA_REPROTOCOL.md"
   upstream_manifest: "rebuttal/baselines/upstream_manifest.json"
@@ -104,9 +104,30 @@ phase2_baselines:
   seeds: [0, 1, 2]
   planned_training_runs: 24
   planned_final_evaluations: 156
-  completed_training_runs: 0
-  completed_final_evaluations: 0
-  current_stage: formal_execution
+  completed_training_runs: 24
+  completed_final_evaluations: 156
+  current_stage: complete
+  dataset_summary_rows: 52
+  macro_summary_rows: 10
+  formal_accounted_seconds: 957.4758505113423
+  checkpoint_reload_max_abs_diff: 0.000009655952453613281
+  calibration_weights:
+    AnomalyGFM-ZS_A: 6.0
+    IA-GGAD_A: 0.1
+    IA-GGAD_B: 0.3
+    IA-GGAD_C: 0.5
+  macro_results:
+    A:
+      ARC: {auroc: 0.7868803327, auprc: 0.3648878345}
+      IA-GGAD: {auroc: 0.7722309655, auprc: 0.3550994875}
+      UNPrompt: {auroc: 0.5802440568, auprc: 0.1022485404}
+      AnomalyGFM-ZS: {auroc: 0.5307151902, auprc: 0.0802408748}
+    B:
+      ARC: {auroc: 0.7275785175, auprc: 0.2949239394}
+      IA-GGAD: {auroc: 0.7284327675, auprc: 0.3073778973}
+    C:
+      ARC: {auroc: 0.6617509051, auprc: 0.1885740570}
+      IA-GGAD: {auroc: 0.6303469056, auprc: 0.1773807861}
   quality_gates:
     upstream_archives_verified: true
     dataset_identity_verified: true
@@ -116,7 +137,12 @@ phase2_baselines:
     method_smokes_passed: true
     unprompt_deterministic_reload_verified: true
     formal_manifest_complete: true
+    formal_runs_complete: true
+    raw_metric_recomputation_passed: true
+    artifact_validation_passed: true
+    source_only_calibration_verified: true
+    final_report_generated: true
   outer_loop:
-    cycle: 3
-    last_direction: broaden
-    last_reflection: "The first formal UNPrompt attempt exposed CUDA sparse-reduction nondeterminism. The failure is retained, deterministic target aggregation passed seven tests and an eight-target zero-difference reload smoke, and all accepted runs will now share one amended protocol hash."
+    cycle: 4
+    last_direction: conclude
+    last_reflection: "The complete 24-run/156-evaluation reproduction passed independent score, hash, label, checkpoint, calibration, and aggregation audits. ARC/IA lead A/B; label-free RECAP has higher C dataset-macro AUROC but slightly lower AUPRC. Preserve weak and high-variance baseline results without tuning."
