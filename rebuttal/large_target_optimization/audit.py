@@ -112,6 +112,8 @@ def audit_three_seed_result(
     max_metric_difference = 0.0
     score_hashes = 0
     for seed, record in enumerate(records):
+        if record.get("labels_accessed") is not False:
+            raise AssertionError(f"{base}: score record accessed labels")
         for route, path in record["score_paths"].items():
             if sha256_file(Path(path)) != record["score_sha256"][route]:
                 raise AssertionError(f"{base}: score hash mismatch")
@@ -121,6 +123,8 @@ def audit_three_seed_result(
                 if int(item["seed"]) == seed and item["route"] == route
             )
             score = np.load(path, mmap_mode="r")
+            if score.shape != labels.shape or not np.all(np.isfinite(score)):
+                raise AssertionError(f"{base}: invalid score shape/values")
             auroc = float(roc_auc_score(labels[mask], score[mask]))
             auprc = float(average_precision_score(labels[mask], score[mask]))
             max_metric_difference = max(
@@ -141,6 +145,60 @@ def audit_three_seed_result(
     }
 
 
+def audit_milestone_result(
+    base: Path, dataset_root: Path, target: str
+) -> dict:
+    with (base / "all_scores_frozen.json").open(
+        "r", encoding="utf-8"
+    ) as handle:
+        frozen = json.load(handle)
+    records = frozen["records"]
+    if len(records) != 12:
+        raise AssertionError(f"{base}: expected 12 milestone records")
+    if frozen.get("labels_accessed_before_global_freeze") is not False:
+        raise AssertionError(f"{base}: invalid freeze declaration")
+    rows = _read_csv(base / "results.csv")
+    if len(rows) != 36:
+        raise AssertionError(f"{base}: expected 36 milestone metric rows")
+    labels, mask = _labels(dataset_root, target)
+    max_metric_difference = 0.0
+    score_hashes = 0
+    for record in records:
+        if record.get("labels_accessed") is not False:
+            raise AssertionError(f"{base}: milestone record accessed labels")
+        for route, path in record["score_paths"].items():
+            if sha256_file(Path(path)) != record["score_sha256"][route]:
+                raise AssertionError(f"{base}: milestone score hash mismatch")
+            score = np.load(path, mmap_mode="r")
+            if score.shape != labels.shape or not np.all(np.isfinite(score)):
+                raise AssertionError(f"{base}: invalid milestone score")
+            row = next(
+                item
+                for item in rows
+                if int(item["seed"]) == int(record["seed"])
+                and int(item["epoch"]) == int(record["epoch"])
+                and item["route"] == route
+            )
+            auroc = float(roc_auc_score(labels[mask], score[mask]))
+            auprc = float(average_precision_score(labels[mask], score[mask]))
+            max_metric_difference = max(
+                max_metric_difference,
+                abs(auroc - float(row["auroc"])),
+                abs(auprc - float(row["auprc"])),
+            )
+            score_hashes += 1
+    if max_metric_difference > 1e-12:
+        raise AssertionError(f"{base}: milestone metric mismatch")
+    return {
+        "target": target,
+        "base": str(base.resolve()),
+        "score_hashes": score_hashes,
+        "metric_rows": len(rows),
+        "max_metric_difference": max_metric_difference,
+        "passed": True,
+    }
+
+
 def run(args: argparse.Namespace) -> None:
     root = Path(args.root).resolve()
     dataset_root = Path(args.dataset_root).resolve()
@@ -148,6 +206,8 @@ def run(args: argparse.Namespace) -> None:
         "format": "recap_large_target_optimization_audit_v1",
         "source_scans": [],
         "target_adaptation": [],
+        "robust_core_adaptation": [],
+        "milestone_diagnostic": [],
         "shared_transfer": None,
         "created_at": utc_now(),
     }
@@ -158,6 +218,18 @@ def run(args: argparse.Namespace) -> None:
         report["target_adaptation"].append(
             audit_three_seed_result(
                 root / "target_adapt" / target, dataset_root, target
+            )
+        )
+        report["robust_core_adaptation"].append(
+            audit_three_seed_result(
+                root / "robust_core_adapt" / target, dataset_root, target
+            )
+        )
+        report["milestone_diagnostic"].append(
+            audit_milestone_result(
+                root / "oracle_milestones" / target,
+                dataset_root,
+                target,
             )
         )
     shared = root / "shared_transfer"
@@ -178,4 +250,3 @@ def parser() -> argparse.ArgumentParser:
 
 if __name__ == "__main__":
     run(parser().parse_args())
-
