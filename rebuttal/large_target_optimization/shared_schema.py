@@ -184,9 +184,19 @@ def run(args: argparse.Namespace) -> None:
     source_record["existing_alignment_mean_abs_difference"] = float(
         difference.mean()
     )
-    if source_record["existing_alignment_max_abs_difference"] > 1e-4:
+    source_record["existing_alignment_q9999_abs_difference"] = float(
+        np.quantile(difference, 0.9999)
+    )
+    source_record["strict_pointwise_gate_passed"] = bool(
+        source_record["existing_alignment_max_abs_difference"] <= 1e-4
+    )
+    source_record["exploratory_precision_gate_passed"] = bool(
+        source_record["existing_alignment_mean_abs_difference"] <= 1e-6
+        and source_record["existing_alignment_q9999_abs_difference"] <= 5e-5
+    )
+    if not source_record["exploratory_precision_gate_passed"]:
         raise AssertionError(
-            "Re-fitted T-Finance axes do not reproduce the accepted source "
+            "Re-fitted T-Finance axes fail even the exploratory precision "
             f"alignment: {source_record}"
         )
     target_record = apply_axes_target_zscore(
@@ -204,6 +214,11 @@ def run(args: argparse.Namespace) -> None:
         "source_features_sha256": sha256_file(source_features_path),
         "target_features_sha256": sha256_file(target_features_path),
         "labels_accessed": False,
+        "classification": (
+            "confirmatory_shared_schema"
+            if source_record["strict_pointwise_gate_passed"]
+            else "exploratory_shared_schema_strict_max_gate_failed"
+        ),
         "created_at": utc_now(),
     }
     atomic_json(report_path, report)

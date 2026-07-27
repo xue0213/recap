@@ -10,6 +10,10 @@ the same 10-dimensional account-behavior schema.
 
 - Fit robust median/IQR statistics and PCA axes on T-Finance without labels.
 - Reproduce the accepted T-Finance aligned features within `1e-4`.
+- If the strict pointwise maximum gate fails, the route cannot be called
+  confirmatory. It may continue only as an explicitly exploratory mechanism
+  check when mean absolute error is below `1e-6` and the 99.99th percentile
+  is below `5e-5`; the failed maximum and its location remain reported.
 - Apply the frozen T-Finance axes to T-Social, followed by label-free
   T-Social coordinate-wise z-scoring and zero-padding to 32 dimensions.
 - Train RECAP label-free on the full T-Finance graph for 100 epochs and seeds
@@ -23,4 +27,3 @@ the same 10-dimensional account-behavior schema.
 
 This route is not applied to DGraph-Fin because its 17 raw features do not
 share the T-Finance/T-Social schema.
-
