@@ -391,15 +391,18 @@ large_target_inference:
     last_reflection: "All nine full-node score vectors and independent audits pass. The adapter establishes target-side computational scalability on the recorded hardware, but every target mean is below its random-ranking AUROC/AUPRC reference, so predictive effectiveness of the unadapted checkpoints is not supported."
 
 large_target_optimization:
-  status: blocked_on_gpu_resource
+  status: running
   classification: mixed_confirmatory_and_exploratory
   started: "2026-07-27"
   protocol: "rebuttal/LARGE_TARGET_OPTIMIZATION_PROTOCOL.md"
   infrastructure_commit: "b7a379e"
   targets: [tfinance, dgraphfin, tsocial]
   server_mode:
-    gpu_available: false
-    cgroup_memory_bytes: 2147483648
+    gpu_available: true
+    gpu_name: "NVIDIA RTX PRO 6000 Blackwell Server Edition"
+    gpu_memory_mib: 97887
+    cgroup_memory_bytes: 128849018880
+    migrated_endpoint: "connect.westd.seetacloud.com:37791"
   source_scan:
     tfinance:
       status: completed_and_independently_audited
@@ -414,7 +417,7 @@ large_target_optimization:
       best_context_only_family: "OFO-BlogCatalog"
       best_context_only_auroc_mean: 0.370733
       conclusion: "Changing among the 15 accepted small-graph source families does not fix T-Finance; every full-score family remains below random."
-    dgraphfin: {status: pending_gpu}
+    dgraphfin: {status: running}
     tsocial: {status: pending_gpu}
   target_adaptation:
     method: "label-free deterministic sample training with full-graph propagated features and algebraically exact chunked fixed-candidate loss"
@@ -439,7 +442,7 @@ large_target_optimization:
     score_inversion_forbidden: true
     global_score_freeze_before_labels: true
     target_adaptation_smoke: "blocked by 2 GiB CPU-only cgroup during backward pass"
-  next_action: "Restore approximately 96 GiB GPU mode, explicitly cap CPU/OpenMP threads, then run DGraph-Fin/T-Social source scans and three-seed target adaptation on all targets."
+  next_action: "Finish and audit DGraph-Fin/T-Social source scans, then run three-seed target adaptation on all targets with capped CPU/OpenMP threads."
   outer_loop:
     cycle: 1
     last_direction: deepen_with_target_adaptation

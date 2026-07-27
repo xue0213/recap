@@ -300,8 +300,12 @@ within the locked `2e-6` absolute/relative tolerance. The default CPU runtime
 over-expanded a tiny backward test across the host's large thread pool; with
 `OMP_NUM_THREADS=1` and `MKL_NUM_THREADS=1`, the gradient test completes in
 0.009 seconds and the four-test suite in 0.287 seconds. Formal launches must
-therefore cap CPU threads explicitly. The actual CPU training smoke cannot
-pass the current no-card
-container's 2 GiB cgroup limit; DGraph-Fin and T-Social also cannot load their
-five propagated feature tensors in this mode. Formal optimization therefore
-awaits restoration of the approximately 96-GiB GPU instance.
+therefore cap CPU threads explicitly. The actual CPU training smoke could not
+pass the former no-card container's 2 GiB cgroup limit; DGraph-Fin and
+T-Social also could not load their five propagated feature tensors in that
+mode. The experiment has now migrated to a new instance with the same
+95.59-GiB RTX PRO 6000 GPU class and a 120-GiB cgroup limit. All three
+canonical bundles, fixed KNN candidates, 45 accepted checkpoints and
+optimization source files match their previously recorded SHA-256 values,
+and the four numerical/protocol gates pass. Formal DGraph-Fin source scanning
+is in progress with explicitly capped CPU threads.
