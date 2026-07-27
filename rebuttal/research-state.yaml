@@ -391,7 +391,7 @@ large_target_inference:
     last_reflection: "All nine full-node score vectors and independent audits pass. The adapter establishes target-side computational scalability on the recorded hardware, but every target mean is below its random-ranking AUROC/AUPRC reference, so predictive effectiveness of the unadapted checkpoints is not supported."
 
 large_target_optimization:
-  status: running
+  status: complete
   classification: mixed_confirmatory_and_exploratory
   started: "2026-07-27"
   protocol: "rebuttal/LARGE_TARGET_OPTIMIZATION_PROTOCOL.md"
@@ -463,7 +463,7 @@ large_target_optimization:
       adhesion_auroc_mean: 0.4992567642
       adhesion_auprc_mean: 0.0305951715
   shared_schema:
-    status: shared_transfer_running
+    status: completed_exploratory_and_independently_audited
     source: tfinance
     target: tsocial
     strict_pointwise_gate_passed: false
@@ -471,17 +471,52 @@ large_target_optimization:
     source_alignment_mean_abs_difference: 0.0000000867
     target_feature_sha256: "6f6e36ec03a1aa85e245693887fef4f781f0b36d485712a57235986c74709966"
     classification: "exploratory_shared_schema_strict_max_gate_failed"
+    results:
+      full_auroc_mean: 0.4548856
+      full_auroc_std: 0.0125410
+      full_auprc_mean: 0.02656137
+      full_auprc_std: 0.0009470
+      adhesion_auroc_mean: 0.5187004
+      adhesion_auroc_std: 0.0045802
+      adhesion_auprc_mean: 0.03045465
+      adhesion_auprc_std: 0.0003845
+  robust_core_adaptation:
+    classification: exploratory
+    protocol: "rebuttal/LARGE_TARGET_ROBUST_CORE_PROTOCOL.md"
+    method: "fixed label-free feature-norm/robust-degree rank proxy; retain lowest 90 percent"
+    status: completed_and_independently_audited
+    tfinance: {full_auroc_mean: 0.3211384, full_auprc_mean: 0.03056597, adhesion_auroc_mean: 0.3221107}
+    dgraphfin: {full_auroc_mean: 0.3700244, full_auprc_mean: 0.00904816, context_auroc_mean: 0.4127838}
+    tsocial: {full_auroc_mean: 0.4190737, full_auprc_mean: 0.02461841, adhesion_auroc_mean: 0.4863630}
+    conclusion: "A small T-Finance gain does not transfer; the fixed robust-core hypothesis degrades DGraph-Fin and T-Social."
+  milestone_diagnostic:
+    classification: oracle_target_metric_diagnostic
+    protocol: "rebuttal/LARGE_TARGET_MILESTONE_DIAGNOSTIC_PROTOCOL.md"
+    epochs: [25, 50, 75, 100]
+    status: completed_and_independently_audited
+    tfinance: {best_full_epoch: 100, full_auroc_mean: 0.3116017, full_auprc_mean: 0.03018822}
+    dgraphfin: {best_full_epoch: 75, full_auroc_mean: 0.3715896, full_auprc_mean: 0.00909192}
+    tsocial: {best_full_epoch: 25, full_auroc_mean: 0.4316411, full_auprc_mean: 0.02528405}
+    conclusion: "Earlier stopping yields only negligible DGraph-Fin and small T-Social gains; epoch-100 overfitting is not the main failure mechanism."
   quality_gates:
     checkpoint_inventory_45_passed: true
     chunked_loss_algebra_exact_passed: true
     chunked_loss_residual_and_cluster_gradients_passed: true
-    built_in_unit_tests: "4 passed with OMP_NUM_THREADS=1 and MKL_NUM_THREADS=1"
+    built_in_unit_tests: "5 passed with OMP_NUM_THREADS=1 and MKL_NUM_THREADS=1"
     tfinance_source_scan_hash_audit_passed: true
     score_inversion_forbidden: true
     global_score_freeze_before_labels: true
-    target_adaptation_smoke: "blocked by 2 GiB CPU-only cgroup during backward pass"
-  next_action: "Finish DGraph-Fin/T-Social target adaptation, run the exploratory shared-schema transfer, then complete the combined independent audit and final evidence-stratified report."
+    target_adaptation_smoke: "passed after migration to 120-GiB cgroup/GPU instance"
+    final_combined_independent_audit_passed: true
+    final_score_hashes: 657
+    final_metric_rows: 657
+    final_maximum_metric_difference: 0.0
+    independent_audit_sha256: "d70681e4388052bd661f451707acd99607b9da0b617f734e79705fac61c9bf88"
+  artifacts:
+    report: "rebuttal/reports/LARGE_TARGET_OPTIMIZATION_REPORT.md"
+    audit: "rebuttal/reports/LARGE_TARGET_OPTIMIZATION_AUDIT.json"
+  next_action: "Concluded. Preserve computational scalability and the negative predictive result; do not claim approximately 0.70 AUROC."
   outer_loop:
-    cycle: 1
-    last_direction: deepen_with_target_adaptation
-    last_reflection: "T-Finance source sensitivity is uniformly below random, so standard source selection is not the mechanism. Prioritize label-free target adaptation and shared-schema T-Finance-to-T-Social transfer once GPU resources return."
+    cycle: 4
+    last_direction: conclude
+    last_reflection: "Exhausted the highest-value label-free hypotheses under the locked evidence strata. Confirmatory target adaptation is not a general fix; robust-core and milestone diagnostics rule out two simple failure explanations; shared coordinates help only T-Social adhesion and fail the strict coordinate gate. No primary full score approaches 0.70 AUROC."

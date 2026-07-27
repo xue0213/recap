@@ -268,7 +268,7 @@ references, so the experiment does not support predictive effectiveness of
 the unadapted Setting-A checkpoints on these large targets. No score inversion,
 target-label tuning, or selective rerun was used to hide that negative result.
 
-## Large-Target Predictive Optimization (In Progress)
+## Large-Target Predictive Optimization
 
 The first outer-loop test scanned all 45 accepted RECAP checkpoints on
 T-Finance: OFA A/B/C and all 12 OFO source families, each with seeds 0/1/2.
@@ -333,5 +333,28 @@ context-only ablation reaches 0.42038/0.01021. T-Social target adaptation
 reduces the paper score to 0.42156/0.02485; adhesion-only is
 0.49926/0.03060 and remains below the predeclared social-domain source
 ensemble. Thus the confirmatory label-free target-adaptation hypothesis is
-not supported as a general predictive fix. The locked exploratory
-T-Finance-to-T-Social shared-coordinate transfer is now running.
+not supported as a general predictive fix.
+
+The locked exploratory T-Finance-to-T-Social shared-coordinate transfer
+completed. Its full paper score is 0.45489/0.02656; the separately named
+adhesion-only ablation reaches 0.51870/0.03045. Because the strict pointwise
+source-coordinate reproduction gate failed, these results remain exploratory
+rather than confirmatory.
+
+A post-confirmatory robust-core experiment retained the lowest 90% of nodes
+under a fixed label-free feature-norm and robust-degree proxy. Full-score
+AUROC/AUPRC is 0.32114/0.03057 on T-Finance, 0.37002/0.00905 on DGraph-Fin
+and 0.41907/0.02462 on T-Social. The small T-Finance improvement does not
+transfer, ruling out this simple normal-core contamination explanation.
+
+The frozen epoch-25/50/75/100 diagnostic found no hidden strong early
+checkpoint. Target-metric oracle selection gives full-score AUROC 0.31160 at
+epoch 100 on T-Finance, 0.37159 at epoch 75 on DGraph-Fin and 0.43164 at
+epoch 25 on T-Social. Thus epoch-100 overfitting is not the main cause.
+
+The final independent audit passed all 657 frozen score-route hashes and all
+657 AUROC/AUPRC rows with maximum recomputation difference zero. No full-score
+configuration approaches 0.70 AUROC and the strongest primary-score AUPRC
+remains below prevalence on every target. The accepted conclusion is
+computational scalability plus transparent negative predictive evidence, not
+competitive effectiveness on these three cross-domain targets.
