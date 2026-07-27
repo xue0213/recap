@@ -14,6 +14,7 @@ import time
 from pathlib import Path
 
 import numpy as np
+import scipy.sparse as sp
 import torch
 import torch.nn.functional as F
 from sklearn.metrics import average_precision_score, roc_auc_score
@@ -53,6 +54,9 @@ from rebuttal.large_target_inference.scoring import (  # noqa: E402
 
 PROTOCOL_PATH = (
     PROJECT_ROOT / "rebuttal" / "LARGE_TARGET_OPTIMIZATION_PROTOCOL.md"
+)
+ROBUST_CORE_PROTOCOL_PATH = (
+    PROJECT_ROOT / "rebuttal" / "LARGE_TARGET_ROBUST_CORE_PROTOCOL.md"
 )
 SEEDS = (0, 1, 2)
 
@@ -114,6 +118,88 @@ def deterministic_sample(node_count: int, sample_size: int) -> np.ndarray:
     return np.sort(
         rng.choice(node_count, size=sample_size, replace=False).astype(np.int64)
     )
+
+
+def _stable_ordinal_percentile(values: np.ndarray) -> np.ndarray:
+    values = np.asarray(values, dtype=np.float64).reshape(-1)
+    order = np.argsort(values, kind="stable")
+    ranks = np.empty(len(values), dtype=np.float32)
+    denominator = max(len(values) - 1, 1)
+    ranks[order] = np.arange(len(values), dtype=np.float32) / denominator
+    return ranks
+
+
+def deterministic_robust_core_sample(
+    *,
+    dataset_root: Path,
+    target: str,
+    initial_features: torch.Tensor,
+    sample_size: int,
+    core_fraction: float,
+) -> tuple[np.ndarray, dict]:
+    """Select a fixed label-free central subset from features and degree."""
+    if not 0.0 < core_fraction < 1.0:
+        raise ValueError("core_fraction must lie strictly between zero and one")
+    node_count = int(initial_features.shape[0])
+    with torch.no_grad():
+        feature_proxy = (
+            torch.linalg.vector_norm(initial_features.detach().float(), dim=1)
+            .cpu()
+            .numpy()
+            .astype(np.float64, copy=False)
+        )
+    adjacency = sp.load_npz(
+        Path(dataset_root) / target / "adjacency.npz"
+    ).tocsr()
+    if adjacency.shape != (node_count, node_count):
+        raise ValueError(f"{target}: robust-core adjacency shape mismatch")
+    degree = np.diff(adjacency.indptr).astype(np.float64, copy=False)
+    log_degree = np.log1p(degree)
+    median = float(np.median(log_degree))
+    q25, q75 = np.quantile(log_degree, [0.25, 0.75])
+    scale = max(float(q75 - q25), 1e-12)
+    structure_proxy = np.abs(log_degree - median) / scale
+    composite = 0.5 * _stable_ordinal_percentile(
+        feature_proxy
+    ) + 0.5 * _stable_ordinal_percentile(structure_proxy)
+    core_count = max(2, min(node_count, int(np.floor(core_fraction * node_count))))
+    core = np.sort(
+        np.argsort(composite, kind="stable")[:core_count].astype(np.int64)
+    )
+    if sample_size >= core_count:
+        sample = core
+    else:
+        rng = np.random.default_rng(20260727)
+        sample = np.sort(
+            rng.choice(core, size=sample_size, replace=False).astype(np.int64)
+        )
+    metadata = {
+        "mode": "robust_core",
+        "core_fraction": float(core_fraction),
+        "core_nodes": int(core_count),
+        "sample_nodes": int(len(sample)),
+        "feature_proxy": "l2_norm_of_aligned_prepropagation_features",
+        "structure_proxy": (
+            "absolute_robust_deviation_of_log1p_unweighted_degree"
+        ),
+        "rank_weights": {"feature": 0.5, "structure": 0.5},
+        "rank_method": "stable_ordinal_percentile",
+        "sample_seed": 20260727,
+        "feature_proxy_quantiles": [
+            float(value)
+            for value in np.quantile(feature_proxy, [0.0, 0.5, 0.9, 1.0])
+        ],
+        "structure_proxy_quantiles": [
+            float(value)
+            for value in np.quantile(structure_proxy, [0.0, 0.5, 0.9, 1.0])
+        ],
+        "composite_quantiles": [
+            float(value)
+            for value in np.quantile(composite, [0.0, 0.5, 0.9, 1.0])
+        ],
+    }
+    del adjacency, degree, log_degree, feature_proxy, structure_proxy, composite
+    return sample, metadata
 
 
 def _edge_terms(
@@ -308,13 +394,14 @@ def train_seed(
     device: str,
     sample_sha256: str,
     candidate_sha256: str,
+    protocol_path: Path = PROTOCOL_PATH,
 ) -> tuple[recap, dict]:
     run_dir = output_root / "runs" / f"seed{seed}"
     final_path = run_dir / "checkpoints" / "final.pt"
     if final_path.exists():
         payload = torch.load(final_path, map_location="cpu", weights_only=False)
         if (
-            payload.get("protocol_sha256") == sha256_file(PROTOCOL_PATH)
+            payload.get("protocol_sha256") == sha256_file(protocol_path)
             and payload.get("sample_sha256") == sample_sha256
             and payload.get("candidate_sha256") == candidate_sha256
             and int(payload.get("epoch", -1)) == epochs
@@ -365,7 +452,7 @@ def train_seed(
                 "history": history,
                 "sample_sha256": sample_sha256,
                 "candidate_sha256": candidate_sha256,
-                "protocol_sha256": sha256_file(PROTOCOL_PATH),
+                "protocol_sha256": sha256_file(protocol_path),
                 "labels_accessed": False,
                 "saved_at": utc_now(),
             }
@@ -443,6 +530,11 @@ def run(args: argparse.Namespace) -> None:
         raise KeyError(args.target)
     output_root = Path(args.output_root).resolve() / args.target
     output_root.mkdir(parents=True, exist_ok=True)
+    protocol_path = (
+        ROBUST_CORE_PROTOCOL_PATH
+        if args.sample_mode == "robust_core"
+        else PROTOCOL_PATH
+    )
     config = locked_model_config(output_root / "knn_cache")
     loader_kwargs = {
         "dataset_root": Path(args.dataset_root).resolve(),
@@ -455,10 +547,25 @@ def run(args: argparse.Namespace) -> None:
         if args.device == "cpu"
         else load_and_propagate(**loader_kwargs, device=args.device)
     )
-    sample = deterministic_sample(context.node_count, args.sample_size)
+    if args.sample_mode == "uniform":
+        sample = deterministic_sample(context.node_count, args.sample_size)
+        sample_selection = {
+            "mode": "uniform",
+            "sample_nodes": int(len(sample)),
+            "sample_seed": 20260727,
+        }
+    else:
+        sample, sample_selection = deterministic_robust_core_sample(
+            dataset_root=Path(args.dataset_root).resolve(),
+            target=args.target,
+            initial_features=context.graph.x_list[0],
+            sample_size=args.sample_size,
+            core_fraction=args.core_fraction,
+        )
     sample_path = output_root / "sample_indices.npy"
     atomic_npy(sample_path, sample)
     sample_sha256 = sha256_file(sample_path)
+    atomic_json(output_root / "sample_selection.json", sample_selection)
     graph = _sample_graph(context, sample, args.device)
     training_candidate_path = output_root / "training_candidates.npy"
     metadata = prepare_training_candidates(
@@ -476,6 +583,7 @@ def run(args: argparse.Namespace) -> None:
             "target": args.target,
             "full_nodes": context.node_count,
             "sample_nodes": len(sample),
+            "sample_selection": sample_selection,
             "sample_sha256": sample_sha256,
             "candidate_metadata": metadata,
             "candidate_sha256": candidate_sha256,
@@ -483,7 +591,8 @@ def run(args: argparse.Namespace) -> None:
             "train_batch_size": args.train_batch_size,
             "score_batch_size": args.score_batch_size,
             "seeds": list(SEEDS),
-            "protocol_sha256": sha256_file(PROTOCOL_PATH),
+            "protocol_path": str(protocol_path.resolve()),
+            "protocol_sha256": sha256_file(protocol_path),
             "labels_accessed": False,
             "created_at": utc_now(),
         },
@@ -506,6 +615,7 @@ def run(args: argparse.Namespace) -> None:
             device=args.device,
             sample_sha256=sample_sha256,
             candidate_sha256=candidate_sha256,
+            protocol_path=protocol_path,
         )
         record = _score_and_freeze(
             model=model,
@@ -610,6 +720,12 @@ def parser() -> argparse.ArgumentParser:
     value.add_argument("--output-root", required=True)
     value.add_argument("--device", default="cuda:0")
     value.add_argument("--sample-size", type=int, default=131_072)
+    value.add_argument(
+        "--sample-mode",
+        choices=("uniform", "robust_core"),
+        default="uniform",
+    )
+    value.add_argument("--core-fraction", type=float, default=0.9)
     value.add_argument("--epochs", type=int, default=100)
     value.add_argument("--train-batch-size", type=int, default=256)
     value.add_argument("--score-batch-size", type=int, default=1024)

@@ -9,6 +9,7 @@ from model import EgoCluster
 from rebuttal.large_target_optimization.scan import discover_checkpoints
 from rebuttal.large_target_optimization.train import (
     _edge_terms,
+    _stable_ordinal_percentile,
     chunked_loss_value_and_backward,
 )
 
@@ -165,6 +166,18 @@ class LargeTargetOptimizationTests(unittest.TestCase):
                     - chunked_cluster.W.weight.grad
                 ).abs().max().item()
             ),
+        )
+
+    def test_stable_ordinal_percentile_is_deterministic(self):
+        values = np.asarray([3.0, 1.0, 1.0, 7.0, 2.0])
+        first = _stable_ordinal_percentile(values)
+        second = _stable_ordinal_percentile(values.copy())
+        self.assertTrue(np.array_equal(first, second))
+        self.assertTrue(
+            np.array_equal(
+                np.argsort(first, kind="stable"),
+                np.asarray([1, 2, 4, 0, 3]),
+            )
         )
 
 
