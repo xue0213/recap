@@ -389,3 +389,57 @@ large_target_inference:
     cycle: 4
     last_direction: conclude
     last_reflection: "All nine full-node score vectors and independent audits pass. The adapter establishes target-side computational scalability on the recorded hardware, but every target mean is below its random-ranking AUROC/AUPRC reference, so predictive effectiveness of the unadapted checkpoints is not supported."
+
+large_target_optimization:
+  status: blocked_on_gpu_resource
+  classification: mixed_confirmatory_and_exploratory
+  started: "2026-07-27"
+  protocol: "rebuttal/LARGE_TARGET_OPTIMIZATION_PROTOCOL.md"
+  infrastructure_commit: "b7a379e"
+  targets: [tfinance, dgraphfin, tsocial]
+  server_mode:
+    gpu_available: false
+    cgroup_memory_bytes: 2147483648
+  source_scan:
+    tfinance:
+      status: completed_and_independently_audited
+      checkpoint_records: 45
+      predeclared_ensemble_records: 9
+      score_hashes: 162
+      metric_rows: 162
+      maximum_metric_difference: 0.0
+      best_full_three_seed_family: "OFA-A"
+      best_full_auroc_mean: 0.2556559088
+      best_full_auprc_mean: 0.0280124715
+      best_context_only_family: "OFO-BlogCatalog"
+      best_context_only_auroc_mean: 0.370733
+      conclusion: "Changing among the 15 accepted small-graph source families does not fix T-Finance; every full-score family remains below random."
+    dgraphfin: {status: pending_gpu}
+    tsocial: {status: pending_gpu}
+  target_adaptation:
+    method: "label-free deterministic sample training with full-graph propagated features and algebraically exact chunked fixed-candidate loss"
+    tfinance: {status: pending_gpu, planned_sample_nodes: 39357}
+    dgraphfin: {status: pending_gpu, planned_sample_nodes: 131072}
+    tsocial: {status: pending_gpu, planned_sample_nodes: 131072}
+  shared_schema:
+    status: features_prepared_exploratory
+    source: tfinance
+    target: tsocial
+    strict_pointwise_gate_passed: false
+    source_alignment_max_abs_difference: 0.0003175735
+    source_alignment_mean_abs_difference: 0.0000000867
+    target_feature_sha256: "6f6e36ec03a1aa85e245693887fef4f781f0b36d485712a57235986c74709966"
+    classification: "exploratory_shared_schema_strict_max_gate_failed"
+  quality_gates:
+    checkpoint_inventory_45_passed: true
+    chunked_loss_algebra_exact_passed: true
+    built_in_unit_tests: "3 passed"
+    tfinance_source_scan_hash_audit_passed: true
+    score_inversion_forbidden: true
+    global_score_freeze_before_labels: true
+    target_adaptation_smoke: "blocked by 2 GiB CPU-only cgroup during backward pass"
+  next_action: "Restore approximately 96 GiB GPU mode, then run DGraph-Fin/T-Social source scans and three-seed target adaptation on all targets."
+  outer_loop:
+    cycle: 1
+    last_direction: deepen_with_target_adaptation
+    last_reflection: "T-Finance source sensitivity is uniformly below random, so standard source selection is not the mechanism. Prioritize label-free target adaptation and shared-schema T-Finance-to-T-Social transfer once GPU resources return."

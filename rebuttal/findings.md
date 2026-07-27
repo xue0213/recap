@@ -267,3 +267,35 @@ AUROCs are below 0.5 and all mean AUPRCs are below their anomaly-prevalence
 references, so the experiment does not support predictive effectiveness of
 the unadapted Setting-A checkpoints on these large targets. No score inversion,
 target-label tuning, or selective rerun was used to hide that negative result.
+
+## Large-Target Predictive Optimization (In Progress)
+
+The first outer-loop test scanned all 45 accepted RECAP checkpoints on
+T-Finance: OFA A/B/C and all 12 OFO source families, each with seeds 0/1/2.
+Every checkpoint produced and hashed the paper score, adhesion-only score and
+context-only score before any label was loaded. Three label-blind,
+seed-aligned ensembles were frozen at the same boundary. An independent audit
+verified 162 score hashes and recomputed 162 metric rows with zero difference.
+
+The result rules out source selection among the existing small graphs as the
+main fix. OFA-A remains the best three-seed full-score family at
+0.25566 AUROC / 0.02801 AUPRC. The best individual full-score checkpoint is
+only 0.30770 AUROC. Context alone is less anti-correlated but the best
+three-seed family, OFO-BlogCatalog, is still only 0.37073 AUROC. No score was
+inverted.
+
+A T-Finance-fitted shared coordinate cache for T-Social was prepared without
+labels. The strict source reproduction maximum gate failed because one
+extreme coordinate differs by 3.18e-4; mean absolute difference is 8.67e-8
+and the 99.99th percentile is 1.19e-5. The route is therefore retained only
+as exploratory mechanism evidence. Its T-Social feature SHA-256 is
+`6f6e36ec03a1aa85e245693887fef4f781f0b36d485712a57235986c74709966`.
+
+The target-adaptation implementation uses deterministic label-free node
+samples, full-graph propagated features, fixed ANN candidates and a two-pass
+chunked quotient derivative. Its community loss is algebraically identical
+to the original symmetrized fixed-KNN loss on the numerical gate (difference
+zero). The actual CPU training smoke cannot pass the current no-card
+container's 2 GiB cgroup limit; DGraph-Fin and T-Social also cannot load their
+five propagated feature tensors in this mode. Formal optimization therefore
+awaits restoration of the approximately 96-GiB GPU instance.
