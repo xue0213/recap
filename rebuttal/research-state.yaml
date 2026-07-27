@@ -520,3 +520,19 @@ large_target_optimization:
     cycle: 4
     last_direction: conclude
     last_reflection: "Exhausted the highest-value label-free hypotheses under the locked evidence strata. Confirmatory target adaptation is not a general fix; robust-core and milestone diagnostics rule out two simple failure explanations; shared coordinates help only T-Social adhesion and fail the strict coordinate gate. No primary full score approaches 0.70 AUROC."
+
+tfinance_source_transfer:
+  status: protocol_locked
+  classification: confirmatory_user_requested_single_source_transfer
+  protocol: "rebuttal/TFINANCE_SOURCE_TRANSFER_PROTOCOL.md"
+  source: tfinance
+  source_training: "label-free full-graph uniform adaptation, epoch 100"
+  seeds: [0, 1, 2]
+  targets: [tfinance, dgraphfin, tsocial]
+  planned_score_vectors: 27
+  planned_primary_evaluations: 9
+  score_routes: [full, adhesion_only, context_only]
+  label_policy: "freeze and hash all 27 scores globally before reading any target label"
+  reporting_boundary: "T-Finance same-graph unsupervised; DGraph-Fin/T-Social cross-graph zero-shot; no combined macro"
+  current_stage: preflight
+  next_action: "Implement a source-checkpoint scorer, pass smoke/hash gates, freeze all three targets, then evaluate and independently audit."
