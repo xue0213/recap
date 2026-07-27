@@ -308,4 +308,20 @@ mode. The experiment has now migrated to a new instance with the same
 canonical bundles, fixed KNN candidates, 45 accepted checkpoints and
 optimization source files match their previously recorded SHA-256 values,
 and the four numerical/protocol gates pass. Formal DGraph-Fin source scanning
-is in progress with explicitly capped CPU threads.
+was started with explicitly capped CPU threads.
+
+The DGraph-Fin and T-Social source scans are now complete. Together with
+T-Finance, the independent scanner reverified 486 frozen score hashes and
+recomputed all 486 AUROC/AUPRC rows with maximum difference zero. DGraph-Fin's
+best three-seed full-score family is OFA-C at 0.38389/0.00931. T-Social's is
+OFO-Facebook at 0.48451/0.02932. The predeclared social-domain ensemble crosses
+random only for the separately named adhesion-only ablation
+(0.50222 AUROC), while post-hoc selection of OFO-weibo raises that ablation to
+0.51255 and is therefore oracle evidence.
+
+Full-graph T-Finance target adaptation completed for three seeds. The
+label-free objective converged smoothly and the independent metric audit
+passed with zero difference. The paper score improves from 0.25566/0.02801 to
+0.31160/0.03019, and adhesion-only reaches 0.31340/0.03033, but both remain
+below random. Target adaptation therefore helps modestly without resolving
+the T-Finance feature/label mismatch. DGraph-Fin target adaptation is running.

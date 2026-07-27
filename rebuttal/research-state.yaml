@@ -417,12 +417,38 @@ large_target_optimization:
       best_context_only_family: "OFO-BlogCatalog"
       best_context_only_auroc_mean: 0.370733
       conclusion: "Changing among the 15 accepted small-graph source families does not fix T-Finance; every full-score family remains below random."
-    dgraphfin: {status: running}
-    tsocial: {status: pending_gpu}
+    dgraphfin:
+      status: completed_and_independently_audited
+      checkpoint_records: 45
+      predeclared_ensemble_records: 9
+      score_hashes: 162
+      metric_rows: 162
+      maximum_metric_difference: 0.0
+      best_full_three_seed_family: "OFA-C"
+      best_full_auroc_mean: 0.3838852144
+      best_full_auprc_mean: 0.0093059130
+    tsocial:
+      status: completed_and_independently_audited
+      checkpoint_records: 45
+      predeclared_ensemble_records: 9
+      score_hashes: 162
+      metric_rows: 162
+      maximum_metric_difference: 0.0
+      best_full_three_seed_family: "OFO-Facebook"
+      best_full_auroc_mean: 0.4845054129
+      best_full_auprc_mean: 0.0293199602
+      predeclared_domain_ensemble_adhesion_auroc_mean: 0.502224
+      oracle_ofo_weibo_adhesion_auroc_mean: 0.512550
   target_adaptation:
     method: "label-free deterministic sample training with full-graph propagated features and algebraically exact chunked fixed-candidate loss"
-    tfinance: {status: pending_gpu, planned_sample_nodes: 39357}
-    dgraphfin: {status: pending_gpu, planned_sample_nodes: 131072}
+    tfinance:
+      status: completed_and_independently_audited
+      planned_sample_nodes: 39357
+      full_auroc_mean: 0.3116017167
+      full_auprc_mean: 0.0301882220
+      adhesion_auroc_mean: 0.3134008000
+      adhesion_auprc_mean: 0.0303296726
+    dgraphfin: {status: running, planned_sample_nodes: 131072}
     tsocial: {status: pending_gpu, planned_sample_nodes: 131072}
   shared_schema:
     status: features_prepared_exploratory
@@ -442,7 +468,7 @@ large_target_optimization:
     score_inversion_forbidden: true
     global_score_freeze_before_labels: true
     target_adaptation_smoke: "blocked by 2 GiB CPU-only cgroup during backward pass"
-  next_action: "Finish and audit DGraph-Fin/T-Social source scans, then run three-seed target adaptation on all targets with capped CPU/OpenMP threads."
+  next_action: "Finish DGraph-Fin/T-Social target adaptation, run the exploratory shared-schema transfer, then complete the combined independent audit and final evidence-stratified report."
   outer_loop:
     cycle: 1
     last_direction: deepen_with_target_adaptation
