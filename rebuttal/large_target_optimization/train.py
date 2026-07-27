@@ -68,7 +68,7 @@ def set_seed(seed: int) -> None:
 
 
 def locked_model_config(cache_dir: Path) -> ModelConfig:
-    path = PROJECT_ROOT / "params" / "recap.json"
+    path = PROJECT_ROOT / "params" / "recap_auprc_best.json"
     config = ModelConfig.from_json(str(path))
     if config is None:
         raise FileNotFoundError(path)
