@@ -358,3 +358,17 @@ configuration approaches 0.70 AUROC and the strongest primary-score AUPRC
 remains below prevalence on every target. The accepted conclusion is
 computational scalability plus transparent negative predictive evidence, not
 competitive effectiveness on these three cross-domain targets.
+
+## T-Finance Single-Source Large-Target Transfer
+
+The user-requested T-Finance source experiment reused the exact three
+label-free T-Finance epoch-100 checkpoints and froze all 27 target/seed/route
+scores before labels. T-Finance same-graph full AUROC/AUPRC is
+0.31160/0.03019. Cross-graph transfer is 0.36485/0.00902 on DGraph-Fin and
+0.43849/0.02570 on T-Social. Relative to the original Setting-A checkpoints,
+the AUROC changes are +0.05595, -0.00261 and +0.00064, respectively.
+
+Thus, a large financial source improves its own graph but does not transfer
+better to DGraph-Fin; broad domain identity is insufficient under the
+feature/graph/anomaly-mechanism shift. The independent audit passed all 27
+score hashes and 27 metric recomputations with maximum difference zero.

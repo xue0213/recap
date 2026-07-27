@@ -522,7 +522,7 @@ large_target_optimization:
     last_reflection: "Exhausted the highest-value label-free hypotheses under the locked evidence strata. Confirmatory target adaptation is not a general fix; robust-core and milestone diagnostics rule out two simple failure explanations; shared coordinates help only T-Social adhesion and fail the strict coordinate gate. No primary full score approaches 0.70 AUROC."
 
 tfinance_source_transfer:
-  status: protocol_locked
+  status: complete
   classification: confirmatory_user_requested_single_source_transfer
   protocol: "rebuttal/TFINANCE_SOURCE_TRANSFER_PROTOCOL.md"
   source: tfinance
@@ -534,5 +534,45 @@ tfinance_source_transfer:
   score_routes: [full, adhesion_only, context_only]
   label_policy: "freeze and hash all 27 scores globally before reading any target label"
   reporting_boundary: "T-Finance same-graph unsupervised; DGraph-Fin/T-Social cross-graph zero-shot; no combined macro"
-  current_stage: preflight
-  next_action: "Implement a source-checkpoint scorer, pass smoke/hash gates, freeze all three targets, then evaluate and independently audit."
+  current_stage: completed_and_independently_audited
+  completed_score_vectors: 27
+  completed_primary_evaluations: 9
+  results:
+    tfinance:
+      evidence: same_graph_unsupervised
+      full_auroc_mean: 0.3116016429
+      full_auroc_std: 0.0186243039
+      full_auprc_mean: 0.0301882078
+      full_auprc_std: 0.0007717296
+    dgraphfin:
+      evidence: cross_graph_target_label_free
+      full_auroc_mean: 0.3648534809
+      full_auroc_std: 0.0013158244
+      full_auprc_mean: 0.0090235280
+      full_auprc_std: 0.0000163845
+    tsocial:
+      evidence: cross_graph_target_label_free
+      full_auroc_mean: 0.4384924553
+      full_auroc_std: 0.0031581535
+      full_auprc_mean: 0.0257034192
+      full_auprc_std: 0.0002754115
+  comparison_to_original_setting_a:
+    tfinance: {auroc_delta: 0.0559457341, auprc_delta: 0.0021757363}
+    dgraphfin: {auroc_delta: -0.0026120783, auprc_delta: -0.0000201176}
+    tsocial: {auroc_delta: 0.0006409672, auprc_delta: -0.0002489746}
+  quality_gates:
+    checkpoint_hashes_passed: true
+    candidate_hashes_passed: true
+    unit_tests: "5 passed"
+    global_score_freeze_before_labels: true
+    score_hashes: 27
+    metric_rows: 27
+    maximum_metric_difference: 0.0
+    independent_audit_sha256: "95a083a823edbae120f5c12ff0f66927f9ba7640e5dd410a3b36b64ed60f97d2"
+  artifacts:
+    report: "rebuttal/reports/TFINANCE_SOURCE_TRANSFER_REPORT.md"
+    results: "rebuttal/reports/TFINANCE_SOURCE_TRANSFER_RESULTS.json"
+    global_freeze: "rebuttal/reports/TFINANCE_SOURCE_TRANSFER_GLOBAL_FREEZE.json"
+    audit: "rebuttal/reports/TFINANCE_SOURCE_TRANSFER_AUDIT.json"
+  conclusion: "T-Finance training improves only its same-graph score; it does not improve DGraph-Fin and is effectively unchanged on T-Social. Broad financial-domain matching is insufficient."
+  next_action: "Concluded; report the negative transfer result without combining same-graph and cross-graph strata."

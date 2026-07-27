@@ -1,0 +1,229 @@
+{
+  "created_at": "2026-07-27T22:37:32.855947+00:00",
+  "format": "recap_tfinance_source_transfer_audit_v1",
+  "global_freeze_sha256": "139b691674ae0cead6217f8a9653a0612b4fe18eb55bc332f9384b5f5d3f6cda",
+  "maximum_metric_difference": 0.0,
+  "metric_rows": 27,
+  "passed": true,
+  "protocol_sha256": "e67d532bcdefe68f2c4dc3b29fba242a149bf17e0792f94bd0825c821979d5ab",
+  "recomputed": [
+    {
+      "auprc": 0.030990644030773336,
+      "auroc": 0.3306843622580308,
+      "maximum_difference": 0.0,
+      "route": "full",
+      "seed": 0,
+      "target": "tfinance"
+    },
+    {
+      "auprc": 0.03128817555619975,
+      "auroc": 0.33605963291024665,
+      "maximum_difference": 0.0,
+      "route": "adhesion_only",
+      "seed": 0,
+      "target": "tfinance"
+    },
+    {
+      "auprc": 0.02957267186278867,
+      "auroc": 0.25939974532963106,
+      "maximum_difference": 0.0,
+      "route": "context_only",
+      "seed": 0,
+      "target": "tfinance"
+    },
+    {
+      "auprc": 0.03042763149256648,
+      "auroc": 0.3177823827172747,
+      "maximum_difference": 0.0,
+      "route": "full",
+      "seed": 1,
+      "target": "tfinance"
+    },
+    {
+      "auprc": 0.030637908358708298,
+      "auroc": 0.32158756643898945,
+      "maximum_difference": 0.0,
+      "route": "adhesion_only",
+      "seed": 1,
+      "target": "tfinance"
+    },
+    {
+      "auprc": 0.029615293595058066,
+      "auroc": 0.2652055973750743,
+      "maximum_difference": 0.0,
+      "route": "context_only",
+      "seed": 1,
+      "target": "tfinance"
+    },
+    {
+      "auprc": 0.029146347953915065,
+      "auroc": 0.2863381837926271,
+      "maximum_difference": 0.0,
+      "route": "full",
+      "seed": 2,
+      "target": "tfinance"
+    },
+    {
+      "auprc": 0.029062985658806238,
+      "auroc": 0.28255519339023755,
+      "maximum_difference": 0.0,
+      "route": "adhesion_only",
+      "seed": 2,
+      "target": "tfinance"
+    },
+    {
+      "auprc": 0.03048615755952993,
+      "auroc": 0.2757409070273068,
+      "maximum_difference": 0.0,
+      "route": "context_only",
+      "seed": 2,
+      "target": "tfinance"
+    },
+    {
+      "auprc": 0.009046147517192396,
+      "auroc": 0.36670657852017585,
+      "maximum_difference": 0.0,
+      "route": "full",
+      "seed": 0,
+      "target": "dgraphfin"
+    },
+    {
+      "auprc": 0.009194682331399855,
+      "auroc": 0.37705490509663386,
+      "maximum_difference": 0.0,
+      "route": "adhesion_only",
+      "seed": 0,
+      "target": "dgraphfin"
+    },
+    {
+      "auprc": 0.0096797732856809,
+      "auroc": 0.392920302037968,
+      "maximum_difference": 0.0,
+      "route": "context_only",
+      "seed": 0,
+      "target": "dgraphfin"
+    },
+    {
+      "auprc": 0.009007865615387557,
+      "auroc": 0.364073943793922,
+      "maximum_difference": 0.0,
+      "route": "full",
+      "seed": 1,
+      "target": "dgraphfin"
+    },
+    {
+      "auprc": 0.009175232385104473,
+      "auroc": 0.3763011951428009,
+      "maximum_difference": 0.0,
+      "route": "adhesion_only",
+      "seed": 1,
+      "target": "dgraphfin"
+    },
+    {
+      "auprc": 0.009545654772948208,
+      "auroc": 0.38210735411579955,
+      "maximum_difference": 0.0,
+      "route": "context_only",
+      "seed": 1,
+      "target": "dgraphfin"
+    },
+    {
+      "auprc": 0.009016570993763393,
+      "auroc": 0.3637799202501959,
+      "maximum_difference": 0.0,
+      "route": "full",
+      "seed": 2,
+      "target": "dgraphfin"
+    },
+    {
+      "auprc": 0.009189710430237058,
+      "auroc": 0.37604511405012014,
+      "maximum_difference": 0.0,
+      "route": "adhesion_only",
+      "seed": 2,
+      "target": "dgraphfin"
+    },
+    {
+      "auprc": 0.009500054937085556,
+      "auroc": 0.38343598730447137,
+      "maximum_difference": 0.0,
+      "route": "context_only",
+      "seed": 2,
+      "target": "dgraphfin"
+    },
+    {
+      "auprc": 0.02541037557646731,
+      "auroc": 0.4340341072993852,
+      "maximum_difference": 0.0,
+      "route": "full",
+      "seed": 0,
+      "target": "tsocial"
+    },
+    {
+      "auprc": 0.02895038765310767,
+      "auroc": 0.48089326795986026,
+      "maximum_difference": 0.0,
+      "route": "adhesion_only",
+      "seed": 0,
+      "target": "tsocial"
+    },
+    {
+      "auprc": 0.025222531652838102,
+      "auroc": 0.43134287317429354,
+      "maximum_difference": 0.0,
+      "route": "context_only",
+      "seed": 0,
+      "target": "tsocial"
+    },
+    {
+      "auprc": 0.026072137650585976,
+      "auroc": 0.4409523892657418,
+      "maximum_difference": 0.0,
+      "route": "full",
+      "seed": 1,
+      "target": "tsocial"
+    },
+    {
+      "auprc": 0.029020045026356384,
+      "auroc": 0.4789020042862388,
+      "maximum_difference": 0.0,
+      "route": "adhesion_only",
+      "seed": 1,
+      "target": "tsocial"
+    },
+    {
+      "auprc": 0.02595786147949569,
+      "auroc": 0.44040916672628583,
+      "maximum_difference": 0.0,
+      "route": "context_only",
+      "seed": 1,
+      "target": "tsocial"
+    },
+    {
+      "auprc": 0.02562774422517755,
+      "auroc": 0.44049086937836784,
+      "maximum_difference": 0.0,
+      "route": "full",
+      "seed": 2,
+      "target": "tsocial"
+    },
+    {
+      "auprc": 0.0283794802933714,
+      "auroc": 0.47457449677573704,
+      "maximum_difference": 0.0,
+      "route": "adhesion_only",
+      "seed": 2,
+      "target": "tsocial"
+    },
+    {
+      "auprc": 0.025722892211756613,
+      "auroc": 0.4446206606987671,
+      "maximum_difference": 0.0,
+      "route": "context_only",
+      "seed": 2,
+      "target": "tsocial"
+    }
+  ],
+  "results_sha256": "da9e8d66b2ae15e5ff5a1c02fe163839db0692c3c9d47e219033f3fab825a291",
+  "score_hashes": 27
+}
