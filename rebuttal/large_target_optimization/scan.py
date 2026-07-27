@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import ctypes
 import gc
 import hashlib
 import json
@@ -225,6 +226,8 @@ def _score_one(
     gc.collect()
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
+    elif sys.platform.startswith("linux"):
+        ctypes.CDLL("libc.so.6").malloc_trim(0)
     return record
 
 
