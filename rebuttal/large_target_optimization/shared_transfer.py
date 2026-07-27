@@ -77,18 +77,54 @@ def run(args: argparse.Namespace) -> None:
     training_candidate_sha256 = sha256_file(training_candidates_path)
     training_records = []
     for seed in SEEDS:
-        model, record = train_seed(
-            seed=seed,
-            graph=source_graph,
-            candidates=training_candidates,
-            config=config,
-            output_root=output_root / "source_training",
-            epochs=args.epochs,
-            batch_size=args.train_batch_size,
-            device=args.device,
-            sample_sha256=source_sample_sha256,
-            candidate_sha256=training_candidate_sha256,
+        reusable_path = (
+            Path(args.source_checkpoint_root).resolve()
+            / "runs"
+            / f"seed{seed}"
+            / "checkpoints"
+            / "final.pt"
+            if args.source_checkpoint_root
+            else None
         )
+        if reusable_path is not None and reusable_path.exists():
+            payload = torch.load(
+                reusable_path, map_location="cpu", weights_only=False
+            )
+            if (
+                payload.get("format")
+                != "recap_large_target_adapt_checkpoint_v1"
+                or int(payload.get("seed", -1)) != seed
+                or int(payload.get("epoch", -1)) != args.epochs
+                or payload.get("sample_sha256") != source_sample_sha256
+                or payload.get("candidate_sha256")
+                != training_candidate_sha256
+            ):
+                raise ValueError(
+                    f"Incompatible reusable T-Finance checkpoint: "
+                    f"{reusable_path}"
+                )
+            model = recap(**config.to_dict())
+            model.load_state_dict(payload["model_state_dict"], strict=True)
+            model = model.to(args.device).eval()
+            record = {
+                "state": "reused_from_target_adaptation",
+                "checkpoint_path": str(reusable_path),
+                "checkpoint_sha256": sha256_file(reusable_path),
+                "history": payload["history"],
+            }
+        else:
+            model, record = train_seed(
+                seed=seed,
+                graph=source_graph,
+                candidates=training_candidates,
+                config=config,
+                output_root=output_root / "source_training",
+                epochs=args.epochs,
+                batch_size=args.train_batch_size,
+                device=args.device,
+                sample_sha256=source_sample_sha256,
+                candidate_sha256=training_candidate_sha256,
+            )
         training_records.append(record)
         del model
         gc.collect()
@@ -254,6 +290,10 @@ def parser() -> argparse.ArgumentParser:
     value.add_argument("--dataset-root", required=True)
     value.add_argument("--tfinance-exact-candidates", required=True)
     value.add_argument("--tsocial-shared-features", required=True)
+    value.add_argument(
+        "--source-checkpoint-root",
+        help="Reuse the completed T-Finance target-adaptation root.",
+    )
     value.add_argument("--output-root", required=True)
     value.add_argument("--device", default="cuda:0")
     value.add_argument("--epochs", type=int, default=100)
