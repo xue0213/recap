@@ -324,4 +324,14 @@ label-free objective converged smoothly and the independent metric audit
 passed with zero difference. The paper score improves from 0.25566/0.02801 to
 0.31160/0.03019, and adhesion-only reaches 0.31340/0.03033, but both remain
 below random. Target adaptation therefore helps modestly without resolving
-the T-Finance feature/label mismatch. DGraph-Fin target adaptation is running.
+the T-Finance feature/label mismatch.
+
+DGraph-Fin and T-Social target adaptation also completed and passed the
+independent nine-score audit. DGraph-Fin's paper score is
+0.37113/0.00908—essentially the original Setting-A level—while its
+context-only ablation reaches 0.42038/0.01021. T-Social target adaptation
+reduces the paper score to 0.42156/0.02485; adhesion-only is
+0.49926/0.03060 and remains below the predeclared social-domain source
+ensemble. Thus the confirmatory label-free target-adaptation hypothesis is
+not supported as a general predictive fix. The locked exploratory
+T-Finance-to-T-Social shared-coordinate transfer is now running.

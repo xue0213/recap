@@ -448,10 +448,22 @@ large_target_optimization:
       full_auprc_mean: 0.0301882220
       adhesion_auroc_mean: 0.3134008000
       adhesion_auprc_mean: 0.0303296726
-    dgraphfin: {status: running, planned_sample_nodes: 131072}
-    tsocial: {status: pending_gpu, planned_sample_nodes: 131072}
+    dgraphfin:
+      status: completed_and_independently_audited
+      planned_sample_nodes: 131072
+      full_auroc_mean: 0.3711288853
+      full_auprc_mean: 0.0090826768
+      context_auroc_mean: 0.4203842352
+      context_auprc_mean: 0.0102149776
+    tsocial:
+      status: completed_and_independently_audited
+      planned_sample_nodes: 131072
+      full_auroc_mean: 0.4215621793
+      full_auprc_mean: 0.0248546019
+      adhesion_auroc_mean: 0.4992567642
+      adhesion_auprc_mean: 0.0305951715
   shared_schema:
-    status: features_prepared_exploratory
+    status: shared_transfer_running
     source: tfinance
     target: tsocial
     strict_pointwise_gate_passed: false
