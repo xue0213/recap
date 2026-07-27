@@ -295,7 +295,13 @@ The target-adaptation implementation uses deterministic label-free node
 samples, full-graph propagated features, fixed ANN candidates and a two-pass
 chunked quotient derivative. Its community loss is algebraically identical
 to the original symmetrized fixed-KNN loss on the numerical gate (difference
-zero). The actual CPU training smoke cannot pass the current no-card
+zero). Residual and community-weight gradients also match the native loss
+within the locked `2e-6` absolute/relative tolerance. The default CPU runtime
+over-expanded a tiny backward test across the host's large thread pool; with
+`OMP_NUM_THREADS=1` and `MKL_NUM_THREADS=1`, the gradient test completes in
+0.009 seconds and the four-test suite in 0.287 seconds. Formal launches must
+therefore cap CPU threads explicitly. The actual CPU training smoke cannot
+pass the current no-card
 container's 2 GiB cgroup limit; DGraph-Fin and T-Social also cannot load their
 five propagated feature tensors in this mode. Formal optimization therefore
 awaits restoration of the approximately 96-GiB GPU instance.

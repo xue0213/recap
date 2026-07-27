@@ -433,12 +433,13 @@ large_target_optimization:
   quality_gates:
     checkpoint_inventory_45_passed: true
     chunked_loss_algebra_exact_passed: true
-    built_in_unit_tests: "3 passed"
+    chunked_loss_residual_and_cluster_gradients_passed: true
+    built_in_unit_tests: "4 passed with OMP_NUM_THREADS=1 and MKL_NUM_THREADS=1"
     tfinance_source_scan_hash_audit_passed: true
     score_inversion_forbidden: true
     global_score_freeze_before_labels: true
     target_adaptation_smoke: "blocked by 2 GiB CPU-only cgroup during backward pass"
-  next_action: "Restore approximately 96 GiB GPU mode, then run DGraph-Fin/T-Social source scans and three-seed target adaptation on all targets."
+  next_action: "Restore approximately 96 GiB GPU mode, explicitly cap CPU/OpenMP threads, then run DGraph-Fin/T-Social source scans and three-seed target adaptation on all targets."
   outer_loop:
     cycle: 1
     last_direction: deepen_with_target_adaptation
