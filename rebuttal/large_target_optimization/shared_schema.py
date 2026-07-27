@@ -45,11 +45,14 @@ def fit_source_axes(source_features: np.ndarray) -> dict:
     pca = PCA(n_components=normalized.shape[1], random_state=0)
     pca.fit(normalized)
     return {
-        "median": median.astype(np.float32),
-        "iqr": iqr.astype(np.float32),
-        "components": pca.components_.astype(np.float32),
-        "pca_mean": pca.mean_.astype(np.float32),
-        "explained_variance": pca.explained_variance_.astype(np.float32),
+        # Preserve sklearn's fitted dtype. Casting these arrays to float32
+        # changes a few extreme projected coordinates by more than the locked
+        # source-reproduction tolerance.
+        "median": median,
+        "iqr": iqr,
+        "components": pca.components_,
+        "pca_mean": pca.mean_,
+        "explained_variance": pca.explained_variance_,
         "sample_count": sample_count,
     }
 
@@ -216,4 +219,3 @@ def parser() -> argparse.ArgumentParser:
 
 if __name__ == "__main__":
     run(parser().parse_args())
-
