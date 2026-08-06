@@ -280,6 +280,10 @@ class recapDetector:
                 all_scores = self.model.get_ego_scores()
                 query_scores = all_scores
                 query_labels = labels.to(self.train_config['device'])
+                evaluation_mask = getattr(test_graph, 'evaluation_mask', None)
+                if evaluation_mask is not None:
+                    query_labels = query_labels[evaluation_mask]
+                    query_scores = query_scores[evaluation_mask]
             
                 test_score = test_eval(query_labels, query_scores)
                 

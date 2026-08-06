@@ -1,0 +1,237 @@
+{
+  "config": {
+    "device": "cpu",
+    "trials": 5,
+    "epochs": 100,
+    "dims": 32,
+    "model": "recap_auprc_best",
+    "json_dir": "params",
+    "output_dir": "ablation/matched_2x2/shards/weibo",
+    "train_datasets": null,
+    "test_datasets": [
+      "weibo"
+    ],
+    "methods": [
+      "Non-residual + KMeans",
+      "Residual + KMeans"
+    ],
+    "no_recap": true,
+    "save_recap_checkpoints": false,
+    "no_diagnostics": false,
+    "diagnostics_interval": 10,
+    "num_clusters": null,
+    "knn_k": 64,
+    "kmeans_n_init": 20,
+    "gmm_covariance": "diag",
+    "gmm_max_iter": 300,
+    "gmm_reg_covar": 1e-06,
+    "gmm_reg_covar_retries": [
+      1e-06,
+      1e-05,
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "gmm_min_std": 1e-08,
+    "gmm_no_component_reduction": false,
+    "spectral_neighbors": null,
+    "spectral_n_init": 5,
+    "spectral_max_nodes": 3000,
+    "spectral_large_mode": "sample",
+    "lof_neighbors": 20,
+    "n_jobs": -1,
+    "continue_on_error": true,
+    "quick": false,
+    "project_root": "/root/autodl-tmp/recap",
+    "model_config": {
+      "model": "recap_auprc_best",
+      "lr": 5e-05,
+      "dropout_rate": 0.2,
+      "h_feats": 256,
+      "num_hops": 4,
+      "weight_decay": 5e-05,
+      "dims": 32,
+      "num_layers": 2,
+      "activation": "ELU",
+      "num_views": 1,
+      "num_clusters": 36,
+      "knn_k": 64,
+      "cluster_lr_multiplier": 10.0,
+      "tau_s": 0.3,
+      "sim_block_size": 256,
+      "knn_cache_enabled": true,
+      "knn_cache_dir": "./knn_cache",
+      "knn_search_dtype": "auto",
+      "ann_large_datasets": [
+        "tsocial",
+        "dgraphfin"
+      ],
+      "ann_backend": "faiss_ivfpq",
+      "ann_nlist": 4096,
+      "ann_nprobe": 16,
+      "ann_pq_m": 16,
+      "ann_train_size": 262144,
+      "ann_query_batch_size": 4096,
+      "ann_add_batch_size": 262144,
+      "ann_rerank_factor": 32,
+      "ann_max_rerank_candidates": 256,
+      "ann_score_batch_size": 2048,
+      "ann_seed": 0,
+      "lambda_H": 0.1,
+      "lambda_bal": 0.1,
+      "lambda_E": 0.1,
+      "gamma": 0.01,
+      "tau_e": 1.0,
+      "beta": 0.02,
+      "eps": 1e-08,
+      "lambda_ortho": 0.1,
+      "lambda_min_usage": 0.1,
+      "lambda_diversity": 0.1,
+      "min_cluster_ratio": 0.01
+    }
+  },
+  "records": [
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 0,
+      "dataset": "weibo",
+      "AUROC": 0.8100228580477632,
+      "AUPRC": 0.40267678148356345,
+      "seconds": 11.796325286850333,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 0,
+      "dataset": "weibo",
+      "AUROC": 0.7528086478442142,
+      "AUPRC": 0.26680725470040806,
+      "seconds": 10.700976356863976,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 1,
+      "dataset": "weibo",
+      "AUROC": 0.805705065455886,
+      "AUPRC": 0.38491919807222535,
+      "seconds": 11.500019481405616,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 1,
+      "dataset": "weibo",
+      "AUROC": 0.7574420111168924,
+      "AUPRC": 0.27494446855534804,
+      "seconds": 10.697825066745281,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 2,
+      "dataset": "weibo",
+      "AUROC": 0.8093509806307317,
+      "AUPRC": 0.40370382597695714,
+      "seconds": 10.696983190253377,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 2,
+      "dataset": "weibo",
+      "AUROC": 0.7563252470607369,
+      "AUPRC": 0.2740167469488912,
+      "seconds": 9.698239563032985,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 3,
+      "dataset": "weibo",
+      "AUROC": 0.8127618036733071,
+      "AUPRC": 0.4149175211587838,
+      "seconds": 9.00402993708849,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 3,
+      "dataset": "weibo",
+      "AUROC": 0.759212615612441,
+      "AUPRC": 0.27004927508028925,
+      "seconds": 11.39547492004931,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 4,
+      "dataset": "weibo",
+      "AUROC": 0.8128316587477202,
+      "AUPRC": 0.420095080058465,
+      "seconds": 12.80847992375493,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 4,
+      "dataset": "weibo",
+      "AUROC": 0.7565591927749371,
+      "AUPRC": 0.27812730326593876,
+      "seconds": 11.997448915615678,
+      "status": "ok",
+      "error": ""
+    }
+  ],
+  "summary": [
+    {
+      "method": "Non-residual + KMeans",
+      "dataset": "weibo",
+      "n": 5,
+      "AUROC_mean": 0.8101344733110816,
+      "AUROC_std": 0.002623876780899701,
+      "AUPRC_mean": 0.405262481349999,
+      "AUPRC_std": 0.01213416831139694,
+      "seconds_mean": 11.16116756387055
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "weibo",
+      "n": 5,
+      "AUROC_mean": 0.7564695428818443,
+      "AUROC_std": 0.002092900061512072,
+      "AUPRC_mean": 0.27278900971017506,
+      "AUPRC_std": 0.003948120020646314,
+      "seconds_mean": 10.897992964461446
+    }
+  ],
+  "average": [
+    {
+      "method": "Non-residual + KMeans",
+      "dataset": "Average",
+      "n": 5,
+      "AUROC_mean": 0.8101344733110816,
+      "AUROC_std": 0.002623876780899701,
+      "AUPRC_mean": 0.405262481349999,
+      "AUPRC_std": 0.01213416831139694
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "Average",
+      "n": 5,
+      "AUROC_mean": 0.7564695428818443,
+      "AUROC_std": 0.002092900061512072,
+      "AUPRC_mean": 0.27278900971017506,
+      "AUPRC_std": 0.003948120020646314
+    }
+  ]
+}

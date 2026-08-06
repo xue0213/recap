@@ -5,7 +5,7 @@ This folder contains the residual + simple detector ablation for RECAP.
 Run the experiment from the RECAP project root:
 
 ```bash
-/root/miniconda3/bin/python ablation/simple_combine/run_simple_combine.py \
+python ablation/simple_combine/run_simple_combine.py \
   --device cuda:0 \
   --model recap_auprc_best \
   --trials 5 \

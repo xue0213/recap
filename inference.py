@@ -68,6 +68,10 @@ def inference_on_dataset(model,
         model(test_graph)
         score_components = model.get_ego_score_components()
         query_scores = score_components['total']
+        evaluation_mask = getattr(test_graph, 'evaluation_mask', None)
+        if evaluation_mask is not None:
+            query_labels = query_labels[evaluation_mask]
+            query_scores = query_scores[evaluation_mask]
         
         test_score = test_eval(query_labels, query_scores)
     

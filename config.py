@@ -57,6 +57,21 @@ class ModelConfig:
     knn_cache_dir: str = "./knn_cache"
     knn_search_dtype: str = "auto"
 
+    # Approximate KNN is opt-in by dataset name. All other datasets keep the
+    # original exact blockwise search and cache namespace.
+    ann_large_datasets: tuple = ("tsocial", "dgraphfin")
+    ann_backend: str = "faiss_ivfpq"
+    ann_nlist: int = 4096
+    ann_nprobe: int = 16
+    ann_pq_m: int = 16
+    ann_train_size: int = 262_144
+    ann_query_batch_size: int = 4_096
+    ann_add_batch_size: int = 262_144
+    ann_rerank_factor: int = 32
+    ann_max_rerank_candidates: int = 256
+    ann_score_batch_size: int = 2_048
+    ann_seed: int = 0
+
     # RECAP loss hyperparameters
     lambda_H: float = 0.1
     lambda_bal: float = 0.1

@@ -18,7 +18,9 @@ from typing import Dict, List, Optional, Any
 # 多视图数据集名称集合，Dataset 初始化时据此走不同分支
 MULTIVIEW_DATASETS = {'dblp', 'imdb', 'cert'}
 FEATURE_ALIGNMENT_VERSION = 'robust_pca_post_zscore_v1'
+LARGE_FEATURE_ALIGNMENT_VERSION = 'robust_sampled_pca_post_zscore_v1'
 ADJACENCY_VERSION = 'sym_norm_with_self_loops_v1'
+LARGE_DATASET_NAMES = {'tfinance', 'tsocial', 'dgraphfin'}
 
 
 def _cache_version(npz_file) -> str:
@@ -48,7 +50,9 @@ def sparse_mx_to_torch_sparse_tensor(sparse_mx):
         np.vstack((sparse_mx.row, sparse_mx.col)).astype(np.int64))
     values = torch.from_numpy(sparse_mx.data)
     shape = torch.Size(sparse_mx.shape)
-    return torch.sparse.FloatTensor(indices, values, shape)
+    return torch.sparse_coo_tensor(
+        indices, values, shape, dtype=torch.float32
+    )
 
 
 def feat_alignment(X, dims):
@@ -94,6 +98,59 @@ def feat_alignment(X, dims):
         X_aligned = np.pad(X_aligned, ((0, 0), (0, pad_width)), mode='constant')
 
     return torch.FloatTensor(X_aligned.astype(np.float32))
+
+
+def feat_alignment_large_to_file(
+    features,
+    dims,
+    output_path,
+    sample_size=200_000,
+    chunk_size=100_000,
+):
+    """Memory-bounded feature alignment for million-node graphs."""
+    features = np.asarray(features)
+    num_nodes, num_features = features.shape
+    sample_count = min(num_nodes, sample_size)
+    sample_idx = np.linspace(
+        0, num_nodes - 1, num=sample_count, dtype=np.int64
+    )
+    sample = np.asarray(features[sample_idx], dtype=np.float32)
+    eps = 1e-8
+    median = np.median(sample, axis=0, keepdims=True)
+    q75 = np.percentile(sample, 75, axis=0, keepdims=True)
+    q25 = np.percentile(sample, 25, axis=0, keepdims=True)
+    iqr = q75 - q25
+    sample = (sample - median) / (iqr + eps)
+    components = min(sample_count, num_features, dims)
+    pca = PCA(n_components=components, random_state=0)
+    pca.fit(sample)
+
+    aligned = np.lib.format.open_memmap(
+        output_path, mode='w+', dtype=np.float32, shape=(num_nodes, dims)
+    )
+    aligned[:] = 0
+    feature_sum = np.zeros(components, dtype=np.float64)
+    feature_sq_sum = np.zeros(components, dtype=np.float64)
+    for start in range(0, num_nodes, chunk_size):
+        stop = min(start + chunk_size, num_nodes)
+        chunk = np.asarray(features[start:stop], dtype=np.float32)
+        projected = pca.transform((chunk - median) / (iqr + eps))
+        projected = projected.astype(np.float32, copy=False)
+        aligned[start:stop, :components] = projected
+        feature_sum += projected.sum(axis=0, dtype=np.float64)
+        feature_sq_sum += np.square(
+            projected, dtype=np.float64
+        ).sum(axis=0, dtype=np.float64)
+    mean = feature_sum / num_nodes
+    variance = np.maximum(feature_sq_sum / num_nodes - mean ** 2, 0)
+    std = np.sqrt(variance)
+    for start in range(0, num_nodes, chunk_size):
+        stop = min(start + chunk_size, num_nodes)
+        aligned[start:stop, :components] = (
+            aligned[start:stop, :components] - mean
+        ) / (std + eps)
+    aligned.flush()
+    return aligned
 
 
 def preprocess_features(features):
@@ -196,6 +253,10 @@ class Dataset:
         preprocess_filename = f'{prefix}{name}_{dims}.npz'
         data = None
         feat = None
+        large_dir = os.path.join(prefix, name)
+        if name.lower() in LARGE_DATASET_NAMES and os.path.isdir(large_dir):
+            self._init_large_singleview(dims, name, large_dir)
+            return
         if os.path.exists(preprocess_filename):
             with np.load(preprocess_filename, allow_pickle=True) as f:
                 if _cache_version(f) == FEATURE_ALIGNMENT_VERSION:
@@ -242,6 +303,82 @@ class Dataset:
                     adjacency_version=ADJACENCY_VERSION,
                     )
         self.graph = data
+
+    def _init_large_singleview(self, dims, name, dataset_dir):
+        """Load the disk-friendly bundle produced by the large-data tools."""
+        metadata_path = os.path.join(dataset_dir, 'metadata.json')
+        adjacency_path = os.path.join(dataset_dir, 'adjacency.npz')
+        features_path = os.path.join(dataset_dir, 'features.npy')
+        labels_path = os.path.join(dataset_dir, 'labels.npy')
+        required = [metadata_path, adjacency_path, features_path, labels_path]
+        missing = [path for path in required if not os.path.exists(path)]
+        if missing:
+            raise FileNotFoundError(
+                f'Large-dataset bundle for {name} is incomplete: {missing}'
+            )
+
+        with open(metadata_path, 'r') as file:
+            metadata = json.load(file)
+        adj = sp.load_npz(adjacency_path).tocsr()
+        feat_raw = np.load(features_path, mmap_mode='r')
+        label = np.load(labels_path, mmap_mode='r')
+        if adj.shape[0] != feat_raw.shape[0] or label.shape[0] != feat_raw.shape[0]:
+            raise ValueError(
+                f'Inconsistent {name} bundle: adjacency={adj.shape}, '
+                f'features={feat_raw.shape}, labels={label.shape}'
+            )
+
+        aligned_path = os.path.join(
+            dataset_dir,
+            f'features_aligned_{dims}_{LARGE_FEATURE_ALIGNMENT_VERSION}.npy',
+        )
+        if os.path.exists(aligned_path):
+            feat_array = np.load(aligned_path, mmap_mode='r')
+        else:
+            feat_array = feat_alignment_large_to_file(
+                feat_raw, dims, aligned_path
+            )
+        feat = torch.from_numpy(np.asarray(feat_array))
+
+        adj_norm = sparse_mx_to_torch_sparse_tensor(
+            normalize_adj(adj + sp.eye(adj.shape[0], dtype=np.float32))
+        ).coalesce()
+        ano_labels = torch.from_numpy(
+            np.asarray(label, dtype=np.float32).reshape(-1).copy()
+        )
+        evaluation_mask_path = os.path.join(dataset_dir, 'evaluation_mask.npy')
+        evaluation_mask = (
+            torch.from_numpy(
+                np.asarray(
+                    np.load(evaluation_mask_path, mmap_mode='r'),
+                    dtype=np.bool_,
+                ).copy()
+            )
+            if os.path.exists(evaluation_mask_path)
+            else torch.ones(ano_labels.shape[0], dtype=torch.bool)
+        )
+        self.label = label
+        self.adj_norm = adj_norm
+        self.feat = feat
+        self.num_views = 1
+        self.graph = Data(
+            x=feat,
+            x_list=None,
+            adj=adj_norm,
+            num_views=1,
+            ano_labels=ano_labels,
+            evaluation_mask=evaluation_mask,
+            dataset_name=name,
+            feature_alignment_version=LARGE_FEATURE_ALIGNMENT_VERSION,
+            feature_dims=dims,
+            adjacency_version=ADJACENCY_VERSION,
+            source_format=metadata.get('source_format', 'canonical-large-v1'),
+        )
+        print(
+            f'[{name}] canonical bundle loaded: nodes={feat.shape[0]}, '
+            f'edges={adj.nnz}, dims={feat.shape[1]}, '
+            f'anomaly_ratio={ano_labels.mean().item():.4f}'
+        )
 
     def _init_multiview(self, dims, name, prefix):
         """初始化多视图数据集（dblp / imdb / cert）。
