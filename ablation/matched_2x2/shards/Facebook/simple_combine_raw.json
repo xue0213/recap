@@ -1,0 +1,237 @@
+{
+  "config": {
+    "device": "cpu",
+    "trials": 5,
+    "epochs": 100,
+    "dims": 32,
+    "model": "recap_auprc_best",
+    "json_dir": "params",
+    "output_dir": "ablation/matched_2x2/shards/Facebook",
+    "train_datasets": null,
+    "test_datasets": [
+      "Facebook"
+    ],
+    "methods": [
+      "Non-residual + KMeans",
+      "Residual + KMeans"
+    ],
+    "no_recap": true,
+    "save_recap_checkpoints": false,
+    "no_diagnostics": false,
+    "diagnostics_interval": 10,
+    "num_clusters": null,
+    "knn_k": 64,
+    "kmeans_n_init": 20,
+    "gmm_covariance": "diag",
+    "gmm_max_iter": 300,
+    "gmm_reg_covar": 1e-06,
+    "gmm_reg_covar_retries": [
+      1e-06,
+      1e-05,
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "gmm_min_std": 1e-08,
+    "gmm_no_component_reduction": false,
+    "spectral_neighbors": null,
+    "spectral_n_init": 5,
+    "spectral_max_nodes": 3000,
+    "spectral_large_mode": "sample",
+    "lof_neighbors": 20,
+    "n_jobs": -1,
+    "continue_on_error": true,
+    "quick": false,
+    "project_root": "/root/autodl-tmp/recap",
+    "model_config": {
+      "model": "recap_auprc_best",
+      "lr": 5e-05,
+      "dropout_rate": 0.2,
+      "h_feats": 256,
+      "num_hops": 4,
+      "weight_decay": 5e-05,
+      "dims": 32,
+      "num_layers": 2,
+      "activation": "ELU",
+      "num_views": 1,
+      "num_clusters": 36,
+      "knn_k": 64,
+      "cluster_lr_multiplier": 10.0,
+      "tau_s": 0.3,
+      "sim_block_size": 256,
+      "knn_cache_enabled": true,
+      "knn_cache_dir": "./knn_cache",
+      "knn_search_dtype": "auto",
+      "ann_large_datasets": [
+        "tsocial",
+        "dgraphfin"
+      ],
+      "ann_backend": "faiss_ivfpq",
+      "ann_nlist": 4096,
+      "ann_nprobe": 16,
+      "ann_pq_m": 16,
+      "ann_train_size": 262144,
+      "ann_query_batch_size": 4096,
+      "ann_add_batch_size": 262144,
+      "ann_rerank_factor": 32,
+      "ann_max_rerank_candidates": 256,
+      "ann_score_batch_size": 2048,
+      "ann_seed": 0,
+      "lambda_H": 0.1,
+      "lambda_bal": 0.1,
+      "lambda_E": 0.1,
+      "gamma": 0.01,
+      "tau_e": 1.0,
+      "beta": 0.02,
+      "eps": 1e-08,
+      "lambda_ortho": 0.1,
+      "lambda_min_usage": 0.1,
+      "lambda_diversity": 0.1,
+      "min_cluster_ratio": 0.01
+    }
+  },
+  "records": [
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 0,
+      "dataset": "Facebook",
+      "AUROC": 0.8685984848484849,
+      "AUPRC": 0.12249006007855055,
+      "seconds": 5.1001503597944975,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 0,
+      "dataset": "Facebook",
+      "AUROC": 0.4714015151515152,
+      "AUPRC": 0.02116991722402728,
+      "seconds": 4.095988277345896,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 1,
+      "dataset": "Facebook",
+      "AUROC": 0.9171969696969697,
+      "AUPRC": 0.19319064267580294,
+      "seconds": 4.595627071335912,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 1,
+      "dataset": "Facebook",
+      "AUROC": 0.47564393939393934,
+      "AUPRC": 0.023972619133682545,
+      "seconds": 4.0119167026132345,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 2,
+      "dataset": "Facebook",
+      "AUROC": 0.8838636363636364,
+      "AUPRC": 0.15889773656003672,
+      "seconds": 3.612107291817665,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 2,
+      "dataset": "Facebook",
+      "AUROC": 0.45022727272727275,
+      "AUPRC": 0.020139536384333367,
+      "seconds": 3.4055063370615244,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 3,
+      "dataset": "Facebook",
+      "AUROC": 0.921060606060606,
+      "AUPRC": 0.1951634097379465,
+      "seconds": 4.7159536592662334,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 3,
+      "dataset": "Facebook",
+      "AUROC": 0.5057575757575757,
+      "AUPRC": 0.022955170886183207,
+      "seconds": 4.098988359794021,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 4,
+      "dataset": "Facebook",
+      "AUROC": 0.9051893939393939,
+      "AUPRC": 0.1828715599230275,
+      "seconds": 3.011788535863161,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 4,
+      "dataset": "Facebook",
+      "AUROC": 0.4401136363636363,
+      "AUPRC": 0.01976887869209078,
+      "seconds": 3.503155654296279,
+      "status": "ok",
+      "error": ""
+    }
+  ],
+  "summary": [
+    {
+      "method": "Non-residual + KMeans",
+      "dataset": "Facebook",
+      "n": 5,
+      "AUROC_mean": 0.8991818181818182,
+      "AUROC_std": 0.0200464709195136,
+      "AUPRC_mean": 0.17052268179507285,
+      "AUPRC_std": 0.027260846706381736,
+      "seconds_mean": 4.207125383615494
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "Facebook",
+      "n": 5,
+      "AUROC_mean": 0.4686287878787878,
+      "AUROC_std": 0.02274720590516986,
+      "AUPRC_mean": 0.021601224464063436,
+      "AUPRC_std": 0.001620909164565831,
+      "seconds_mean": 3.8231110662221908
+    }
+  ],
+  "average": [
+    {
+      "method": "Non-residual + KMeans",
+      "dataset": "Average",
+      "n": 5,
+      "AUROC_mean": 0.8991818181818182,
+      "AUROC_std": 0.0200464709195136,
+      "AUPRC_mean": 0.17052268179507285,
+      "AUPRC_std": 0.027260846706381736
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "Average",
+      "n": 5,
+      "AUROC_mean": 0.4686287878787878,
+      "AUROC_std": 0.02274720590516986,
+      "AUPRC_mean": 0.021601224464063436,
+      "AUPRC_std": 0.001620909164565831
+    }
+  ]
+}

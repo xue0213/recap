@@ -1,0 +1,42 @@
+{
+  "status": "pass",
+  "datasets": [
+    "Facebook",
+    "cora",
+    "citeseer",
+    "ACM",
+    "BlogCatalog",
+    "weibo",
+    "Reddit",
+    "Amazon"
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "methods": [
+    "Non-residual + KMeans",
+    "Residual + KMeans",
+    "RECAP w/o Residual",
+    "RECAP"
+  ],
+  "combined_record_count": 160,
+  "new_record_count": 80,
+  "residual_kmeans_metric_values_compared": 80,
+  "residual_kmeans_max_abs_difference": 8.487497389020326e-06,
+  "residual_kmeans_equivalence_tolerance": 1e-05,
+  "residual_kmeans_final_source": "ablation/simple_combine/results/simple_combine_raw.json",
+  "shard_sha256": {
+    "ablation/matched_2x2/shards/Facebook/simple_combine_raw.json": "06317e4514c4101aac637899db9f865f3329cd270380ff0bfaa3839e4a0489bf",
+    "ablation/matched_2x2/shards/cora/simple_combine_raw.json": "f97a3ae716c14751fa1e95cf56818accc8f920f85f8c9d28e15f08f45b49ef61",
+    "ablation/matched_2x2/shards/citeseer/simple_combine_raw.json": "50c33b2b3aa6129b221f57117a9fddd8524eee2bdd809ad2ce9dbe972e023a10",
+    "ablation/matched_2x2/shards/ACM/simple_combine_raw.json": "86999dc4ec6517d567ca56136dfc1f1048c55925f56dc9b9cd4e4fb826445ed6",
+    "ablation/matched_2x2/shards/BlogCatalog/simple_combine_raw.json": "2106db9434432f2f7fe73962260960a7ed28eea826120bee0da4a16e6c58b0e1",
+    "ablation/matched_2x2/shards/weibo/simple_combine_raw.json": "757510fb837ec34fcd8aca19664303ab1eb4fffe99506e59dcccc1fa0fd3d765",
+    "ablation/matched_2x2/shards/Reddit/simple_combine_raw.json": "e5bc3b1faf1adabd2450a8b2c1a086231fa1010c47d23977d9a27fa9b0c389d1",
+    "ablation/matched_2x2/shards/Amazon/simple_combine_raw.json": "0980bfb3a3f19613ea67d0cf42a25422da955b0c8e452ce348a8a696a6d64563"
+  }
+}

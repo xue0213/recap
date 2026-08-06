@@ -1,0 +1,32 @@
+observations:
+  - id: O01
+    timestamp: "2026-07-26T17:07+08:00"
+    provenance: ai-suggested
+    content: >
+      UNPrompt and AnomalyGFM-ZS transfer weakly under the locked multi-source
+      Settings A/B/C relative to RECAP; the B/C supplement confirms the
+      pattern with independently audited results.
+    context: "Post-audit comparison of all A/B/C dataset macros."
+    potential_type: claim
+    promoted: true
+    promoted_to: C06
+  - id: O02
+    timestamp: "2026-07-26T17:07+08:00"
+    provenance: ai-suggested
+    content: >
+      IA-GGAD has unusually high three-seed variance on Amazon in Setting A.
+    context: "Per-dataset review of the completed baseline table."
+    potential_type: observation
+    promoted: false
+    stale: true
+  - id: O03
+    timestamp: "2026-07-26T23:45+08:00"
+    provenance: ai-suggested
+    content: >
+      DiffGAD has substantial cross-seed AUROC variation on Facebook and
+      Weibo, even though several citation and commerce cells are nearly
+      deterministic under the same fixed diffusion-level ensemble.
+    context: "Per-dataset review after the independent three-baseline audit."
+    potential_type: observation
+    promoted: false
+    stale: false

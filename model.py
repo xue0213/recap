@@ -4,6 +4,8 @@ import torch
 import hashlib
 import os
 
+from large_graph_knn import select_faiss_ivfpq_candidates
+
 
 class EgoCluster(nn.Module):
     """Residual community assignment module used in RECAP.
@@ -39,6 +41,18 @@ class EgoCluster(nn.Module):
         knn_cache_enabled: bool = True,
         knn_cache_dir: str = "./knn_cache",
         knn_search_dtype: str = "auto",
+        ann_large_datasets=("tsocial", "dgraphfin"),
+        ann_backend: str = "faiss_ivfpq",
+        ann_nlist: int = 4096,
+        ann_nprobe: int = 16,
+        ann_pq_m: int = 16,
+        ann_train_size: int = 262_144,
+        ann_query_batch_size: int = 4_096,
+        ann_add_batch_size: int = 262_144,
+        ann_rerank_factor: int = 32,
+        ann_max_rerank_candidates: int = 256,
+        ann_score_batch_size: int = 2_048,
+        ann_seed: int = 0,
     ):
         super().__init__()
         self.knn_k = knn_k
@@ -64,6 +78,20 @@ class EgoCluster(nn.Module):
         self.knn_cache_enabled = knn_cache_enabled
         self.knn_cache_dir = knn_cache_dir
         self.knn_search_dtype = knn_search_dtype
+        self.ann_large_datasets = {
+            str(name).lower() for name in ann_large_datasets
+        }
+        self.ann_backend = ann_backend
+        self.ann_nlist = ann_nlist
+        self.ann_nprobe = ann_nprobe
+        self.ann_pq_m = ann_pq_m
+        self.ann_train_size = ann_train_size
+        self.ann_query_batch_size = ann_query_batch_size
+        self.ann_add_batch_size = ann_add_batch_size
+        self.ann_rerank_factor = ann_rerank_factor
+        self.ann_max_rerank_candidates = ann_max_rerank_candidates
+        self.ann_score_batch_size = ann_score_batch_size
+        self.ann_seed = ann_seed
 
         self.W = nn.Linear(embed_dim, num_clusters, bias=False)
         if self.cluster_init_gain is not None:
@@ -166,6 +194,34 @@ class EgoCluster(nn.Module):
 
         return torch.cat(all_topk_idx, dim=0)
 
+    def _dataset_uses_ann(self, cache_key: tuple | None) -> bool:
+        return (
+            isinstance(cache_key, tuple)
+            and len(cache_key) > 1
+            and cache_key[0] == "dataset"
+            and str(cache_key[1]).lower() in self.ann_large_datasets
+        )
+
+    @torch.no_grad()
+    def _select_approximate_knn_candidates(
+        self, E_init: torch.Tensor
+    ) -> torch.Tensor:
+        if self.ann_backend != "faiss_ivfpq":
+            raise ValueError(f"Unsupported ANN backend: {self.ann_backend!r}")
+        return select_faiss_ivfpq_candidates(
+            E_init,
+            self.knn_k,
+            nlist=self.ann_nlist,
+            nprobe=self.ann_nprobe,
+            pq_m=self.ann_pq_m,
+            train_size=self.ann_train_size,
+            query_batch_size=self.ann_query_batch_size,
+            add_batch_size=self.ann_add_batch_size,
+            rerank_factor=self.ann_rerank_factor,
+            max_rerank_candidates=self.ann_max_rerank_candidates,
+            seed=self.ann_seed,
+        )
+
     def _get_knn_candidates(
         self, E_init: torch.Tensor, cache_key: tuple | None = None
     ) -> torch.Tensor:
@@ -174,21 +230,43 @@ class EgoCluster(nn.Module):
 
         device = E_init.device
         search_dtype = self._resolve_knn_search_dtype(device)
-        full_key = (
-            "recap_knn_candidates_v1",
-            cache_key,
-            E_init.shape[0],
-            E_init.shape[1],
-            self.knn_k,
-            str(search_dtype).replace("torch.", ""),
-        )
+        use_ann = self._dataset_uses_ann(cache_key)
+        if use_ann:
+            full_key = (
+                "recap_ann_knn_candidates_v1",
+                cache_key,
+                E_init.shape[0],
+                E_init.shape[1],
+                self.knn_k,
+                self.ann_backend,
+                self.ann_nlist,
+                self.ann_nprobe,
+                self.ann_pq_m,
+                self.ann_train_size,
+                self.ann_rerank_factor,
+                self.ann_max_rerank_candidates,
+                self.ann_seed,
+            )
+        else:
+            full_key = (
+                "recap_knn_candidates_v1",
+                cache_key,
+                E_init.shape[0],
+                E_init.shape[1],
+                self.knn_k,
+                str(search_dtype).replace("torch.", ""),
+            )
         cached = self._knn_cache.get(full_key)
         if cached is None:
             cached = self._load_knn_from_disk(full_key)
             if cached is not None:
                 self._knn_cache[full_key] = cached
         if cached is None:
-            cached = self._select_knn_candidates(E_init).detach().cpu()
+            if use_ann:
+                cached = self._select_approximate_knn_candidates(E_init)
+            else:
+                cached = self._select_knn_candidates(E_init)
+            cached = cached.detach().cpu()
             self._knn_cache[full_key] = cached
             self._save_knn_to_disk(full_key, cached)
         return cached.to(device)
@@ -361,6 +439,106 @@ class EgoCluster(nn.Module):
         js = js / torch.log(H.new_tensor(2.0))
         return js, neighbor_H
 
+    def _compute_ann_context_score(
+        self,
+        E: torch.Tensor,
+        H: torch.Tensor,
+        topk_idx: torch.Tensor,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        """Compute the symmetrized KNN context score in bounded blocks."""
+        num_nodes, k = topk_idx.shape
+        if k == 0:
+            return H.new_zeros(num_nodes), H
+
+        E_norm = F.normalize(E, p=2, dim=1)
+        neighbor_H = H.new_zeros(H.shape)
+        degree = H.new_zeros(num_nodes)
+        scale = max(self.tau_s, self.eps)
+        block = max(1, int(self.ann_score_batch_size))
+        for start in range(0, num_nodes, block):
+            stop = min(start + block, num_nodes)
+            cols = topk_idx[start:stop]
+            candidate_emb = E_norm[cols]
+            scores = (
+                candidate_emb * E_norm[start:stop].unsqueeze(1)
+            ).sum(dim=2)
+            weights = F.softmax(scores / scale, dim=1) * 0.5
+
+            neighbor_H[start:stop] += (
+                H[cols] * weights.unsqueeze(-1)
+            ).sum(dim=1)
+            degree[start:stop] += weights.sum(dim=1)
+
+            flat_cols = cols.reshape(-1)
+            reverse_values = (
+                H[start:stop].unsqueeze(1) * weights.unsqueeze(-1)
+            ).reshape(-1, H.shape[1])
+            neighbor_H.index_add_(0, flat_cols, reverse_values)
+            degree.index_add_(0, flat_cols, weights.reshape(-1))
+
+        neighbor_H = neighbor_H / degree.clamp(min=self.eps).unsqueeze(1)
+        neighbor_H = neighbor_H / neighbor_H.sum(
+            dim=1, keepdim=True
+        ).clamp(min=self.eps)
+        midpoint = 0.5 * (H + neighbor_H)
+        kl_self = (
+            H * (torch.log(H + self.eps) - torch.log(midpoint + self.eps))
+        ).sum(dim=1)
+        kl_neighbor = (
+            neighbor_H
+            * (
+                torch.log(neighbor_H + self.eps)
+                - torch.log(midpoint + self.eps)
+            )
+        ).sum(dim=1)
+        js = 0.5 * (kl_self + kl_neighbor)
+        return js / torch.log(H.new_tensor(2.0)), neighbor_H
+
+    def _compute_adhesion_raw_chunked(
+        self, E: torch.Tensor, H: torch.Tensor, Z: torch.Tensor
+    ) -> torch.Tensor:
+        """Compute centroid distances without materializing N x C x D."""
+        output = E.new_empty(E.shape[0])
+        z_norm = (Z * Z).sum(dim=1).unsqueeze(0)
+        block = max(1, int(self.ann_score_batch_size))
+        for start in range(0, E.shape[0], block):
+            stop = min(start + block, E.shape[0])
+            current = E[start:stop]
+            dist_sq = (
+                (current * current).sum(dim=1, keepdim=True)
+                + z_norm
+                - 2.0 * torch.mm(current, Z.t())
+            ).clamp_min_(0)
+            output[start:stop] = (
+                H[start:stop] * dist_sq
+            ).sum(dim=1) / max(self.tau_e, self.eps)
+        return output
+
+    def _compute_ann_score_components(
+        self,
+        E: torch.Tensor,
+        E_init: torch.Tensor,
+        cache_key: tuple,
+    ) -> dict:
+        H = self.cluster(E)
+        topk_idx = self._get_knn_candidates(E_init, cache_key=cache_key)
+        denom = H.sum(dim=0).clamp(min=self.eps)
+        Z = torch.mm(H.t(), E) / denom.unsqueeze(1)
+        s_adhesion_raw = self._compute_adhesion_raw_chunked(E, H, Z)
+        s_scale_raw, neighbor_H = self._compute_ann_context_score(
+            E, H, topk_idx
+        )
+        s_adhesion = self._standardize_score(s_adhesion_raw)
+        s_scale = self._standardize_score(s_scale_raw)
+        return {
+            "total": s_adhesion + self.beta * s_scale,
+            "adhesion": s_adhesion,
+            "scale": s_scale,
+            "adhesion_raw": s_adhesion_raw,
+            "scale_raw": s_scale_raw,
+            "neighbor_context": neighbor_H,
+        }
+
     def compute_score_components(
         self,
         E: torch.Tensor,
@@ -368,6 +546,11 @@ class EgoCluster(nn.Module):
         cache_key: tuple | None = None,
     ) -> dict:
         """Compute decomposed score components for each node."""
+        if self._dataset_uses_ann(cache_key):
+            if E_init is None:
+                E_init = E.detach()
+            return self._compute_ann_score_components(E, E_init, cache_key)
+
         H = self.cluster(E)
         edge_index, edge_weight = self.build_ego_graph(E, E_init=E_init, cache_key=cache_key)
 
@@ -459,6 +642,22 @@ class recap(nn.Module):
         self.knn_cache_enabled = kwargs.get("knn_cache_enabled", True)
         self.knn_cache_dir = kwargs.get("knn_cache_dir", "./knn_cache")
         self.knn_search_dtype = kwargs.get("knn_search_dtype", "auto")
+        self.ann_large_datasets = kwargs.get(
+            "ann_large_datasets", ("tsocial", "dgraphfin")
+        )
+        self.ann_backend = kwargs.get("ann_backend", "faiss_ivfpq")
+        self.ann_nlist = kwargs.get("ann_nlist", 4096)
+        self.ann_nprobe = kwargs.get("ann_nprobe", 16)
+        self.ann_pq_m = kwargs.get("ann_pq_m", 16)
+        self.ann_train_size = kwargs.get("ann_train_size", 262_144)
+        self.ann_query_batch_size = kwargs.get("ann_query_batch_size", 4_096)
+        self.ann_add_batch_size = kwargs.get("ann_add_batch_size", 262_144)
+        self.ann_rerank_factor = kwargs.get("ann_rerank_factor", 32)
+        self.ann_max_rerank_candidates = kwargs.get(
+            "ann_max_rerank_candidates", 256
+        )
+        self.ann_score_batch_size = kwargs.get("ann_score_batch_size", 2_048)
+        self.ann_seed = kwargs.get("ann_seed", 0)
 
         # Backward-compatible aliases (for old config/checkpoint consumers)
         self.lambda_ortho = self.lambda_H
@@ -491,6 +690,18 @@ class recap(nn.Module):
                     self.knn_cache_enabled,
                     self.knn_cache_dir,
                     self.knn_search_dtype,
+                    self.ann_large_datasets,
+                    self.ann_backend,
+                    self.ann_nlist,
+                    self.ann_nprobe,
+                    self.ann_pq_m,
+                    self.ann_train_size,
+                    self.ann_query_batch_size,
+                    self.ann_add_batch_size,
+                    self.ann_rerank_factor,
+                    self.ann_max_rerank_candidates,
+                    self.ann_score_batch_size,
+                    self.ann_seed,
                 )
             ]
         )

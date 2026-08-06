@@ -1,0 +1,10 @@
+requirement,expected,actual,status,evidence
+12 datasets load and have immutable raw hashes,12 datasets,12,PASS,OFO global audit raw_dataset_hashes
+RECAP-OFO,12 datasets × 3 seeds,36 evaluations / 36 training runs,PASS,Phase 1 raw results + Questions addendum
+RECAP-OFA A/B/C,3 settings × 3 seeds,54 evaluations / 9 training runs,PASS,Phase 1 raw results
+10 OFO baselines,10 methods × 12 datasets × 3 seeds,360 evaluations / 360 training runs,PASS,OFO global audit + three-baseline extension audit
+5 OFA baselines in A/B/C,5 methods × (8+5+5) targets × 3 seeds,270 evaluations / 45 training runs,PASS,Phase 2 audits + three-baseline extension audit
+Community stability,30 scopes × 3 seed pairs,90 pair records,PASS,pair-level stability CSVs
+Training diagnostics,486 rows after Questions addendum,486,PASS,RECAP artifact audits
+Checkpoints and reload gates,225 checkpoints / 45 final reload gates,225 / 45,PASS,RECAP artifact audits
+Protocol Tables 1–9,all cells backed by raw records,consolidated and recomputed,PASS,protocol_completion analysis outputs

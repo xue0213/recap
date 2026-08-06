@@ -1,7 +1,8 @@
 # Quick Start
 
+Run every command below from the repository root.
+
 ```bash
-cd /Users/coco/Desktop/temp/recap
 ./tuning_hyperparams/run_sensitivity.sh
 ```
 
@@ -33,7 +34,7 @@ PLOT_ONLY=1 OUTPUT_DIR=/autodl-fs/data/recap/tuning_hyperparams/sensitivity_resu
 
 ```bash
 # 快速扫描原 sensitivity_default_v2 日志，确认 L_var 在敏感度实验中是否实际活跃
-/root/miniconda3/bin/python tuning_hyperparams/lambda_e_activity_check.py
+python tuning_hyperparams/lambda_e_activity_check.py
 ```
 
 ```bash

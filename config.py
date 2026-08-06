@@ -50,14 +50,32 @@ class ModelConfig:
     cluster_lr_multiplier: float = 10.0
     tau_s: float = 0.08
     tau_c: float = 0.3
+    tau_e: float = 1.0
     cluster_init_gain: Optional[float] = 1.5
     sim_block_size: int = 256
     knn_cache_enabled: bool = True
     knn_cache_dir: str = "./knn_cache"
     knn_search_dtype: str = "auto"
 
+    # Approximate KNN is opt-in by dataset name. All other datasets keep the
+    # original exact blockwise search and cache namespace.
+    ann_large_datasets: tuple = ("tsocial", "dgraphfin")
+    ann_backend: str = "faiss_ivfpq"
+    ann_nlist: int = 4096
+    ann_nprobe: int = 16
+    ann_pq_m: int = 16
+    ann_train_size: int = 262_144
+    ann_query_batch_size: int = 4_096
+    ann_add_batch_size: int = 262_144
+    ann_rerank_factor: int = 32
+    ann_max_rerank_candidates: int = 256
+    ann_score_batch_size: int = 2_048
+    ann_seed: int = 0
+
     # RECAP loss hyperparameters
     lambda_H: float = 0.1
+    lambda_bal: float = 0.1
+    lambda_E: float = 0.0
     lambda_usage_entropy: float = 0.1
     assignment_entropy_lower: Optional[float] = 0.45
     assignment_entropy_upper: Optional[float] = 0.85
@@ -66,6 +84,7 @@ class ModelConfig:
 
     # RECAP inference scoring hyperparameters
     beta: float = 0.02
+    gamma: float = 0.01
 
     # Numerical stability
     eps: float = 1e-8

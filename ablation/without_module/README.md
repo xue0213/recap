@@ -20,9 +20,7 @@ The default model configuration is `params/recap_auprc_best.json`
 Formal run:
 
 ```bash
-cd /root/autodl-fs/recap
-
-/root/miniconda3/bin/python ablation/without_module/run_without_module.py \
+python ablation/without_module/run_without_module.py \
   --device cuda:0 \
   --model recap_auprc_best \
   --trials 5 \

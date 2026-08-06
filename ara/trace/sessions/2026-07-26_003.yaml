@@ -1,0 +1,79 @@
+session:
+  id: "2026-07-26_003"
+  timestamp: "2026-07-26T20:10+08:00"
+  summary: >
+    Completed and independently audited all 288 runs in the eight-method,
+    12-dataset RECAP-OFO baseline reproduction.
+
+events_logged:
+  - type: question
+    id: N13
+    provenance: user
+    summary: "User required all eight OFO baselines on all twelve datasets."
+  - type: experiment
+    id: N14
+    provenance: ai-executed
+    summary: "Locked and passed the 288-run protocol, equivalence, and smoke gates."
+  - type: dead_end
+    id: N15
+    provenance: ai-executed
+    summary: "Rejected incompatible XGBoost sklearn-wrapper persistence."
+  - type: experiment
+    id: N16
+    provenance: ai-executed
+    summary: "Verified native Booster JSON persistence."
+  - type: dead_end
+    id: N17
+    provenance: ai-executed
+    summary: "Rejected a fixed absolute reload threshold on large reconstruction scores."
+  - type: experiment
+    id: N18
+    provenance: ai-executed
+    summary: "Locked and gated a scale-aware reload threshold before formal results."
+  - type: experiment
+    id: N19
+    provenance: ai-executed
+    summary: "Completed 288 method-dataset-seed runs with block audits."
+  - type: experiment
+    id: N20
+    provenance: ai-executed
+    summary: "Passed the global 288-run artifact and 576-metric audit."
+
+ai_actions:
+  - action: "Implemented the locked OFO models, label vault, runner, gates, and analyzer."
+    provenance: ai-executed
+    files_changed:
+      - "rebuttal/OFO_12_BASELINE_PROTOCOL.md"
+      - "rebuttal/ofo_baselines/common.py"
+      - "rebuttal/ofo_baselines/models.py"
+      - "rebuttal/ofo_baselines/protocol.py"
+      - "rebuttal/ofo_baselines/runner.py"
+      - "rebuttal/ofo_baselines/test_ofo_baselines.py"
+      - "rebuttal/ofo_baselines/analysis.py"
+  - action: "Executed 288 formal runs and independently recomputed 576 metrics."
+    provenance: ai-executed
+    files_changed:
+      - "rebuttal/artifacts/ofo_12_baselines/formal/analysis/"
+  - action: "Generated the final per-method, per-dataset, domain, timing, and adaptation report."
+    provenance: ai-executed
+    files_changed:
+      - "rebuttal/reports/OFO_12_BASELINE_REPORT.md"
+
+claims_touched:
+  - id: C07
+    action: created
+    provenance: ai-suggested
+  - id: C08
+    action: created
+    provenance: ai-suggested
+  - id: C09
+    action: created
+    provenance: ai-suggested
+
+open_threads:
+  - "Investigate why the full-graph unsupervised baselines are weak on several social graphs without changing the accepted confirmatory results."
+  - "Investigate GAT's comparatively large macro AUPRC seed variance in a separately labeled diagnostic."
+
+ai_suggestions_pending:
+  - "Keep supervised 40%-test and unsupervised full-graph results in separate interpretation strata."
+  - "Do not target-tune or selectively rerun the completed weak/high-variance cells."

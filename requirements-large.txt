@@ -1,0 +1,2 @@
+# Optional dependency used only by T-Social and DGraph-Fin ANN inference.
+faiss-cpu==1.14.3

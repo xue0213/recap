@@ -1,0 +1,353 @@
+{
+  "evaluated_at": "2026-07-27T22:36:39.288132+00:00",
+  "format": "recap_tfinance_source_transfer_results_v1",
+  "global_freeze_sha256": "139b691674ae0cead6217f8a9653a0612b4fe18eb55bc332f9384b5f5d3f6cda",
+  "labels_accessed_after_global_freeze": true,
+  "metric_rows": [
+    {
+      "anomalies": 1804,
+      "auprc": 0.030990644030773336,
+      "auroc": 0.3306843622580308,
+      "evaluation_nodes": 39357,
+      "route": "full",
+      "score_sha256": "abb061256ac9f569c3a757c4ee570df789fac7cb09466ac5628c8933519df0d0",
+      "seed": 0,
+      "target": "tfinance"
+    },
+    {
+      "anomalies": 1804,
+      "auprc": 0.03128817555619975,
+      "auroc": 0.33605963291024665,
+      "evaluation_nodes": 39357,
+      "route": "adhesion_only",
+      "score_sha256": "9d121400b0f938628d986f0aaaa694fa6da2343b46f783878570db4dc7db989e",
+      "seed": 0,
+      "target": "tfinance"
+    },
+    {
+      "anomalies": 1804,
+      "auprc": 0.02957267186278867,
+      "auroc": 0.25939974532963106,
+      "evaluation_nodes": 39357,
+      "route": "context_only",
+      "score_sha256": "ca5532d49be9765cda4a9d51eb0ba2f1cadad6b3d13d645233bdf05246d48fae",
+      "seed": 0,
+      "target": "tfinance"
+    },
+    {
+      "anomalies": 1804,
+      "auprc": 0.03042763149256648,
+      "auroc": 0.3177823827172747,
+      "evaluation_nodes": 39357,
+      "route": "full",
+      "score_sha256": "ce54af69b24d8b9d21b72e98d5ba27e6a2d00924d943dc9df07e23c3e7d98833",
+      "seed": 1,
+      "target": "tfinance"
+    },
+    {
+      "anomalies": 1804,
+      "auprc": 0.030637908358708298,
+      "auroc": 0.32158756643898945,
+      "evaluation_nodes": 39357,
+      "route": "adhesion_only",
+      "score_sha256": "4ef52cc7861627e2f571782a2243b4a6577e23ac09f7931382e975232e20a148",
+      "seed": 1,
+      "target": "tfinance"
+    },
+    {
+      "anomalies": 1804,
+      "auprc": 0.029615293595058066,
+      "auroc": 0.2652055973750743,
+      "evaluation_nodes": 39357,
+      "route": "context_only",
+      "score_sha256": "b980bca694feb9b25ea80c9787dfbf0c6275b51e31dfc17785d6913afe6dd589",
+      "seed": 1,
+      "target": "tfinance"
+    },
+    {
+      "anomalies": 1804,
+      "auprc": 0.029146347953915065,
+      "auroc": 0.2863381837926271,
+      "evaluation_nodes": 39357,
+      "route": "full",
+      "score_sha256": "0c6d8c87e88f94b205c6feb2b484622a6f108ae8f8642d7961cd23f08e9fd91d",
+      "seed": 2,
+      "target": "tfinance"
+    },
+    {
+      "anomalies": 1804,
+      "auprc": 0.029062985658806238,
+      "auroc": 0.28255519339023755,
+      "evaluation_nodes": 39357,
+      "route": "adhesion_only",
+      "score_sha256": "53eac4bedcdfe8c9dd71338862ccbba395117be54e4dd122b23771cbbd3b2dbc",
+      "seed": 2,
+      "target": "tfinance"
+    },
+    {
+      "anomalies": 1804,
+      "auprc": 0.03048615755952993,
+      "auroc": 0.2757409070273068,
+      "evaluation_nodes": 39357,
+      "route": "context_only",
+      "score_sha256": "ee60b48bda22eb700b8016dc7d4d81a7912a0e84a1aa7edbf73559351d64e894",
+      "seed": 2,
+      "target": "tfinance"
+    },
+    {
+      "anomalies": 15509,
+      "auprc": 0.009046147517192396,
+      "auroc": 0.36670657852017585,
+      "evaluation_nodes": 1225601,
+      "route": "full",
+      "score_sha256": "b49987ba04c39bc616d27a29182cc7d32592cf3e7cf4823844dbb6a7116c6c6c",
+      "seed": 0,
+      "target": "dgraphfin"
+    },
+    {
+      "anomalies": 15509,
+      "auprc": 0.009194682331399855,
+      "auroc": 0.37705490509663386,
+      "evaluation_nodes": 1225601,
+      "route": "adhesion_only",
+      "score_sha256": "a089a0776705a1ec4bd4cafc85e1effa05a6d2a1517b25dd5cab333b87743091",
+      "seed": 0,
+      "target": "dgraphfin"
+    },
+    {
+      "anomalies": 15509,
+      "auprc": 0.0096797732856809,
+      "auroc": 0.392920302037968,
+      "evaluation_nodes": 1225601,
+      "route": "context_only",
+      "score_sha256": "737c61c0b12920022561d0512a82955f5db02edab9a261067de5fe6de20589f7",
+      "seed": 0,
+      "target": "dgraphfin"
+    },
+    {
+      "anomalies": 15509,
+      "auprc": 0.009007865615387557,
+      "auroc": 0.364073943793922,
+      "evaluation_nodes": 1225601,
+      "route": "full",
+      "score_sha256": "7c0995db0f13b263ab143524b10b509956517ef0a9618ee000467392c5f1befa",
+      "seed": 1,
+      "target": "dgraphfin"
+    },
+    {
+      "anomalies": 15509,
+      "auprc": 0.009175232385104473,
+      "auroc": 0.3763011951428009,
+      "evaluation_nodes": 1225601,
+      "route": "adhesion_only",
+      "score_sha256": "6c4cd5e7848c84a4781bd67b5e0eab0b25ca9e45822291330cb4060b84cdf625",
+      "seed": 1,
+      "target": "dgraphfin"
+    },
+    {
+      "anomalies": 15509,
+      "auprc": 0.009545654772948208,
+      "auroc": 0.38210735411579955,
+      "evaluation_nodes": 1225601,
+      "route": "context_only",
+      "score_sha256": "476f19e32b966b9cd7dede19f6da15a174b9cb6c09ecd6632bf61f3284111161",
+      "seed": 1,
+      "target": "dgraphfin"
+    },
+    {
+      "anomalies": 15509,
+      "auprc": 0.009016570993763393,
+      "auroc": 0.3637799202501959,
+      "evaluation_nodes": 1225601,
+      "route": "full",
+      "score_sha256": "a27fa750710996209fd15b141248e51661efdbdd30af25cbd2a84be95317658b",
+      "seed": 2,
+      "target": "dgraphfin"
+    },
+    {
+      "anomalies": 15509,
+      "auprc": 0.009189710430237058,
+      "auroc": 0.37604511405012014,
+      "evaluation_nodes": 1225601,
+      "route": "adhesion_only",
+      "score_sha256": "f3932b18df41dfd2d10ede0eab10dd6d6be27d19588651d59352e915fbf0b3f9",
+      "seed": 2,
+      "target": "dgraphfin"
+    },
+    {
+      "anomalies": 15509,
+      "auprc": 0.009500054937085556,
+      "auroc": 0.38343598730447137,
+      "evaluation_nodes": 1225601,
+      "route": "context_only",
+      "score_sha256": "d370106086eba9709da21eaac2c30a42694231e97d725caf97a38324ffb97937",
+      "seed": 2,
+      "target": "dgraphfin"
+    },
+    {
+      "anomalies": 174280,
+      "auprc": 0.02541037557646731,
+      "auroc": 0.4340341072993852,
+      "evaluation_nodes": 5781065,
+      "route": "full",
+      "score_sha256": "b6141aa4a795d3fe0a062c98f1cc93a884c8ee0d0d1ccb05e19724ec2705250d",
+      "seed": 0,
+      "target": "tsocial"
+    },
+    {
+      "anomalies": 174280,
+      "auprc": 0.02895038765310767,
+      "auroc": 0.48089326795986026,
+      "evaluation_nodes": 5781065,
+      "route": "adhesion_only",
+      "score_sha256": "775456b3881f3a26d735837eacf4346260b39d703e152730224f5a1d121426b3",
+      "seed": 0,
+      "target": "tsocial"
+    },
+    {
+      "anomalies": 174280,
+      "auprc": 0.025222531652838102,
+      "auroc": 0.43134287317429354,
+      "evaluation_nodes": 5781065,
+      "route": "context_only",
+      "score_sha256": "f3a26c61e615fd1c66bed2c551f22cf68c62eaa01f52ad26d50747d384e125ed",
+      "seed": 0,
+      "target": "tsocial"
+    },
+    {
+      "anomalies": 174280,
+      "auprc": 0.026072137650585976,
+      "auroc": 0.4409523892657418,
+      "evaluation_nodes": 5781065,
+      "route": "full",
+      "score_sha256": "c6fe535a3c44a8f4b1360c3b881a08019e1ec4a874f1991b40e0de8f957c3c64",
+      "seed": 1,
+      "target": "tsocial"
+    },
+    {
+      "anomalies": 174280,
+      "auprc": 0.029020045026356384,
+      "auroc": 0.4789020042862388,
+      "evaluation_nodes": 5781065,
+      "route": "adhesion_only",
+      "score_sha256": "cd5260e7fd14c3a2c36fc6caca10305351e350b54f794ace327645f94c2c71d6",
+      "seed": 1,
+      "target": "tsocial"
+    },
+    {
+      "anomalies": 174280,
+      "auprc": 0.02595786147949569,
+      "auroc": 0.44040916672628583,
+      "evaluation_nodes": 5781065,
+      "route": "context_only",
+      "score_sha256": "0f9c09c452adcd795a26e5fcc69250c781f5a38ca6b9f2fcb3c1a124a66c0e74",
+      "seed": 1,
+      "target": "tsocial"
+    },
+    {
+      "anomalies": 174280,
+      "auprc": 0.02562774422517755,
+      "auroc": 0.44049086937836784,
+      "evaluation_nodes": 5781065,
+      "route": "full",
+      "score_sha256": "61719f2088cf9d980e775e914526ee934a49a6166fce36c5f9cf6f27bd8f1bd1",
+      "seed": 2,
+      "target": "tsocial"
+    },
+    {
+      "anomalies": 174280,
+      "auprc": 0.0283794802933714,
+      "auroc": 0.47457449677573704,
+      "evaluation_nodes": 5781065,
+      "route": "adhesion_only",
+      "score_sha256": "8ea3d8cf546a42383a5347e97d52743cbeca71eb14db48cc3e608e3b55fedbf2",
+      "seed": 2,
+      "target": "tsocial"
+    },
+    {
+      "anomalies": 174280,
+      "auprc": 0.025722892211756613,
+      "auroc": 0.4446206606987671,
+      "evaluation_nodes": 5781065,
+      "route": "context_only",
+      "score_sha256": "55b441ed70dbf90a76bdab3237787685a2667d6d5445c066f3ccbfde718435f8",
+      "seed": 2,
+      "target": "tsocial"
+    }
+  ],
+  "protocol_sha256": "e67d532bcdefe68f2c4dc3b29fba242a149bf17e0792f94bd0825c821979d5ab",
+  "summary": [
+    {
+      "auprc_mean": 0.03018820782575163,
+      "auprc_std": 0.000771729561419027,
+      "auroc_mean": 0.3116016429226442,
+      "auroc_std": 0.01862430391411636,
+      "route": "full",
+      "target": "tfinance"
+    },
+    {
+      "auprc_mean": 0.030329689857904758,
+      "auprc_std": 0.0009342078651790933,
+      "auroc_mean": 0.31340079757982453,
+      "auroc_std": 0.022597177557571537,
+      "route": "adhesion_only",
+      "target": "tfinance"
+    },
+    {
+      "auprc_mean": 0.029891374339125556,
+      "auprc_std": 0.00042093504049228313,
+      "auroc_mean": 0.26678208324400404,
+      "auroc_std": 0.006763745125229443,
+      "route": "context_only",
+      "target": "tfinance"
+    },
+    {
+      "auprc_mean": 0.009023528042114448,
+      "auprc_std": 1.6384472176790283e-05,
+      "auroc_mean": 0.36485348085476454,
+      "auroc_std": 0.0013158243751177025,
+      "route": "full",
+      "target": "dgraphfin"
+    },
+    {
+      "auprc_mean": 0.009186541715580462,
+      "auprc_std": 8.250481487141833e-06,
+      "auroc_mean": 0.37646707142985164,
+      "auroc_std": 0.00042860680999343224,
+      "route": "adhesion_only",
+      "target": "dgraphfin"
+    },
+    {
+      "auprc_mean": 0.009575160998571555,
+      "auprc_std": 7.627858685267354e-05,
+      "auroc_mean": 0.386154547819413,
+      "auroc_std": 0.004814761271128025,
+      "route": "context_only",
+      "target": "dgraphfin"
+    },
+    {
+      "auprc_mean": 0.025703419150743614,
+      "auprc_std": 0.0002754115483599424,
+      "auroc_mean": 0.43849245531449826,
+      "auroc_std": 0.0031581535132106956,
+      "route": "full",
+      "target": "tsocial"
+    },
+    {
+      "auprc_mean": 0.028783304324278485,
+      "auprc_std": 0.00028695925769524913,
+      "auroc_mean": 0.4781232563406121,
+      "auroc_std": 0.0026377457031134133,
+      "route": "adhesion_only",
+      "target": "tsocial"
+    },
+    {
+      "auprc_mean": 0.02563442844803013,
+      "auprc_std": 0.0003066451441134736,
+      "auroc_mean": 0.4387909001997821,
+      "auroc_std": 0.00554009628673053,
+      "route": "context_only",
+      "target": "tsocial"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+# Optional dependencies for the baseline reproduction suite.
+# Install after requirements.txt in a separate environment when possible.
+einops==0.8.1
+pandas==2.3.1
+pygod==1.1.0
+PyYAML==6.0.2
+xgboost==3.0.2

@@ -1,0 +1,55 @@
+session:
+  id: "2026-07-26_002"
+  timestamp: "2026-07-26T18:01+08:00"
+  summary: >
+    Completed and independently audited the user-requested UNPrompt and
+    AnomalyGFM-ZS Setting-B/C supplement.
+
+events_logged:
+  - type: decision
+    id: N09
+    provenance: user-revised
+    summary: "User required all four baselines in Settings B and C."
+  - type: experiment
+    id: N10
+    provenance: ai-executed
+    summary: "Passed ten tests and four method-setting smoke gates."
+  - type: experiment
+    id: N11
+    provenance: ai-executed
+    summary: "Completed 12 supplementary runs and 60 evaluations."
+  - type: experiment
+    id: N12
+    provenance: ai-executed
+    summary: "Passed independent artifact, label, calibration, and metric audit."
+
+ai_actions:
+  - action: "Locked a separate user-revised supplement before new results."
+    provenance: ai-executed
+    files_changed:
+      - "rebuttal/BASELINE_BC_SUPPLEMENT_PROTOCOL.md"
+      - "rebuttal/baselines/baseline_bc_protocol.py"
+  - action: "Implemented isolated supplement runner, analyzer, and tests."
+    provenance: ai-executed
+    files_changed:
+      - "rebuttal/baselines/baseline_bc_runner.py"
+      - "rebuttal/baselines/baseline_bc_analysis.py"
+      - "rebuttal/baselines/test_baselines.py"
+  - action: "Executed 12 formal runs, 60 evaluations, and dual primary/supplement regression audits."
+    provenance: ai-executed
+    files_changed:
+      - "rebuttal/reports/PHASE2_BC_BASELINE_SUPPLEMENT_REPORT.md"
+
+claims_touched:
+  - id: C05
+    action: created
+    provenance: ai-suggested
+  - id: C06
+    action: created
+    provenance: ai-suggested
+
+open_threads:
+  - "Investigate weak UNPrompt and AnomalyGFM-ZS cross-domain transfer only as a separately labeled diagnostic."
+
+ai_suggestions_pending:
+  - "Do not target-tune the completed confirmatory runs; use source-only or exploratory diagnostics for follow-up."

@@ -23,9 +23,7 @@ datasets can be added with `--analysis-datasets`.
 ## Quick Smoke Run
 
 ```bash
-cd /root/autodl-fs/recap
-
-/root/miniconda3/bin/python interpretability/run_interpretability.py \
+python interpretability/run_interpretability.py \
   --device cuda:0 \
   --quick \
   --no-diagnostics \
@@ -35,9 +33,7 @@ cd /root/autodl-fs/recap
 ## Suggested Case Study Run
 
 ```bash
-cd /root/autodl-fs/recap
-
-/root/miniconda3/bin/python interpretability/run_interpretability.py \
+python interpretability/run_interpretability.py \
   --device cuda:0 \
   --model recap_auprc_best \
   --trials 3 \
@@ -58,9 +54,7 @@ If checkpoints already exist, skip source training and run target-only
 interpretability:
 
 ```bash
-cd /root/autodl-fs/recap
-
-/root/miniconda3/bin/python interpretability/run_interpretability.py \
+python interpretability/run_interpretability.py \
   --device cuda:0 \
   --checkpoint-paths \
     interpretability/results_weibo/checkpoints/recap_auprc_best/trial_0/model.pt \
@@ -76,9 +70,7 @@ cd /root/autodl-fs/recap
 ## Broader Report
 
 ```bash
-cd /root/autodl-fs/recap
-
-/root/miniconda3/bin/python interpretability/run_interpretability.py \
+python interpretability/run_interpretability.py \
   --device cuda:0 \
   --model recap_auprc_best \
   --trials 3 \

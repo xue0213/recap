@@ -1,0 +1,65 @@
+[
+  {
+    "actual": 12,
+    "evidence": "OFO global audit raw_dataset_hashes",
+    "expected": "12 datasets",
+    "requirement": "12 datasets load and have immutable raw hashes",
+    "status": "PASS"
+  },
+  {
+    "actual": "36 evaluations / 36 training runs",
+    "evidence": "Phase 1 raw results + Questions addendum",
+    "expected": "12 datasets \u00d7 3 seeds",
+    "requirement": "RECAP-OFO",
+    "status": "PASS"
+  },
+  {
+    "actual": "54 evaluations / 9 training runs",
+    "evidence": "Phase 1 raw results",
+    "expected": "3 settings \u00d7 3 seeds",
+    "requirement": "RECAP-OFA A/B/C",
+    "status": "PASS"
+  },
+  {
+    "actual": "360 evaluations / 360 training runs",
+    "evidence": "OFO global audit + three-baseline extension audit",
+    "expected": "10 methods \u00d7 12 datasets \u00d7 3 seeds",
+    "requirement": "10 OFO baselines",
+    "status": "PASS"
+  },
+  {
+    "actual": "270 evaluations / 45 training runs",
+    "evidence": "Phase 2 audits + three-baseline extension audit",
+    "expected": "5 methods \u00d7 (8+5+5) targets \u00d7 3 seeds",
+    "requirement": "5 OFA baselines in A/B/C",
+    "status": "PASS"
+  },
+  {
+    "actual": "90 pair records",
+    "evidence": "pair-level stability CSVs",
+    "expected": "30 scopes \u00d7 3 seed pairs",
+    "requirement": "Community stability",
+    "status": "PASS"
+  },
+  {
+    "actual": 486,
+    "evidence": "RECAP artifact audits",
+    "expected": "486 rows after Questions addendum",
+    "requirement": "Training diagnostics",
+    "status": "PASS"
+  },
+  {
+    "actual": "225 / 45",
+    "evidence": "RECAP artifact audits",
+    "expected": "225 checkpoints / 45 final reload gates",
+    "requirement": "Checkpoints and reload gates",
+    "status": "PASS"
+  },
+  {
+    "actual": "consolidated and recomputed",
+    "evidence": "protocol_completion analysis outputs",
+    "expected": "all cells backed by raw records",
+    "requirement": "Protocol Tables 1\u20139",
+    "status": "PASS"
+  }
+]

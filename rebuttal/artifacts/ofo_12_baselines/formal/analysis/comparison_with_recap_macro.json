@@ -1,0 +1,250 @@
+{
+  "methods": [
+    {
+      "auprc_mean": 0.4282692734869377,
+      "auprc_std": 0.006593641419620893,
+      "auroc_mean": 0.8152498865267656,
+      "auroc_std": 0.004650693470939896,
+      "dataset_count": 12,
+      "evaluation_population": "stratified_test_40pct",
+      "method": "GCN",
+      "run_count": 36,
+      "seed_count": 3,
+      "seed_macros": [
+        {
+          "auprc": 0.43238040510973924,
+          "auroc": 0.8217990887736207,
+          "seed": 0
+        },
+        {
+          "auprc": 0.4334620252969447,
+          "auroc": 0.8114514656936044,
+          "seed": 1
+        },
+        {
+          "auprc": 0.4189653900541291,
+          "auroc": 0.8124991051130718,
+          "seed": 2
+        }
+      ],
+      "supervised": true
+    },
+    {
+      "auprc_mean": 0.43336051239486567,
+      "auprc_std": 0.04730948896753045,
+      "auroc_mean": 0.8308508232545108,
+      "auroc_std": 0.008931285798325068,
+      "dataset_count": 12,
+      "evaluation_population": "stratified_test_40pct",
+      "method": "GAT",
+      "run_count": 36,
+      "seed_count": 3,
+      "seed_macros": [
+        {
+          "auprc": 0.4256725024230372,
+          "auroc": 0.834410252091648,
+          "seed": 0
+        },
+        {
+          "auprc": 0.49476277045154404,
+          "auroc": 0.8395663291186263,
+          "seed": 1
+        },
+        {
+          "auprc": 0.3796462643100158,
+          "auroc": 0.8185758885532582,
+          "seed": 2
+        }
+      ],
+      "supervised": true
+    },
+    {
+      "auprc_mean": 0.29687414630503045,
+      "auprc_std": 0.007815825989687575,
+      "auroc_mean": 0.7437794544966808,
+      "auroc_std": 0.008145906687509988,
+      "dataset_count": 12,
+      "evaluation_population": "stratified_test_40pct",
+      "method": "BWGNN",
+      "run_count": 36,
+      "seed_count": 3,
+      "seed_macros": [
+        {
+          "auprc": 0.2996475520721427,
+          "auroc": 0.744343518986278,
+          "seed": 0
+        },
+        {
+          "auprc": 0.2862212754330432,
+          "auroc": 0.7335327312340376,
+          "seed": 1
+        },
+        {
+          "auprc": 0.30475361140990537,
+          "auroc": 0.7534621132697267,
+          "seed": 2
+        }
+      ],
+      "supervised": true
+    },
+    {
+      "auprc_mean": 0.6198103896039243,
+      "auprc_std": 0.016121760256991392,
+      "auroc_mean": 0.8884011985238676,
+      "auroc_std": 0.0028975097523761422,
+      "dataset_count": 12,
+      "evaluation_population": "stratified_test_40pct",
+      "method": "XGBGraph",
+      "run_count": 36,
+      "seed_count": 3,
+      "seed_macros": [
+        {
+          "auprc": 0.5994644378783761,
+          "auroc": 0.8849158200560567,
+          "seed": 0
+        },
+        {
+          "auprc": 0.6210727865314042,
+          "auroc": 0.88827775623782,
+          "seed": 1
+        },
+        {
+          "auprc": 0.6388939444019925,
+          "auroc": 0.8920100192777262,
+          "seed": 2
+        }
+      ],
+      "supervised": true
+    },
+    {
+      "auprc_mean": 0.10402405393073404,
+      "auprc_std": 0.0001239002198489968,
+      "auroc_mean": 0.5332117116616827,
+      "auroc_std": 0.0017809808519167387,
+      "dataset_count": 12,
+      "evaluation_population": "full_graph",
+      "method": "DOMINANT",
+      "run_count": 36,
+      "seed_count": 3,
+      "seed_macros": [
+        {
+          "auprc": 0.10384919107099594,
+          "auroc": 0.5310993007722181,
+          "seed": 0
+        },
+        {
+          "auprc": 0.10412118752175963,
+          "auroc": 0.5330800074432273,
+          "seed": 1
+        },
+        {
+          "auprc": 0.10410178319944652,
+          "auroc": 0.5354558267696027,
+          "seed": 2
+        }
+      ],
+      "supervised": false
+    },
+    {
+      "auprc_mean": 0.09968526106075958,
+      "auprc_std": 0.0010937298729245478,
+      "auroc_mean": 0.5623811302961959,
+      "auroc_std": 0.0032570481913848075,
+      "dataset_count": 12,
+      "evaluation_population": "full_graph",
+      "method": "AnomalyDAE",
+      "run_count": 36,
+      "seed_count": 3,
+      "seed_macros": [
+        {
+          "auprc": 0.10095856931768259,
+          "auroc": 0.5650240794878334,
+          "seed": 0
+        },
+        {
+          "auprc": 0.09828809255733197,
+          "auroc": 0.5577925990649143,
+          "seed": 1
+        },
+        {
+          "auprc": 0.09980912130726417,
+          "auroc": 0.5643267123358399,
+          "seed": 2
+        }
+      ],
+      "supervised": false
+    },
+    {
+      "auprc_mean": 0.11880707076866635,
+      "auprc_std": 0.0024180273995930233,
+      "auroc_mean": 0.5436274280425453,
+      "auroc_std": 0.0019009214074980076,
+      "dataset_count": 12,
+      "evaluation_population": "full_graph",
+      "method": "CoLA",
+      "run_count": 36,
+      "seed_count": 3,
+      "seed_macros": [
+        {
+          "auprc": 0.117523838705503,
+          "auroc": 0.5417018781412,
+          "seed": 0
+        },
+        {
+          "auprc": 0.11670364192596526,
+          "auroc": 0.5462148403309947,
+          "seed": 1
+        },
+        {
+          "auprc": 0.12219373167453078,
+          "auroc": 0.5429655656554414,
+          "seed": 2
+        }
+      ],
+      "supervised": false
+    },
+    {
+      "auprc_mean": 0.07171768948410889,
+      "auprc_std": 0.0006136291795964901,
+      "auroc_mean": 0.5757474312304177,
+      "auroc_std": 0.007455375461297787,
+      "dataset_count": 12,
+      "evaluation_population": "full_graph",
+      "method": "ADA-GAD",
+      "run_count": 36,
+      "seed_count": 3,
+      "seed_macros": [
+        {
+          "auprc": 0.07258548720650419,
+          "auroc": 0.5806194546813256,
+          "seed": 0
+        },
+        {
+          "auprc": 0.07128124310793785,
+          "auroc": 0.581409041101688,
+          "seed": 1
+        },
+        {
+          "auprc": 0.07128633813788464,
+          "auroc": 0.5652137979082396,
+          "seed": 2
+        }
+      ],
+      "supervised": false
+    },
+    {
+      "auprc_mean": 0.2360564769465697,
+      "auprc_std": 0.0026123169144912526,
+      "auroc_mean": 0.7108255562672888,
+      "auroc_std": 0.0035445910612879996,
+      "classification": "post_hoc_user_requested_combined_ofo_12",
+      "dataset_count": 12,
+      "evaluation_population": "full_graph",
+      "method": "RECAP-OFO",
+      "run_count": 36,
+      "seed_count": 3,
+      "supervised": false
+    }
+  ],
+  "warning": "Supervised baselines evaluate a stratified 40% test split; unsupervised baselines and RECAP evaluate the full graph."
+}
