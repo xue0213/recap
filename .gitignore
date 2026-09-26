@@ -11,5 +11,3 @@ checkpoints/
 knn_cache/
 inference_results/
 *.log
-rebuttal/artifacts/
-rebuttal/logs/

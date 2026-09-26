@@ -131,4 +131,4 @@ million-node training scalability. The unadapted Setting-A checkpoints were
 below random-ranking references on all three targets, so computational success
 must not be presented as predictive effectiveness. Complete latency, memory,
 ANN-fidelity, metrics, and audit results are in
-`rebuttal/reports/LARGE_TARGET_INFERENCE_REPORT.md`.
+the generated large-target evaluation report.
