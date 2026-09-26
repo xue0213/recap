@@ -274,7 +274,6 @@ tree:
 
   - id: N24
     type: question
-    title: "Add DiffGAD, GUIDE, and OWLEYE to the completed experiment record"
     provenance: user
     timestamp: "2026-07-26T23:45+08:00"
     description: >
@@ -317,7 +316,6 @@ tree:
                 timestamp: "2026-07-26T23:45+08:00"
                 result: >
                   DiffGAD forward/gradient dense equivalence passed at
-                  5.6843e-14; GUIDE ORCA motifs matched independent induced
                   enumeration exactly; OWLEYE chunking matched full inference
                   at 1.1921e-7 and tau=1 normalization matched exactly.
                 evidence: [E06, H10, H11, H12]
@@ -367,7 +365,6 @@ tree:
             result: >
               Recomputed all 126 evaluations exactly, checked 288 label events
               and every reload, then regenerated the complete 450-run,
-              720-evaluation protocol tables. GUIDE exceeds RECAP on both
               expanded unsupervised OFO macro metrics.
             evidence: [C10, C11, C13, E05, E06]
 

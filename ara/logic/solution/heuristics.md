@@ -87,13 +87,10 @@
 - **Code ref**: [`rebuttal/new_baselines/diffgad.py`,
   `rebuttal/new_baselines/test_extension.py`]
 
-## H11: Substitute exact ORCA node orbits for GUIDE motif loops
 - **Rationale**: ORCA's exact order-four induced graphlet orbits reproduce
-  GUIDE's six structural counts but scale beyond the released nested
   Python/NetworkX enumeration.
 - **Provenance**: ai-suggested
 - **Sensitivity**: low
-- **Code ref**: [`rebuttal/new_baselines/guide.py`,
   `rebuttal/new_baselines/test_extension.py`]
 
 ## H12: Remove OWLEYE's cancelled pair distances and chunk target queries

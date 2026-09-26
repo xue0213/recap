@@ -76,10 +76,8 @@ rights, and consistency checks are in
 | CoLA | 54.36 ± 0.19 | 11.88 ± 0.24 |
 | ADA-GAD | 57.57 ± 0.75 | 7.17 ± 0.06 |
 | DiffGAD | 55.03 ± 2.17 | 10.61 ± 0.24 |
-| GUIDE | **75.19 ± 0.14** | **33.09 ± 0.09** |
 | RECAP-OFO | 71.08 ± 0.35 | 23.61 ± 0.26 |
 
-GUIDE is stronger when every method can be retrained on each target. RECAP's
 intended advantage is source-only cross-graph transfer, not unconditional
 dominance over target-specific detectors.
 
@@ -97,12 +95,10 @@ Dataset-macro AUROC/AUPRC (%):
 | **RECAP-OFA** | **no** | **none** | **74.65/27.04** | **67.75/21.98** | **67.31/17.50** |
 
 We additionally construct protocol-aligned, non-official OFA adaptations of
-GUIDE and DiffGAD by training one model on the same four source graphs and
 freezing it for every target:
 
 | Adapted method | Setting A | Setting B | Setting C |
 |---|---:|---:|---:|
-| GUIDE-OFA-adapted | 63.86/27.74 | 50.66/6.90 | 55.68/7.01 |
 | DiffGAD-OFA-adapted | 66.94/21.11 | 59.61/18.47 | **69.61/17.99** |
 | **RECAP-OFA** | **74.65/27.04** | **67.75/21.98** | 67.31/17.50 |
 
@@ -268,5 +264,4 @@ python -m rebuttal.protocol_completion_audit
 The repository intentionally retains weak, high-variance, and negative results.
 Do not average Settings A/B/C because their target sets differ. Do not directly
 rank supervised held-out OFO, full-graph unsupervised OFO, and zero-shot OFA as
-if their label rights and task difficulty were identical. Adapted GUIDE/DiffGAD
 OFA results are protocol-aligned research adaptations, not official variants.

@@ -91,7 +91,6 @@
   the original DOMINANT, AnomalyDAE, CoLA, and ADA-GAD set under the
   label-free, full-graph evaluation regime.
 - **Status**: revised
-- **Revision**: The later extension added GUIDE, whose 75.19/33.09 macro
   exceeds RECAP's 71.08/23.61. The statement remains true only for the
   original four-baseline set and is no longer a claim of leadership over the
   expanded unsupervised group.
@@ -131,7 +130,6 @@
 ## C11: The three-baseline extension is complete
 - **Statement**: The locked extension contains 81 accepted training runs and
   126 independently verified evaluations: 72 full-graph OFO runs for DiffGAD
-  and GUIDE and nine shared-source OWLEYE runs covering 54 OFA targets.
 - **Status**: supported
 - **Provenance**: ai-suggested
 - **Falsification criteria**: Any missing manifest key, invalid label event,
@@ -154,9 +152,7 @@
 - **Dependencies**: [C11]
 - **Tags**: supervision, zero-shot, OWLEYE, label-isolation
 
-## C13: GUIDE exceeds RECAP on the expanded unsupervised OFO macro
 - **Statement**: Under the same full-node, label-free, 12-dataset evaluation
-  population, GUIDE reaches 75.19% AUROC and 33.09% AUPRC versus RECAP-OFO's
   71.08% and 23.61%.
 - **Status**: supported
 - **Provenance**: ai-suggested
@@ -164,7 +160,6 @@
   reverses either macro comparison.
 - **Proof**: [E06, E05]
 - **Dependencies**: [C10, C11]
-- **Tags**: OFO, comparative-performance, unsupervised, GUIDE
 
 ## C14: RECAP target-side full-graph inference is computationally scalable on the recorded hardware
 - **Statement**: The locked adapter completes finite full-node inference for

@@ -1,4 +1,4 @@
-"""Resumable runner for DiffGAD, GUIDE, and OWLEYE."""
+"""Resumable runner for DiffGAD and OWLEYE."""
 
 from __future__ import annotations
 
@@ -55,16 +55,9 @@ if __package__ in {None, ""}:
         DiffGADConfig,
         DiffusionDetector,
         forward_noise_schedule,
-        guided_sample,
+        diffusion_sample,
         joint_reconstruction_score,
         update_prototype,
-    )
-    from rebuttal.new_baselines.guide import (  # type: ignore
-        GUIDEConfig,
-        GUIDEModel,
-        cached_guide_motifs,
-        guide_score,
-        minmax_columns,
     )
     from rebuttal.new_baselines.owleye import (  # type: ignore
         OWLEYEConfig,
@@ -111,16 +104,9 @@ else:
         DiffGADConfig,
         DiffusionDetector,
         forward_noise_schedule,
-        guided_sample,
+        diffusion_sample,
         joint_reconstruction_score,
         update_prototype,
-    )
-    from .guide import (
-        GUIDEConfig,
-        GUIDEModel,
-        cached_guide_motifs,
-        guide_score,
-        minmax_columns,
     )
     from .owleye import (
         OWLEYEConfig,
@@ -142,11 +128,6 @@ ARCHIVES = {
         "commit": "197d60fe341f3a2080b242f04d4f81025e5f96b6",
         "url": "https://github.com/fortunato-all/DiffGAD/archive/197d60fe341f3a2080b242f04d4f81025e5f96b6.tar.gz",
         "sha256": "6f6f8dbc22f7b486a127f3c24fa19a342753468384fbb2d3dc3dd780ff940ce8",
-    },
-    "GUIDE": {
-        "commit": "482103ef137ef88fb4d01c847dc266944e88e6fa",
-        "url": "https://github.com/yushuowiki/GUIDE_pytorch/archive/482103ef137ef88fb4d01c847dc266944e88e6fa.tar.gz",
-        "sha256": "b0cf88353dca694240fae9f9e98c00e3067f2ac2e320dca43a29d7116a19f8a4",
     },
     "OWLEYE": {
         "commit": "370435cd0442671e33b2874efb4cd15d30177225",
@@ -251,28 +232,6 @@ def prepare_vendor(vendor_root: Path, dataset_dir: Path) -> dict[str, Any]:
             "commit": metadata["commit"],
         }
 
-    orca_source = source_root / "ORCA" / "orca.cpp"
-    if sha256_file(orca_source) != (
-        "01c580febfd3653a632a04d6b466f7c6f2bf2f9baf3a75a2e553be30ac7ee778"
-    ):
-        raise ValueError("ORCA source hash mismatch")
-    binary = vendor_root / "bin" / "orca"
-    binary.parent.mkdir(parents=True, exist_ok=True)
-    if not binary.exists():
-        import subprocess
-
-        subprocess.run(
-            [
-                "g++",
-                "-O3",
-                "-std=c++11",
-                str(orca_source),
-                "-o",
-                str(binary),
-            ],
-            check=True,
-        )
-    report["orca_binary"] = str(binary)
 
     owleye_source = source_root / "OWLEYE"
     owleye_dataset = vendor_root / "owleye" / "dataset"
@@ -414,7 +373,7 @@ def _diffgad_scores(
             sqrt_alpha[timestep] * embeddings
             + sqrt_one_minus[timestep] * base_noise
         )
-        reconstructed = guided_sample(
+        reconstructed = diffusion_sample(
             conditional.denoiser,
             unconditional.denoiser,
             noisy,
@@ -639,191 +598,11 @@ def run_diffgad(
     return result
 
 
-def _guide_inputs(
-    *,
-    dataset_dir: Path,
-    dataset: str,
-    vendor_root: Path,
-    device: torch.device,
-) -> tuple[Any, torch.Tensor, torch.Tensor, torch.Tensor, dict[str, Any]]:
-    graph = load_raw_graph(dataset_dir, dataset, undirected=True)
-    attributes_np = minmax_columns(
-        np.asarray(graph.features.toarray(), dtype=np.float32)
-    )
-    motifs_np, cache_path, cache_state = cached_guide_motifs(
-        graph.adjacency,
-        orca_binary=vendor_root / "bin" / "orca",
-        cache_dir=vendor_root / "guide_motif_cache",
-        orca_commit=ARCHIVES["ORCA"]["commit"],
-    )
-    motifs_np = minmax_columns(motifs_np)
-    attributes = torch.from_numpy(attributes_np).to(device)
-    motifs = torch.from_numpy(motifs_np).to(device)
-    adjacency = normalized_adjacency_with_loops(graph.adjacency, device)
-    provenance = {
-        "motif_cache_path": str(cache_path),
-        "motif_cache_state": cache_state,
-        "motif_sha256": sha256_array(motifs_np),
-    }
-    return graph, attributes, motifs, adjacency, provenance
 
 
 @torch.no_grad()
-def _guide_scores(
-    model: GUIDEModel,
-    attributes: torch.Tensor,
-    motifs: torch.Tensor,
-    adjacency: torch.Tensor,
-    config: GUIDEConfig,
-) -> np.ndarray:
-    model.eval()
-    attributes_hat, motifs_hat = model(attributes, motifs, adjacency)
-    score, _, _ = guide_score(
-        attributes,
-        attributes_hat,
-        motifs,
-        motifs_hat,
-        config.attribute_weight,
-    )
-    return score.detach().cpu().numpy().astype(np.float32)
 
 
-def run_guide(
-    spec: ExtensionRunSpec,
-    *,
-    dataset_dir: Path,
-    vendor_root: Path,
-    output_root: Path,
-    device: torch.device,
-    smoke_epochs: int | None = None,
-) -> dict[str, Any]:
-    if spec.dataset is None:
-        raise ValueError("GUIDE requires OFO dataset")
-    directory = run_directory(output_root, spec)
-    complete_path = directory / "complete.json"
-    if complete_path.exists() and smoke_epochs is None:
-        return json.loads(complete_path.read_text())
-    directory.mkdir(parents=True, exist_ok=True)
-    config = GUIDEConfig()
-    epochs = smoke_epochs or config.epochs
-    metadata = base_metadata(
-        run=spec.to_dict(),
-        dataset_dir=dataset_dir,
-        vendor_root=vendor_root,
-        device=device,
-    )
-    metadata["resolved_config"] = {
-        **config.__dict__,
-        "effective_epochs": epochs,
-        "smoke": smoke_epochs is not None,
-    }
-    atomic_json(directory / "run_start.json", metadata)
-    started = time.perf_counter()
-    vault = OFOLabelVault(dataset_dir, spec.dataset, False, spec.seed)
-    preparation_started = time.perf_counter()
-    graph, attributes, motifs, adjacency, motif_provenance = _guide_inputs(
-        dataset_dir=dataset_dir,
-        dataset=spec.dataset,
-        vendor_root=vendor_root,
-        device=device,
-    )
-    preparation_seconds = time.perf_counter() - preparation_started
-    set_seed(spec.seed)
-    if device.type == "cuda":
-        torch.cuda.reset_peak_memory_stats(device)
-    model = GUIDEModel(graph.feature_count, motifs.shape[1], config).to(device)
-    optimizer = torch.optim.Adam(
-        model.parameters(),
-        lr=config.learning_rate,
-        weight_decay=config.weight_decay,
-    )
-    trace = []
-    training_started = time.perf_counter()
-    for epoch in range(epochs):
-        model.train()
-        attributes_hat, motifs_hat = model(attributes, motifs, adjacency)
-        score, attribute_loss, structure_loss = guide_score(
-            attributes,
-            attributes_hat,
-            motifs,
-            motifs_hat,
-            config.attribute_weight,
-        )
-        loss = score.mean()
-        optimizer.zero_grad(set_to_none=True)
-        loss.backward()
-        optimizer.step()
-        if epoch == 0 or epoch == epochs - 1 or (epoch + 1) % 20 == 0:
-            trace.append(
-                {
-                    "epoch": epoch + 1,
-                    "loss": float(loss.detach().cpu()),
-                    "attribute_error": float(attribute_loss.detach().cpu()),
-                    "structure_error": float(structure_loss.detach().cpu()),
-                }
-            )
-    training_seconds = time.perf_counter() - training_started
-    atomic_json(directory / "loss_trace.json", trace)
-    checkpoint = directory / "checkpoint.pt"
-    atomic_torch_save(
-        checkpoint,
-        {
-            "model": model.state_dict(),
-            "config": config.__dict__,
-            "spec": spec.to_dict(),
-        },
-    )
-    inference_started = time.perf_counter()
-    scores = _guide_scores(model, attributes, motifs, adjacency, config)
-    score_path, mask = save_unsupervised_scores(
-        directory=directory, scores=scores, vault=vault
-    )
-    labels = vault.evaluation_labels()
-    metrics = score_metrics(labels[mask], scores[mask])
-    inference_seconds = time.perf_counter() - inference_started
-    reloaded = GUIDEModel(graph.feature_count, motifs.shape[1], config).to(device)
-    payload = torch.load(checkpoint, map_location=device, weights_only=False)
-    reloaded.load_state_dict(payload["model"])
-    reload_scores = _guide_scores(
-        reloaded, attributes, motifs, adjacency, config
-    )
-    reload_difference = float(np.max(np.abs(scores - reload_scores)))
-    tolerance = reload_tolerance(scores)
-    if reload_difference > tolerance:
-        raise ValueError(
-            f"{spec.run_id}: reload difference {reload_difference} > {tolerance}"
-        )
-    result = {
-        **metadata,
-        "completed_at": utc_now(),
-        "status": "complete",
-        "dataset": spec.dataset,
-        "nodes": graph.node_count,
-        "features": graph.feature_count,
-        "raw_sha256": graph.raw_sha256,
-        "motif_provenance": motif_provenance,
-        "metrics": metrics,
-        "score_path": str(score_path),
-        "score_sha256": sha256_array(scores),
-        "checkpoint_path": str(checkpoint),
-        "checkpoint_sha256": sha256_file(checkpoint),
-        "label_audit": vault.audit(),
-        "reload_max_abs_difference": reload_difference,
-        "reload_tolerance": tolerance,
-        "timing_seconds": {
-            "preprocessing": preparation_seconds,
-            "training": training_seconds,
-            "inference": inference_seconds,
-            "total": time.perf_counter() - started,
-        },
-        "resources": {
-            **gpu_memory(device),
-            "peak_rss_mb": current_rss_mb(),
-        },
-        "smoke": smoke_epochs is not None,
-    }
-    atomic_json(complete_path, result)
-    return result
 
 
 def _owleye_patterns(
@@ -1203,15 +982,6 @@ def main() -> None:
         try:
             if spec.method == "DiffGAD":
                 result = run_diffgad(
-                    spec,
-                    dataset_dir=args.dataset_dir,
-                    vendor_root=args.vendor_root,
-                    output_root=args.output_root,
-                    device=device,
-                    smoke_epochs=args.smoke_epochs,
-                )
-            elif spec.method == "GUIDE":
-                result = run_guide(
                     spec,
                     dataset_dir=args.dataset_dir,
                     vendor_root=args.vendor_root,

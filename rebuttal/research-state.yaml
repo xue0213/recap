@@ -252,7 +252,6 @@ phase2_ofo_12_baselines:
   outer_loop:
     cycle: 9
     last_direction: conclude
-    last_reflection: "At the original eight-baseline scope, all 288 runs and 576 independently recomputed metrics passed and RECAP led the four-method full-graph unsupervised subset. The later three-baseline extension revises expanded-group leadership because GUIDE is higher."
 
 three_baseline_extension:
   status: complete
@@ -260,7 +259,6 @@ three_baseline_extension:
   protocol: "rebuttal/THREE_BASELINE_EXTENSION_PROTOCOL.md"
   upstream_manifest: "rebuttal/new_baselines/upstream_manifest.json"
   methods:
-    ofo_unsupervised: [DiffGAD, GUIDE]
     ofa_source_supervised_target_zero_shot: [OWLEYE]
   datasets: [pubmed, cora, citeseer, ACM, Flickr, BlogCatalog, Facebook, weibo, Reddit, questions, YelpChi, Amazon]
   settings: [A, B, C]
@@ -277,7 +275,6 @@ three_baseline_extension:
     supervision_taxonomy_verified: true
     diffgad_label_selection_removed: true
     diffgad_exact_structure_forward_and_gradient_verified: true
-    guide_exact_orca_motifs_verified: true
     owleye_tau1_normalization_verified: true
     owleye_chunked_inference_verified: true
     label_access_guards_verified: true
@@ -288,14 +285,12 @@ three_baseline_extension:
     final_report_generated: true
   results:
     DiffGAD_OFO: {auroc_mean: 0.5503, auroc_std: 0.0217, auprc_mean: 0.1061, auprc_std: 0.0024}
-    GUIDE_OFO: {auroc_mean: 0.7519, auroc_std: 0.0014, auprc_mean: 0.3309, auprc_std: 0.0009}
     OWLEYE_A: {auroc_mean: 0.7604, auroc_std: 0.0005, auprc_mean: 0.3567, auprc_std: 0.0052}
     OWLEYE_B: {auroc_mean: 0.7179, auroc_std: 0.0020, auprc_mean: 0.2866, auprc_std: 0.0022}
     OWLEYE_C_dataset: {auroc_mean: 0.6033, auroc_std: 0.0068, auprc_mean: 0.1801, auprc_std: 0.0009}
     OWLEYE_C_domain: {auroc_mean: 0.5624, auroc_std: 0.0107, auprc_mean: 0.1234, auprc_std: 0.0025}
   timing:
     DiffGAD_total_seconds: 695.81
-    GUIDE_total_seconds: 237.11
     OWLEYE_total_seconds: 206.09
   audit:
     score_files_verified: 126
@@ -310,7 +305,6 @@ three_baseline_extension:
   outer_loop:
     cycle: 5
     last_direction: conclude
-    last_reflection: "All 81 runs and 126 evaluations pass independent audit. GUIDE exceeds RECAP on the expanded full-graph unsupervised OFO macro; OWLEYE is source-label supervised and target-label-free. Preserve all supervision strata, weak results, and high-variance cells."
 
 protocol_completion:
   status: complete

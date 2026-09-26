@@ -1,2 +1,1 @@
-"""DiffGAD, GUIDE, and OWLEYE reproduction extension."""
-
+"""DiffGAD and OWLEYE reproduction extension."""

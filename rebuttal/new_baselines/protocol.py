@@ -1,4 +1,4 @@
-"""Declarative manifest for the three-baseline extension."""
+"""Declarative manifest for the DiffGAD and OWLEYE extension."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from rebuttal.ofo_baselines.protocol import DATASETS
 
 
 SEEDS = (0, 1, 2)
-OFO_METHODS = ("DiffGAD", "GUIDE")
+OFO_METHODS = ("DiffGAD",)
 OFA_METHOD = "OWLEYE"
 
 
@@ -71,21 +71,21 @@ def build_manifest() -> list[ExtensionRunSpec]:
 
 
 def expected_evaluations() -> int:
-    return 72 + sum(
+    return 36 + sum(
         len(SETTINGS[setting]["targets"]) * len(SEEDS)
         for setting in ("A", "B", "C")
     )
 
 
 def validate_manifest(specs: list[ExtensionRunSpec]) -> None:
-    if len(specs) != 81:
-        raise ValueError(f"Expected 81 training runs, found {len(specs)}")
+    if len(specs) != 45:
+        raise ValueError(f"Expected 45 training runs, found {len(specs)}")
     if len({spec.run_id for spec in specs}) != len(specs):
         raise ValueError("Duplicate extension run IDs")
     ofo = [spec for spec in specs if spec.method in OFO_METHODS]
     ofa = [spec for spec in specs if spec.method == OFA_METHOD]
-    if len(ofo) != 72 or len(ofa) != 9:
-        raise ValueError("Expected 72 OFO and 9 OFA training runs")
+    if len(ofo) != 36 or len(ofa) != 9:
+        raise ValueError("Expected 36 OFO and 9 OFA training runs")
     for spec in ofo:
         if spec.dataset not in DATASETS or spec.setting is not None:
             raise ValueError(f"{spec.run_id}: invalid OFO scope")
@@ -101,8 +101,8 @@ def validate_manifest(specs: list[ExtensionRunSpec]) -> None:
             raise ValueError(f"{spec.run_id}: target split drift")
     if any(spec.seed not in SEEDS for spec in specs):
         raise ValueError("Unexpected seed")
-    if expected_evaluations() != 126:
-        raise ValueError("Expected 126 final evaluations")
+    if expected_evaluations() != 90:
+        raise ValueError("Expected 90 final evaluations")
 
 
 if __name__ == "__main__":

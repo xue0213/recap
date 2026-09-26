@@ -1,4 +1,3 @@
-# Source-Only OFA Adaptations of GUIDE and DiffGAD
 
 Status: **locked before formal execution**
 
@@ -6,9 +5,7 @@ Date: 2026-08-04
 
 ## 1. Purpose and method names
 
-This experiment tests whether the target-specific unsupervised detectors GUIDE
 and DiffGAD transfer when target-side optimization is prohibited. The variants
-are named **GUIDE-OFA-adapted** and **DiffGAD-OFA-adapted** because neither
 released repository defines a heterogeneous-feature, multi-source OFA path.
 They must not be described as official OFA implementations.
 
@@ -55,9 +52,7 @@ self-loops removed before method-specific self-loop handling. Source graphs
 are equally weighted: every epoch accumulates one mean node loss per source,
 divides each by four, and performs one optimizer step.
 
-## 4. GUIDE-OFA-adapted
 
-GUIDE retains its released architecture, exact six structural inputs
 `[degree, M31, M32, M41, M42, M43]`, and settings:
 
 - embedding 32 and hidden dimensions 128/64;

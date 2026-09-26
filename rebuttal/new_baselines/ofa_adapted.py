@@ -1,4 +1,4 @@
-"""Source-only OFA adaptations of GUIDE and DiffGAD.
+"""Source-only OFA adaptation of DiffGAD.
 
 The released methods are target-specific OFO detectors. This module supplies a
 strict, explicitly adapted comparison: one model is trained on the four RECAP
@@ -49,16 +49,9 @@ from rebuttal.new_baselines.diffgad import (
     DiffGADConfig,
     DiffusionDetector,
     forward_noise_schedule,
-    guided_sample,
+    diffusion_sample,
     joint_reconstruction_score,
     update_prototype,
-)
-from rebuttal.new_baselines.guide import (
-    GUIDEConfig,
-    GUIDEModel,
-    cached_guide_motifs,
-    guide_score,
-    minmax_columns,
 )
 
 
@@ -72,8 +65,7 @@ DEFAULT_OUTPUT_ROOT = (
     PROJECT_ROOT / "rebuttal" / "artifacts" / "ofa_adapted_unsupervised"
 )
 ALIGNMENT_VERSION = "robust_pca_post_zscore_v1"
-ORCA_COMMIT = "e146a8b1a99a90f5e3096b7bcc2ab0ea246c3ca7"
-METHODS = ("GUIDE-OFA-adapted", "DiffGAD-OFA-adapted")
+METHODS = ("DiffGAD-OFA-adapted",)
 SEEDS = (0, 1, 2)
 
 
@@ -95,16 +87,6 @@ class AdaptedRunSpec:
 
 
 @dataclass
-class GuideGraph:
-    name: str
-    attributes: torch.Tensor
-    motifs: torch.Tensor
-    adjacency: torch.Tensor
-    node_count: int
-    raw_sha256: str
-    aligned_sha256: str
-    motif_sha256: str
-    motif_cache_path: str
 
 
 @dataclass
@@ -183,36 +165,6 @@ def load_aligned_features(
     return features, sha256_file(path)
 
 
-def prepare_guide_graph(
-    *,
-    dataset_dir: Path,
-    vendor_root: Path,
-    name: str,
-    device: torch.device,
-) -> GuideGraph:
-    graph = load_raw_graph(dataset_dir, name, undirected=True)
-    aligned, aligned_hash = load_aligned_features(dataset_dir, name)
-    if aligned.shape[0] != graph.node_count:
-        raise ValueError(f"{name}: aligned feature node mismatch")
-    motifs, motif_path, _ = cached_guide_motifs(
-        graph.adjacency,
-        orca_binary=vendor_root / "bin" / "orca",
-        cache_dir=vendor_root / "guide_motif_cache",
-        orca_commit=ORCA_COMMIT,
-    )
-    attributes_np = minmax_columns(aligned)
-    motifs_np = minmax_columns(motifs)
-    return GuideGraph(
-        name=name,
-        attributes=torch.from_numpy(attributes_np).to(device),
-        motifs=torch.from_numpy(motifs_np).to(device),
-        adjacency=normalized_adjacency_with_loops(graph.adjacency, device),
-        node_count=graph.node_count,
-        raw_sha256=graph.raw_sha256,
-        aligned_sha256=aligned_hash,
-        motif_sha256=sha256_array(motifs_np),
-        motif_cache_path=str(motif_path),
-    )
 
 
 def prepare_diff_graph(
@@ -232,87 +184,12 @@ def prepare_diff_graph(
     )
 
 
-def graph_provenance(graph: GuideGraph | DiffGraph) -> dict[str, Any]:
-    output = {
-        "nodes": graph.node_count,
+def graph_provenance(graph: DiffGraph) -> dict[str, Any]:
+    return {
+        "name": graph.name,
         "raw_sha256": graph.raw_sha256,
         "aligned_sha256": graph.aligned_sha256,
-        "alignment_version": ALIGNMENT_VERSION,
     }
-    if isinstance(graph, GuideGraph):
-        output.update(
-            {
-                "motif_sha256": graph.motif_sha256,
-                "motif_cache_path": graph.motif_cache_path,
-            }
-        )
-    return output
-
-
-def train_guide_sources(
-    sources: list[GuideGraph],
-    *,
-    config: GUIDEConfig,
-    epochs: int,
-    device: torch.device,
-) -> tuple[GUIDEModel, list[dict[str, Any]]]:
-    model = GUIDEModel(32, 6, config).to(device)
-    optimizer = torch.optim.Adam(
-        model.parameters(),
-        lr=config.learning_rate,
-        weight_decay=config.weight_decay,
-    )
-    trace = []
-    for epoch in range(epochs):
-        model.train()
-        optimizer.zero_grad(set_to_none=True)
-        values = []
-        for graph in sources:
-            attributes_hat, motifs_hat = model(
-                graph.attributes, graph.motifs, graph.adjacency
-            )
-            score, _, _ = guide_score(
-                graph.attributes,
-                attributes_hat,
-                graph.motifs,
-                motifs_hat,
-                config.attribute_weight,
-            )
-            source_loss = score.mean()
-            (source_loss / len(sources)).backward()
-            values.append(float(source_loss.detach().cpu()))
-        optimizer.step()
-        if epoch == 0 or epoch == epochs - 1 or (epoch + 1) % 20 == 0:
-            trace.append(
-                {
-                    "epoch": epoch + 1,
-                    "source_macro_loss": float(np.mean(values)),
-                    "source_losses": {
-                        graph.name: value
-                        for graph, value in zip(sources, values)
-                    },
-                }
-            )
-    return model, trace
-
-
-@torch.no_grad()
-def guide_target_scores(
-    model: GUIDEModel, graph: GuideGraph, config: GUIDEConfig
-) -> np.ndarray:
-    model.eval()
-    attributes_hat, motifs_hat = model(
-        graph.attributes, graph.motifs, graph.adjacency
-    )
-    score, _, _ = guide_score(
-        graph.attributes,
-        attributes_hat,
-        graph.motifs,
-        motifs_hat,
-        config.attribute_weight,
-    )
-    return score.detach().cpu().numpy().astype(np.float32)
-
 
 def train_diffgad_autoencoder(
     sources: list[DiffGraph],
@@ -492,7 +369,7 @@ def diffgad_target_scores(
             sqrt_alpha[timestep] * embedding
             + sqrt_one_minus[timestep] * base_noise
         )
-        reconstructed = guided_sample(
+        reconstructed = diffusion_sample(
             conditional.denoiser,
             unconditional.denoiser,
             noisy,
@@ -541,177 +418,6 @@ def run_directory(output_root: Path, spec: AdaptedRunSpec) -> Path:
     return output_root / "runs" / spec.run_id
 
 
-def run_guide(
-    spec: AdaptedRunSpec,
-    *,
-    dataset_dir: Path,
-    vendor_root: Path,
-    output_root: Path,
-    device: torch.device,
-    smoke_epochs: int | None,
-    target_limit: int | None,
-) -> dict[str, Any]:
-    directory = run_directory(output_root, spec)
-    complete_path = directory / "complete.json"
-    if complete_path.exists() and smoke_epochs is None:
-        return json.loads(complete_path.read_text())
-    directory.mkdir(parents=True, exist_ok=True)
-    targets = (
-        spec.target_graphs
-        if target_limit is None
-        else spec.target_graphs[:target_limit]
-    )
-    config = GUIDEConfig()
-    epochs = smoke_epochs or config.epochs
-    started = time.perf_counter()
-    metadata = {
-        "format": "recap_ofa_adapted_run_v1",
-        "run": spec.to_dict(),
-        "effective_targets": list(targets),
-        "started_at": utc_now(),
-        "protocol_path": str(PROTOCOL_PATH),
-        "protocol_sha256": sha256_file(PROTOCOL_PATH),
-        "environment": environment_metadata(device),
-        "resolved_config": {
-            **asdict(config),
-            "effective_epochs": epochs,
-            "alignment_version": ALIGNMENT_VERSION,
-            "source_graph_weighting": "equal_graph_macro",
-            "smoke": smoke_epochs is not None,
-        },
-    }
-    atomic_json(directory / "run_start.json", metadata)
-    vault = LabelVault(dataset_dir)
-    preparation_started = time.perf_counter()
-    sources = [
-        prepare_guide_graph(
-            dataset_dir=dataset_dir,
-            vendor_root=vendor_root,
-            name=name,
-            device=device,
-        )
-        for name in spec.source_graphs
-    ]
-    source_provenance = {
-        graph.name: graph_provenance(graph) for graph in sources
-    }
-    preparation_seconds = time.perf_counter() - preparation_started
-    set_seed(spec.seed)
-    if device.type == "cuda":
-        torch.cuda.reset_peak_memory_stats(device)
-    synchronize(device)
-    training_started = time.perf_counter()
-    model, trace = train_guide_sources(
-        sources, config=config, epochs=epochs, device=device
-    )
-    synchronize(device)
-    training_seconds = time.perf_counter() - training_started
-    atomic_json(directory / "loss_trace.json", trace)
-    checkpoint = directory / "checkpoint.pt"
-    atomic_torch_save(
-        checkpoint,
-        {
-            "model": model.state_dict(),
-            "config": asdict(config),
-            "spec": spec.to_dict(),
-            "alignment_version": ALIGNMENT_VERSION,
-        },
-    )
-    del sources
-    gc.collect()
-    if device.type == "cuda":
-        torch.cuda.empty_cache()
-
-    target_payload: dict[str, dict[str, Any]] = {}
-    target_provenance = {}
-    inference_started = time.perf_counter()
-    for target in targets:
-        graph = prepare_guide_graph(
-            dataset_dir=dataset_dir,
-            vendor_root=vendor_root,
-            name=target,
-            device=device,
-        )
-        target_provenance[target] = graph_provenance(graph)
-        scores = guide_target_scores(model, graph, config)
-        score_path, mask = save_and_freeze_score(
-            directory=directory,
-            target=target,
-            scores=scores,
-            vault=vault,
-        )
-        target_payload[target] = {
-            "scores": scores,
-            "mask": mask,
-            "score_path": score_path,
-            "score_sha256": sha256_array(scores),
-        }
-        del graph
-    synchronize(device)
-    model_inference_seconds = time.perf_counter() - inference_started
-
-    # All targets are immutable before the first target label is read.
-    metrics = {}
-    for target in targets:
-        labels = vault.load_target_for_evaluation(target)
-        item = target_payload[target]
-        metrics[target] = score_metrics(
-            labels[item["mask"]], item["scores"][item["mask"]]
-        )
-
-    reloaded = GUIDEModel(32, 6, config).to(device)
-    payload = torch.load(checkpoint, map_location=device, weights_only=False)
-    reloaded.load_state_dict(payload["model"])
-    reload_differences = {}
-    for target in targets:
-        graph = prepare_guide_graph(
-            dataset_dir=dataset_dir,
-            vendor_root=vendor_root,
-            name=target,
-            device=device,
-        )
-        reload_scores = guide_target_scores(reloaded, graph, config)
-        original = target_payload[target]["scores"]
-        difference = float(np.max(np.abs(original - reload_scores)))
-        tolerance = reload_tolerance(original)
-        if difference > tolerance:
-            raise ValueError(
-                f"{spec.run_id}/{target}: reload {difference} > {tolerance}"
-            )
-        reload_differences[target] = {
-            "max_abs_difference": difference,
-            "tolerance": tolerance,
-        }
-        del graph
-    result = {
-        **metadata,
-        "completed_at": utc_now(),
-        "status": "complete",
-        "source_provenance": source_provenance,
-        "target_provenance": target_provenance,
-        "metrics": metrics,
-        "score_files": {
-            target: {
-                "path": str(item["score_path"]),
-                "sha256": item["score_sha256"],
-            }
-            for target, item in target_payload.items()
-        },
-        "checkpoint_path": str(checkpoint),
-        "checkpoint_sha256": sha256_file(checkpoint),
-        "reload": reload_differences,
-        "label_audit": vault.audit(),
-        "timing_seconds": {
-            "preprocessing_sources": preparation_seconds,
-            "training": training_seconds,
-            "target_inference_and_freeze": model_inference_seconds,
-            "total": time.perf_counter() - started,
-        },
-        "resources": {**gpu_memory(device), "peak_rss_mb": current_rss_mb()},
-        "smoke": smoke_epochs is not None,
-    }
-    atomic_json(complete_path, result)
-    return result
 
 
 def run_diffgad(
@@ -958,8 +664,6 @@ def run_spec(
         smoke_epochs=smoke_epochs,
         target_limit=target_limit,
     )
-    if spec.method == "GUIDE-OFA-adapted":
-        return run_guide(spec, **arguments)
     if spec.method == "DiffGAD-OFA-adapted":
         return run_diffgad(spec, **arguments)
     raise ValueError(spec.method)
@@ -981,8 +685,6 @@ def preflight(dataset_dir: Path, vendor_root: Path) -> dict[str, Any]:
             "aligned_sha256": aligned_hash,
         }
     for required in (
-        vendor_root / "bin" / "orca",
-        vendor_root / "archives" / "guide.tar.gz",
         vendor_root / "archives" / "diffgad.tar.gz",
     ):
         if not required.exists():
@@ -1151,7 +853,7 @@ def analyze(
     analysis_dir = output_root / "analysis"
     atomic_json(analysis_dir / "summary.json", report)
     lines = [
-        "# GUIDE/DiffGAD Source-Only OFA Adaptation Report",
+        "# DiffGAD Source-Only OFA Adaptation Report",
         "",
         "All numbers are dataset-macro AUROC/AUPRC in percent, mean +/- population standard deviation over seeds 0/1/2.",
         "",

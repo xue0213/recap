@@ -11,7 +11,6 @@ graphs, including Questions, without quadratic-memory failures, unsupported
 legacy dependencies, target-test tuning, or selective exclusion of weak
 results.
 
-The final extension asks whether DiffGAD and GUIDE can be added to the
 full-graph unsupervised OFO stratum and whether OWLEYE can be reproduced in
 OFA A/B/C under its actual source-label-supervised, target-label-free
 zero-shot rights, without inheriting released label-selection leakage or

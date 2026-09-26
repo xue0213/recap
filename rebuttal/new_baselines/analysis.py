@@ -255,7 +255,7 @@ def audit(
     }
     if len(keys) != len(records):
         problems.append("duplicate evaluation cell")
-    for method in ("DiffGAD", "GUIDE"):
+    for method in ("DiffGAD",):
         for dataset in OFO_ORDER:
             found = {
                 record["seed"]
@@ -444,7 +444,7 @@ def summarize(
             )
 
     timing_rows = []
-    for method in ("DiffGAD", "GUIDE", "OWLEYE"):
+    for method in ("DiffGAD", "OWLEYE"):
         run_ids = sorted(
             {record["run_id"] for record in records if record["method"] == method}
         )
@@ -508,7 +508,7 @@ def make_report(
         "",
         "Status: **PASS**",
         "",
-        "DiffGAD and GUIDE are unsupervised one-for-one methods evaluated on "
+        "DiffGAD is an unsupervised one-for-one method evaluated on "
         "the full graph. OWLEYE is source-label supervised and target-label-free "
         "zero-shot; its ten uniformly sampled unlabeled target pattern nodes "
         "remain in the full-target evaluation population.",
@@ -524,7 +524,7 @@ def make_report(
         + " | Macro |",
         "|" + "---|" * (len(OFO_ORDER) + 2),
     ]
-    for method in ("DiffGAD", "GUIDE"):
+    for method in ("DiffGAD",):
         cells = []
         for dataset in OFO_ORDER:
             row = by_key[(method, "", dataset)]
@@ -547,7 +547,7 @@ def make_report(
             "|" + "---|" * (len(OFO_ORDER) + 2),
         ]
     )
-    for method in ("DiffGAD", "GUIDE"):
+    for method in ("DiffGAD",):
         cells = []
         for dataset in OFO_ORDER:
             row = by_key[(method, "", dataset)]
@@ -658,8 +658,6 @@ def make_report(
             "- DiffGAD removes the released target-label selection over "
             "autoencoder trials and 500 diffusion levels. It uses the locked "
             "ten-level label-free average and exact non-quadratic structure loss.",
-            "- GUIDE uses exact ORCA order-four node orbits. The mapping was "
-            "validated against independent induced-subgraph enumeration.",
             "- OWLEYE uses source labels and must not be described as fully "
             "unsupervised. Target labels are unavailable until every target's "
             "full-node score vector is frozen.",

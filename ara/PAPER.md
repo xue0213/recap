@@ -4,7 +4,6 @@
 - Artifact scope: confirmatory reproduction and rebuttal experiments
 - Current completed layers: RECAP Phase 1, Questions OFO addendum, supervised
   OFA baseline Phase 2, user-revised B/C baseline completion supplement,
-  eight-method 12-dataset OFO baseline reproduction, and the DiffGAD/GUIDE/
   OWLEYE three-baseline extension, plus target-side full-graph inference on
   T-Finance, DGraph-Fin, and T-Social
 - Primary protocol: `rebuttal/RECAP_EXPERIMENT_PROTOCOL.md`

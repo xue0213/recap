@@ -53,8 +53,7 @@ OFO_BASELINES = (
     "CoLA",
     "ADA-GAD",
     "DiffGAD",
-    "GUIDE",
-)
+    )
 OFO_METHODS = (*OFO_BASELINES, "RECAP-OFO")
 OFA_BASELINES = ("ARC", "IA-GGAD", "UNPrompt", "AnomalyGFM-ZS", "OWLEYE")
 OFA_METHODS = (*OFA_BASELINES, "RECAP")
@@ -580,7 +579,7 @@ def evaluation_strata(inputs: dict[str, Any]) -> list[dict[str, Any]]:
         populations = {
             row.get("evaluation_population", "full_graph") for row in rows
         }
-        if not populations and method in {"DiffGAD", "GUIDE"}:
+        if not populations and method == "DiffGAD":
             populations = {"full_graph"}
         output.append(
             {

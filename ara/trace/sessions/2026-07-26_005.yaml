@@ -2,7 +2,6 @@ session:
   id: "2026-07-26_005"
   timestamp: "2026-07-26T23:45+08:00"
   summary: >
-    Completed, independently audited, and consolidated the DiffGAD, GUIDE, and
     OWLEYE extension.
 
 events_logged:
@@ -49,7 +48,6 @@ ai_actions:
     provenance: ai-executed
     files_changed:
       - "rebuttal/new_baselines/diffgad.py"
-      - "rebuttal/new_baselines/guide.py"
       - "rebuttal/new_baselines/owleye.py"
       - "rebuttal/new_baselines/runner.py"
       - "rebuttal/new_baselines/analysis.py"
@@ -79,7 +77,6 @@ claims_touched:
 
 open_threads:
   - "Investigate DiffGAD's high Facebook/Weibo seed variance only as a separately labeled diagnostic."
-  - "Explain GUIDE's gain over RECAP by motif family without changing the accepted confirmatory runs."
 
 ai_suggestions_pending:
   - "Describe OWLEYE as source-label supervised, target-label-free zero-shot rather than fully unsupervised."

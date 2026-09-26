@@ -32,7 +32,6 @@
 ## E05: Protocol-wide completion and consistency audit
 
 - Scope: RECAP-OFO, RECAP-OFA A/B/C, eight OFO baselines, and four OFA
-  baselines in A/B/C, extended by DiffGAD/GUIDE OFO and OWLEYE OFA
 - Evidence: 450 training runs, 720 final evaluations, 90 stability pair
   records, 486 diagnostic rows, and 225 RECAP checkpoints
 - Aggregation: dataset macro within seed, Setting-C domain macro within seed,
@@ -41,13 +40,10 @@
   passing source artifact audits, explicit evaluation-population strata,
   deterministic table regeneration, and all protocol/equivalence tests
 
-## E06: DiffGAD, GUIDE, and OWLEYE extension
 
-- OFO methods: DiffGAD and GUIDE on 12 datasets and seeds 0/1/2
 - OFA method: OWLEYE on Settings A/B/C and seeds 0/1/2
 - Scope: 81 training runs, 126 final evaluations, and 126 frozen score vectors
 - Fidelity gates: label-free fixed DiffGAD diffusion-level ensemble, exact
-  algebraic structure loss, exact ORCA GUIDE motifs, OWLEYE tau=1
   normalization cancellation, and chunk-equivalent target inference
 - Acceptance: exact manifest coverage, upstream/data/score hashes, 288 label
   events, checkpoint reload, and independent AUROC/AUPRC recomputation

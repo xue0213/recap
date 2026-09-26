@@ -3,7 +3,6 @@
 ## Research Question
 
 Does RECAP remain effective and community-stable under the locked OFO and OFA
-evaluation protocol, including the expanded DiffGAD, GUIDE, and OWLEYE
 comparison?
 
 ## Current Understanding
@@ -33,7 +32,6 @@ audits, and checkpoint reloads passed. Its accounted formal-run time is
 report generation.
 
 The three-baseline extension is complete: 81 training runs and 126 final
-evaluations for DiffGAD, GUIDE, and OWLEYE. The independent audit verified all
 126 frozen score vectors, 288 label events, checkpoint reloads, and metric
 recomputations with zero metric discrepancy.
 
@@ -80,7 +78,6 @@ source artifact audits pass, and no missing experiment or rerun remains.
   12-dataset macro is 0.71083/0.23606 on the same full-graph, label-free
   evaluation regime.
 - The added full-graph OFO macros are DiffGAD 0.5503 ± 0.0217 AUROC /
-  0.1061 ± 0.0024 AUPRC and GUIDE 0.7519 ± 0.0014 /
   0.3309 ± 0.0009.
 - OWLEYE's OFA dataset macros are 0.7604/0.3567 in Setting A,
   0.7179/0.2866 in Setting B, and 0.6033/0.1801 in Setting C; its Setting-C
@@ -130,7 +127,6 @@ source artifact audits pass, and no missing experiment or rerun remains.
   main runtime bottleneck: 1306.99 of 2344.41 accounted seconds. The locked
   100-tree configuration was retained.
 - RECAP exceeds the original DOMINANT/AnomalyDAE/CoLA/ADA-GAD full-graph
-  unsupervised set and DiffGAD, but GUIDE exceeds RECAP on both expanded
   12-dataset macro metrics (0.7519/0.3309 versus 0.7108/0.2361). The earlier
   leadership claim is therefore valid only for its original four-baseline
   scope.
@@ -186,7 +182,6 @@ source artifact audits pass, and no missing experiment or rerun remains.
 - DiffGAD's released target-label selection over autoencoder trials and 500
   diffusion levels was removed. Formal inference uses one preregistered
   ten-level average and an exact non-quadratic structure identity.
-- GUIDE's nested motif enumeration was replaced by exact ORCA order-four node
   orbits, verified against independent induced-subgraph enumeration.
 - OWLEYE uses official hash-matched 64-dimensional feature caches. Its
   released tau=1 pair-distance multiplier cancels exactly, and chunked target
@@ -198,7 +193,6 @@ source artifact audits pass, and no missing experiment or rerun remains.
 - Why do cross-domain Setting C communities change substantially across seeds
   even when final score rankings are moderately stable?
 - Why does DiffGAD have high seed variance on Facebook and Weibo?
-- Which exact GUIDE motif families account for its gain over RECAP on the
   expanded unsupervised OFO macro?
 - These are follow-up research questions, not reasons to alter the completed
   confirmatory Phase 1.

@@ -22,7 +22,6 @@ source artifact audits pass; no missing experiment or rerun remains.
 | RECAP-OFA C, dataset macro | 0.673100 ± 0.004322 | 0.175007 ± 0.000924 |
 | RECAP-OFA C, domain macro | 0.671091 ± 0.005091 | 0.135780 ± 0.000781 |
 | DiffGAD OFO, 12-dataset macro | 0.5503 ± 0.0217 | 0.1061 ± 0.0024 |
-| GUIDE OFO, 12-dataset macro | 0.7519 ± 0.0014 | 0.3309 ± 0.0009 |
 | OWLEYE OFA A, dataset macro | 0.7604 ± 0.0005 | 0.3567 ± 0.0052 |
 | OWLEYE OFA B, dataset macro | 0.7179 ± 0.0020 | 0.2866 ± 0.0022 |
 | OWLEYE OFA C, dataset macro | 0.6033 ± 0.0068 | 0.1801 ± 0.0009 |

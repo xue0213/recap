@@ -4,7 +4,6 @@ Status: **locked before formal results**
 
 Date: 2026-07-26
 
-This document governs the addition of DiffGAD, GUIDE, and OWLEYE to the
 completed RECAP rebuttal experiment record. It supplements
 `RECAP_EXPERIMENT_PROTOCOL.md`, `OFO_12_BASELINE_PROTOCOL.md`, and
 `BASELINE_OFA_REPROTOCOL.md`. Existing runs and frozen score vectors are
@@ -14,7 +13,6 @@ immutable.
 
 ### 1.1 One-for-one unsupervised baselines
 
-DiffGAD and GUIDE are trained independently and transductively on each of the
 twelve RECAP graphs:
 
 - Citation: PubMed, Cora, CiteSeer, ACM;
@@ -65,7 +63,6 @@ evaluations**.
 
 1. All raw MAT files are the same hash-locked twelve files used by the
    completed RECAP experiments under `/root/autodl-tmp/recap/dataset`.
-2. DiffGAD and GUIDE use the same binary undirected adjacency union as the
    existing OFO baselines, with duplicate edges and self-loops removed before
    method-specific self-loop handling. OWLEYE retains the released raw
    adjacency orientation for its propagation operator because its official
@@ -125,11 +122,9 @@ The structure decoder itself is unchanged; only the mathematically identical
 row-error calculation is replaced. Dense-reference forward and gradient gates
 must pass before formal execution.
 
-## 4. GUIDE
 
 ### 4.1 Released mechanism and settings
 
-GUIDE retains the released attribute GCN autoencoder, graph-node-attention
 structural autoencoder, six structural inputs
 `[degree, M31, M32, M41, M42, M43]`, and joint node score.
 
@@ -149,7 +144,6 @@ adding self-loops.
 ### 4.2 Exact scalable motif preprocessing
 
 The released Python/NetworkX nested enumeration is replaced by ORCA's exact
-induced graphlet-orbit counter up to order four. The six GUIDE values are
 obtained from the standard node orbits:
 
 - degree: orbit 0;
@@ -209,7 +203,6 @@ reload verification.
 ## 6. Upstream provenance and environment
 
 Pinned revisions and archive SHA-256 values are stored in
-`new_baselines/upstream_manifest.json`. DiffGAD, GUIDE, and OWLEYE currently
 publish no repository license file; their code is therefore not redistributed.
 The tracked adapter is an independently written current-PyTorch compatibility
 implementation. ORCA is invoked under its bundled MIT license.
@@ -249,9 +242,7 @@ Formal execution may start only after:
 - upstream archive, OWLEYE raw-data, and twelve RECAP file hashes pass;
 - environment import and GPU probes pass;
 - exact DiffGAD dense-loss forward/gradient gates pass;
-- exact GUIDE motif equality and sparse-layer gates pass;
 - OWLEYE normalization and query-chunk equivalence gates pass;
-- Cora and Questions smoke runs pass for DiffGAD and GUIDE;
 - one Setting-A OWLEYE smoke passes;
 - all label-isolation and score-freeze tests pass.
 

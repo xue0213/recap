@@ -19,7 +19,6 @@ the exact method×dataset×seed Cartesian product and regenerates all reported m
 the frozen arrays.
 
 For the three-baseline extension, DiffGAD averages a preregistered ten-level
-diffusion grid rather than selecting a level with labels; GUIDE trains on
 exact ORCA-derived motif features; and OWLEYE trains one source-label model
 per setting before chunked full-node target scoring. All target labels remain
 sealed until the corresponding score hash is frozen.

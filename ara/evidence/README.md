@@ -30,7 +30,6 @@
   and frozen scores remain on the experiment server.
 - Machine-readable protocol-wide completion evidence is stored under
   `rebuttal/artifacts/protocol_completion/analysis/`.
-- Machine-readable DiffGAD/GUIDE/OWLEYE evidence is stored under
   `rebuttal/artifacts/three_baseline_extension/formal/analysis/`; large
   checkpoints and frozen scores remain on the experiment server.
 - Machine-readable large-target inference evidence and all full-node score/KNN

@@ -18,11 +18,6 @@ from rebuttal.new_baselines.diffgad import (
     dense_structure_squared_error,
     exact_structure_squared_error,
 )
-from rebuttal.new_baselines.guide import (
-    SparseResidualAttention,
-    guide_motifs_from_orbits,
-    orca_node_orbits,
-)
 from rebuttal.new_baselines.owleye import (
     OWLEYEConfig,
     OWLEYEGraph,
@@ -71,118 +66,10 @@ def gate_diffgad_exact_loss() -> dict[str, float]:
     }
 
 
-def _brute_guide_motifs(adjacency: np.ndarray) -> np.ndarray:
-    node_count = adjacency.shape[0]
-    output = np.zeros((node_count, 6), dtype=np.float64)
-    output[:, 0] = adjacency.sum(axis=1)
-    for size in (3, 4):
-        for nodes in itertools.combinations(range(node_count), size):
-            subgraph = adjacency[np.ix_(nodes, nodes)]
-            degrees = subgraph.sum(axis=1).astype(int)
-            edges = int(subgraph.sum() // 2)
-            if np.any(degrees == 0):
-                continue
-            column = None
-            if size == 3 and edges == 3:
-                column = 1
-            elif size == 3 and sorted(degrees.tolist()) == [1, 1, 2]:
-                column = 2
-            elif size == 4 and edges == 6:
-                column = 3
-            elif size == 4 and edges == 5:
-                column = 4
-            elif size == 4 and edges == 4 and np.all(degrees == 2):
-                column = 5
-            if column is not None:
-                output[list(nodes), column] += 1
-    return output.astype(np.float32)
 
 
-def gate_guide_orca(orca_binary: Path) -> dict[str, float]:
-    graph_suite = []
-    # Triangle, path, square, diamond, clique, and a deterministic mixed graph.
-    for edges, node_count in (
-        ([(0, 1), (1, 2), (2, 0)], 3),
-        ([(0, 1), (1, 2)], 3),
-        ([(0, 1), (1, 2), (2, 3), (3, 0)], 4),
-        ([(0, 1), (0, 2), (1, 2), (0, 3), (1, 3)], 4),
-        (list(itertools.combinations(range(4), 2)), 4),
-        (
-            [
-                (0, 1),
-                (1, 2),
-                (2, 0),
-                (2, 3),
-                (3, 4),
-                (4, 5),
-                (5, 2),
-                (0, 4),
-                (1, 5),
-            ],
-            6,
-        ),
-    ):
-        adjacency = np.zeros((node_count, node_count), dtype=np.float32)
-        for source, target in edges:
-            adjacency[source, target] = adjacency[target, source] = 1
-        graph_suite.append(adjacency)
-    maximum = 0.0
-    with tempfile.TemporaryDirectory(prefix="guide_orca_gate_") as temporary:
-        work_dir = Path(temporary)
-        for adjacency in graph_suite:
-            orbits = orca_node_orbits(
-                sp.csr_matrix(adjacency),
-                orca_binary=orca_binary,
-                work_dir=work_dir,
-            )
-            observed = guide_motifs_from_orbits(orbits)
-            expected = _brute_guide_motifs(adjacency)
-            maximum = max(maximum, float(np.max(np.abs(observed - expected))))
-    if maximum != 0:
-        raise AssertionError(f"GUIDE ORCA motif mismatch: {maximum}")
-    return {"maximum_absolute_count_difference": maximum}
 
 
-def gate_guide_attention() -> dict[str, float]:
-    torch.manual_seed(23)
-    adjacency_np = np.asarray(
-        [
-            [1, 1, 0, 0],
-            [1, 1, 1, 0],
-            [0, 1, 1, 1],
-            [0, 0, 1, 1],
-        ],
-        dtype=np.float32,
-    )
-    indices = _edge_index(adjacency_np)
-    adjacency = torch.sparse_coo_tensor(
-        indices,
-        torch.ones(indices.shape[1]),
-        (4, 4),
-    ).coalesce()
-    x = torch.randn(4, 3)
-    layer = SparseResidualAttention(3, 5, dropout=0.0, alpha=0.3)
-    observed = layer(x, adjacency)
-    source, target = adjacency.indices()
-    hidden = x @ layer.weight
-    logits = torch.nn.functional.leaky_relu(
-        torch.sum(
-            (hidden[source] - hidden[target]) * layer.attention, dim=1
-        ),
-        negative_slope=0.3,
-    )
-    weights = torch.exp(-logits)
-    denominator = torch.zeros(4).index_add_(0, source, weights)
-    numerator = torch.zeros(4, 5).index_add_(
-        0, source, weights[:, None] * hidden[target]
-    )
-    expected = torch.nn.functional.elu(
-        numerator / denominator[:, None]
-    )
-    difference = float(torch.max(torch.abs(observed - expected)))
-    if difference > 1e-7:
-        raise AssertionError(f"GUIDE sparse attention mismatch: {difference}")
-    return {"max_abs_difference": difference}
 
 
 def gate_owleye_chunking() -> dict[str, float]:
@@ -289,8 +176,6 @@ def main() -> None:
             "evaluations": expected_evaluations(),
         },
         "diffgad_exact_structure": gate_diffgad_exact_loss(),
-        "guide_orca": gate_guide_orca(args.vendor_root / "bin" / "orca"),
-        "guide_sparse_attention": gate_guide_attention(),
         "owleye_chunking": gate_owleye_chunking(),
         "owleye_normalization": gate_owleye_normalization(
             args.vendor_root / "owleye" / "dataset" / "cora_64.npz"

@@ -13,8 +13,6 @@ recompute metrics. Reports contain the compact, publication-facing results.
 | Questions OFO addendum | 3 training/evaluation runs | [`QUESTIONS_OFO_ADDENDUM_PROTOCOL.md`](QUESTIONS_OFO_ADDENDUM_PROTOCOL.md) | `questions_ofo_addendum.py` | [`QUESTIONS_OFO_ADDENDUM_REPORT.md`](reports/QUESTIONS_OFO_ADDENDUM_REPORT.md) |
 | Original OFA baselines | ARC, IA-GGAD, UNPrompt, AnomalyGFM-ZS on A/B/C | [`BASELINE_OFA_REPROTOCOL.md`](BASELINE_OFA_REPROTOCOL.md), [`BASELINE_BC_SUPPLEMENT_PROTOCOL.md`](BASELINE_BC_SUPPLEMENT_PROTOCOL.md) | `baselines/baseline_runner.py`, `baselines/baseline_bc_runner.py` | [`PHASE2_OFA_BASELINE_REPORT.md`](reports/PHASE2_OFA_BASELINE_REPORT.md), [`PHASE2_BC_BASELINE_SUPPLEMENT_REPORT.md`](reports/PHASE2_BC_BASELINE_SUPPLEMENT_REPORT.md) |
 | Twelve-dataset OFO baselines | GCN, GAT, BWGNN, XGBGraph, DOMINANT, AnomalyDAE, CoLA, ADA-GAD | [`OFO_12_BASELINE_PROTOCOL.md`](OFO_12_BASELINE_PROTOCOL.md) | `ofo_baselines/runner.py`, `ofo_baselines/analysis.py` | [`OFO_12_BASELINE_REPORT.md`](reports/OFO_12_BASELINE_REPORT.md) |
-| Recent baselines | DiffGAD and GUIDE OFO; OWLEYE OFA | [`THREE_BASELINE_EXTENSION_PROTOCOL.md`](THREE_BASELINE_EXTENSION_PROTOCOL.md) | `new_baselines/runner.py`, `new_baselines/analysis.py` | [`THREE_BASELINE_EXTENSION_REPORT.md`](reports/THREE_BASELINE_EXTENSION_REPORT.md) |
-| GUIDE/DiffGAD source-only adaptations | 2 methods × 3 settings × 3 seeds | [`OFA_ADAPTED_UNSUPERVISED_PROTOCOL.md`](OFA_ADAPTED_UNSUPERVISED_PROTOCOL.md) | `new_baselines/ofa_adapted.py` | [`OFA_ADAPTED_UNSUPERVISED_REPORT.md`](reports/OFA_ADAPTED_UNSUPERVISED_REPORT.md) |
 | Full protocol audit | core 450 runs and 720 evaluations | [`EXPERIMENT_PROTOCOL_COMPLETION_AUDIT.md`](EXPERIMENT_PROTOCOL_COMPLETION_AUDIT.md) | `protocol_completion_audit.py` | [`RECAP_EXPERIMENT_PROTOCOL_COMPLETION_REPORT.md`](reports/RECAP_EXPERIMENT_PROTOCOL_COMPLETION_REPORT.md) |
 | Context-neighborhood ablation | residual KNN vs aligned-feature KNN | controlled in `context_neighbor_ablation.py` | `context_neighbor_ablation.py` | [`context_neighbor_ablation/RESULTS.md`](reports/context_neighbor_ablation/RESULTS.md) |
 | Large-target inference | T-Finance, DGraph-Fin, T-Social | [`LARGE_TARGET_INFERENCE_PROTOCOL.md`](LARGE_TARGET_INFERENCE_PROTOCOL.md) | `large_target_inference/runner.py`, `large_target_inference/analysis.py` | [`LARGE_TARGET_INFERENCE_REPORT.md`](reports/LARGE_TARGET_INFERENCE_REPORT.md) |
@@ -88,7 +86,6 @@ The exact environment and method-specific adaptations are documented in
 [`ofo_baselines/environment_matrix.md`](ofo_baselines/environment_matrix.md)
 and [`OFO_12_BASELINE_PROTOCOL.md`](OFO_12_BASELINE_PROTOCOL.md).
 
-### 4. DiffGAD, GUIDE, and OWLEYE
 
 ```bash
 python -m rebuttal.new_baselines.runner manifest
@@ -101,7 +98,6 @@ python -m rebuttal.new_baselines.runner run \
 Exact upstream commits and archive hashes are in
 [`new_baselines/upstream_manifest.json`](new_baselines/upstream_manifest.json).
 
-### 5. Source-only GUIDE/DiffGAD adaptations
 
 ```bash
 python -m rebuttal.new_baselines.ofa_adapted preflight \
@@ -113,7 +109,6 @@ python -m rebuttal.new_baselines.ofa_adapted analyze \
 ```
 
 These are our protocol-aligned adaptations, not variants released by the
-original GUIDE or DiffGAD authors.
 
 ### 6. Consolidated audit
 

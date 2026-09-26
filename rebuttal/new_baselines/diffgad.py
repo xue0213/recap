@@ -297,7 +297,7 @@ def _reverse_schedule(
 
 
 @torch.no_grad()
-def guided_sample(
+def diffusion_sample(
     conditional: PreconditionedDenoiser,
     unconditional: PreconditionedDenoiser,
     initial: torch.Tensor,
@@ -374,7 +374,7 @@ __all__ = [
     "dense_structure_squared_error",
     "exact_structure_squared_error",
     "forward_noise_schedule",
-    "guided_sample",
+    "diffusion_sample",
     "joint_reconstruction_score",
     "update_prototype",
 ]
