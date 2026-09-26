@@ -28,7 +28,7 @@ from sensitivity_analysis import (
 DEFAULT_REFERENCE_DIR = (
     PROJECT_ROOT / "tuning_hyperparams" / "sensitivity_results" / "sensitivity_default_v2"
 )
-DEFAULT_REFERENCE_CONFIG = DEFAULT_REFERENCE_DIR / "configs" / "baseline" / "recap.json"
+DEFAULT_REFERENCE_CONFIG = PROJECT_ROOT / "params" / "recap_auprc_best.json"
 DEFAULT_REFERENCE_SUMMARY = DEFAULT_REFERENCE_DIR / "sensitivity_summary.csv"
 
 DEFAULT_PARAMS = [

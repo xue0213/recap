@@ -2,13 +2,13 @@
 set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PYTHON_BIN="${PYTHON_BIN:-/root/miniconda3/bin/python}"
+PYTHON_BIN="${PYTHON_BIN:-python}"
 DEVICE="${DEVICE:-cuda:0}"
 EPOCHS="${EPOCHS:-100}"
 TRIALS="${TRIALS:-3}"
 RUN_NAME="${RUN_NAME:-sensitivity_$(date +%Y%m%d_%H%M%S)}"
 OUTPUT_DIR="${OUTPUT_DIR:-${PROJECT_ROOT}/tuning_hyperparams/sensitivity_results/${RUN_NAME}}"
-BASE_CONFIG="${BASE_CONFIG:-${PROJECT_ROOT}/params/recap.json}"
+BASE_CONFIG="${BASE_CONFIG:-${PROJECT_ROOT}/params/recap_auprc_best.json}"
 KNN_CACHE_DIR="${KNN_CACHE_DIR:-${PROJECT_ROOT}/knn_cache}"
 KNN_SEARCH_DTYPE="${KNN_SEARCH_DTYPE:-auto}"
 INCLUDE_HEATMAP="${INCLUDE_HEATMAP:-0}"

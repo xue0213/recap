@@ -2,13 +2,13 @@
 set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PYTHON_BIN="${PYTHON_BIN:-/root/miniconda3/bin/python}"
+PYTHON_BIN="${PYTHON_BIN:-python}"
 DEVICE="${DEVICE:-cuda:0}"
 EPOCHS="${EPOCHS:-100}"
 TRIALS="${TRIALS:-3}"
 RUN_NAME="${RUN_NAME:-lambda_e0_invariance_$(date +%Y%m%d_%H%M%S)}"
 OUTPUT_DIR="${OUTPUT_DIR:-${PROJECT_ROOT}/tuning_hyperparams/lambda_e0_invariance_results/${RUN_NAME}}"
-BASE_CONFIG="${BASE_CONFIG:-${PROJECT_ROOT}/tuning_hyperparams/sensitivity_results/sensitivity_default_v2/configs/baseline/recap.json}"
+BASE_CONFIG="${BASE_CONFIG:-${PROJECT_ROOT}/params/recap_auprc_best.json}"
 REFERENCE_SUMMARY="${REFERENCE_SUMMARY:-${PROJECT_ROOT}/tuning_hyperparams/sensitivity_results/sensitivity_default_v2/sensitivity_summary.csv}"
 KNN_CACHE_DIR="${KNN_CACHE_DIR:-${PROJECT_ROOT}/knn_cache}"
 KNN_SEARCH_DTYPE="${KNN_SEARCH_DTYPE:-auto}"
