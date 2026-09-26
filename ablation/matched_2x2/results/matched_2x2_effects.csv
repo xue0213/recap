@@ -1,0 +1,6 @@
+effect,high,low,AUROC_mean_difference,AUROC_std_difference,AUPRC_mean_difference,AUPRC_std_difference
+Residual representation effect with KMeans,Residual + KMeans,Non-residual + KMeans,0.075286767202177,0.003956785778855279,0.04499884898641857,0.005103898507533569
+Residual representation effect with RECAP,RECAP,RECAP w/o Residual,0.21090892919634455,0.0023356793077491072,0.15983256969600276,0.005708335426095631
+Community framework effect with non-residual features,RECAP w/o Residual,Non-residual + KMeans,-0.0689855441559287,0.001988244806680071,-0.03127290285418801,0.002864145627710441
+Community framework effect with residual features,RECAP,Residual + KMeans,0.06663661783823885,0.005002067120855906,0.08356081785539618,0.009201943592948266
+Difference-in-differences interaction,(RECAP - RECAP w/o Residual),(Residual KMeans - Non-residual KMeans),0.13562216199416754,0.003933239613578171,0.1148337207095842,0.007594925313949367

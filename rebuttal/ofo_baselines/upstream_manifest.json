@@ -1,0 +1,50 @@
+{
+  "created_at": "2026-07-26",
+  "repositories": {
+    "GADBench": {
+      "archive_sha256": "04146d33fe29ed9abb5c509cd5988e3f22e6d139e48358e627584d172c77e5a3",
+      "license_file_at_revision": false,
+      "revision": "f9aa021ce9b6c6580427fb633b596843be76ddc6",
+      "url": "https://github.com/squareRoot3/GADBench"
+    },
+    "BWGNN": {
+      "archive_sha256": "fe05df711ff94c2659ad6f6030c31cdc649fd5e96bf862be9b86aac54b7b036b",
+      "license_file_at_revision": false,
+      "revision": "de0631f039bbd19c1890b483cc01f1007f596af7",
+      "url": "https://github.com/squareRoot3/Rethinking-Anomaly-Detection"
+    },
+    "DOMINANT": {
+      "archive_sha256": "54ceb1655646e5548e6423cc3b0b15e656a28cde439d497cc7549a0efa9c393e",
+      "license_file_at_revision": false,
+      "revision": "83fa93931164aee5386fdc74c12a5d5c46a5d62f",
+      "url": "https://github.com/kaize0409/GCN_AnomalyDetection_pytorch"
+    },
+    "AnomalyDAE": {
+      "archive_sha256": "e6e46354c220f2a98f34c5f27baf10e979ac7761cbe332cd324372f8751243fb",
+      "license_file_at_revision": true,
+      "revision": "1199bae1820cd923efb5a6ec2d32ab758968f465",
+      "url": "https://github.com/haoyfan/AnomalyDAE"
+    },
+    "CoLA": {
+      "archive_sha256": "6589d04cffcfde36bcd82b8d012a0f8f2fca89e39af32e347407d2d4c6b95bfe",
+      "license_file_at_revision": true,
+      "revision": "c2b5273fe6368509dfc558a485764003f5f18ca3",
+      "url": "https://github.com/TrustAGI-Lab/CoLA"
+    },
+    "ADA-GAD": {
+      "archive_sha256": "86d9380358cc508a96cd4ac37baddd274d438de7e7efa9fba11780134196ec6f",
+      "license_file_at_revision": true,
+      "revision": "71a3aca936ccfe430e3809864f256d4bf80b22ee",
+      "url": "https://github.com/jweihe/ADA-GAD"
+    },
+    "PyGOD": {
+      "archive_sha256": "be3ef98ae6c46af00238ad80403d7fc576e21934cda6ee36d2a1cf61383c16b6",
+      "license_file_at_revision": true,
+      "revision": "2654c80222bbeaea03f7627d3d8b944d2a09e2f7",
+      "tag": "v1.1.0",
+      "url": "https://github.com/pygod-team/pygod"
+    }
+  },
+  "server_archive_root": "/root/autodl-tmp/recap_baselines/ofo_12/archives",
+  "server_vendor_root": "/root/autodl-tmp/recap_baselines/ofo_12/vendor"
+}

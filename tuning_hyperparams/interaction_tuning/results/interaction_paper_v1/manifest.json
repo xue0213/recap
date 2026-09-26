@@ -1,0 +1,758 @@
+{
+  "base_config": "/root/autodl-fs/recap/params/recap.json",
+  "output_dir": "/autodl-fs/data/recap/tuning_hyperparams/interaction_tuning/results/interaction_paper_v1",
+  "device": "cuda:0",
+  "epochs": 200,
+  "trials": 3,
+  "train_datasets": [
+    "pubmed",
+    "Flickr",
+    "questions",
+    "YelpChi"
+  ],
+  "test_datasets": [
+    "Facebook",
+    "cora",
+    "citeseer",
+    "ACM",
+    "BlogCatalog",
+    "weibo",
+    "Reddit",
+    "Amazon"
+  ],
+  "knn_cache_dir": "/autodl-fs/data/recap/knn_cache",
+  "knn_search_dtype": "auto",
+  "auroc_weight": 1.0,
+  "auprc_weight": 1.0,
+  "num_jobs": 52,
+  "jobs": [
+    {
+      "run_id": "baseline",
+      "stage": "baseline",
+      "overrides": {
+        "knn_k": 4,
+        "num_clusters": 4,
+        "num_hops": 3,
+        "tau_s": 0.15,
+        "beta": 0.03,
+        "lambda_H": 0.5,
+        "lambda_bal": 0.05,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k16__C20__L1",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 16,
+        "num_clusters": 20,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k16__C20__L2",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 16,
+        "num_clusters": 20,
+        "num_hops": 2,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k16__C20__L3",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 16,
+        "num_clusters": 20,
+        "num_hops": 3,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k16__C28__L1",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 16,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k16__C28__L2",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 16,
+        "num_clusters": 28,
+        "num_hops": 2,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k16__C28__L3",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 16,
+        "num_clusters": 28,
+        "num_hops": 3,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k16__C36__L1",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 16,
+        "num_clusters": 36,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k16__C36__L2",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 16,
+        "num_clusters": 36,
+        "num_hops": 2,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k16__C36__L3",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 16,
+        "num_clusters": 36,
+        "num_hops": 3,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k20__C20__L1",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 20,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k20__C20__L2",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 20,
+        "num_hops": 2,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k20__C20__L3",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 20,
+        "num_hops": 3,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k20__C28__L1",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k20__C28__L2",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 2,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k20__C28__L3",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 3,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k20__C36__L1",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 36,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k20__C36__L2",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 36,
+        "num_hops": 2,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k20__C36__L3",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 36,
+        "num_hops": 3,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k24__C20__L1",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 24,
+        "num_clusters": 20,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k24__C20__L2",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 24,
+        "num_clusters": 20,
+        "num_hops": 2,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k24__C20__L3",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 24,
+        "num_clusters": 20,
+        "num_hops": 3,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k24__C28__L1",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 24,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k24__C28__L2",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 24,
+        "num_clusters": 28,
+        "num_hops": 2,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k24__C28__L3",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 24,
+        "num_clusters": 28,
+        "num_hops": 3,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k24__C36__L1",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 24,
+        "num_clusters": 36,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k24__C36__L2",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 24,
+        "num_clusters": 36,
+        "num_hops": 2,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "graph__k24__C36__L3",
+      "stage": "graph_core",
+      "overrides": {
+        "knn_k": 24,
+        "num_clusters": 36,
+        "num_hops": 3,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "score__lH0p2__b0",
+      "stage": "score_loss",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0,
+        "lambda_H": 0.2,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "score__lH0p2__b0p005",
+      "stage": "score_loss",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.2,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "score__lH0p2__b0p01",
+      "stage": "score_loss",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.01,
+        "lambda_H": 0.2,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "score__lH0p35__b0",
+      "stage": "score_loss",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "score__lH0p35__b0p01",
+      "stage": "score_loss",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.01,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "score__lH0p5__b0",
+      "stage": "score_loss",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0,
+        "lambda_H": 0.5,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "score__lH0p5__b0p005",
+      "stage": "score_loss",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.5,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "score__lH0p5__b0p01",
+      "stage": "score_loss",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.01,
+        "lambda_H": 0.5,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "score__lH0p8__b0",
+      "stage": "score_loss",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0,
+        "lambda_H": 0.8,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "score__lH0p8__b0p005",
+      "stage": "score_loss",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.8,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "score__lH0p8__b0p01",
+      "stage": "score_loss",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.01,
+        "lambda_H": 0.8,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "score__lH1p2__b0",
+      "stage": "score_loss",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0,
+        "lambda_H": 1.2,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "score__lH1p2__b0p005",
+      "stage": "score_loss",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 1.2,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "score__lH1p2__b0p01",
+      "stage": "score_loss",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.01,
+        "lambda_H": 1.2,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "ctrl__tau0p03",
+      "stage": "controls",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.03,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "ctrl__tau0p08",
+      "stage": "controls",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.08,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "ctrl__tau0p1",
+      "stage": "controls",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.1,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "ctrl__tau0p15",
+      "stage": "controls",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.15,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "ctrl__lbal0",
+      "stage": "controls",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "ctrl__lbal0p005",
+      "stage": "controls",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.005,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "ctrl__lbal0p05",
+      "stage": "controls",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.05,
+        "lambda_E": 0.1
+      }
+    },
+    {
+      "run_id": "ctrl__lE0",
+      "stage": "controls",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0
+      }
+    },
+    {
+      "run_id": "ctrl__lE0p01",
+      "stage": "controls",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.01
+      }
+    },
+    {
+      "run_id": "ctrl__lE0p3",
+      "stage": "controls",
+      "overrides": {
+        "knn_k": 20,
+        "num_clusters": 28,
+        "num_hops": 1,
+        "tau_s": 0.05,
+        "beta": 0.005,
+        "lambda_H": 0.35,
+        "lambda_bal": 0.01,
+        "lambda_E": 0.3
+      }
+    }
+  ]
+}

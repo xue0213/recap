@@ -1,0 +1,4 @@
+trial,mode,seed,epochs,checkpoint_path,train_datasets,analysis_datasets,model,num_clusters,knn_k,beta
+0,loaded_checkpoint,0,100,interpretability/results_weibo/checkpoints/recap_auprc_best/trial_0/model.pt,,weibo,recap_auprc_best,36,64,0.02
+1,loaded_checkpoint,1,100,interpretability/results_weibo/checkpoints/recap_auprc_best/trial_1/model.pt,,weibo,recap_auprc_best,36,64,0.02
+2,loaded_checkpoint,2,100,interpretability/results_weibo/checkpoints/recap_auprc_best/trial_2/model.pt,,weibo,recap_auprc_best,36,64,0.02

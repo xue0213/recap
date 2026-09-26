@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.DS_Store
+
+# 数据与运行时产物（体积大或可再生成）
+dataset/
+dataset_large/
+checkpoints/
+knn_cache/
+inference_results/
+*.log
+rebuttal/artifacts/
+rebuttal/logs/

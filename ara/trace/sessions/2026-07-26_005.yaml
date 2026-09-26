@@ -1,0 +1,86 @@
+session:
+  id: "2026-07-26_005"
+  timestamp: "2026-07-26T23:45+08:00"
+  summary: >
+    Completed, independently audited, and consolidated the DiffGAD, GUIDE, and
+    OWLEYE extension.
+
+events_logged:
+  - type: question
+    id: N24
+    provenance: user
+    summary: "User requested three additional baselines in their appropriate strata."
+  - type: experiment
+    id: N25
+    provenance: ai-executed
+    summary: "Audited upstream supervision, leakage, data identity, and complexity."
+  - type: dead_end
+    id: N26
+    provenance: ai-executed
+    summary: "Rejected released DiffGAD label-selected and quadratic formal path."
+  - type: experiment
+    id: N27
+    provenance: ai-executed
+    summary: "Passed all exactness, equivalence, label, and smoke gates."
+  - type: dead_end
+    id: N28
+    provenance: ai-executed
+    summary: "Server-side upstream archive download timed out."
+  - type: experiment
+    id: N29
+    provenance: ai-executed
+    summary: "Uploaded and reverified locally hashed pinned archives."
+  - type: experiment
+    id: N30
+    provenance: ai-executed
+    summary: "Completed 81 training runs and 126 evaluations."
+  - type: experiment
+    id: N31
+    provenance: ai-executed
+    summary: "Passed independent audit and regenerated the 450/720 consolidated scope."
+
+ai_actions:
+  - action: "Locked the supervision-correct extension protocol before results."
+    provenance: ai-executed
+    files_changed:
+      - "rebuttal/THREE_BASELINE_EXTENSION_PROTOCOL.md"
+      - "rebuttal/new_baselines/upstream_manifest.json"
+  - action: "Implemented independently written scalable adapters, tests, runner, and analyzer."
+    provenance: ai-executed
+    files_changed:
+      - "rebuttal/new_baselines/diffgad.py"
+      - "rebuttal/new_baselines/guide.py"
+      - "rebuttal/new_baselines/owleye.py"
+      - "rebuttal/new_baselines/runner.py"
+      - "rebuttal/new_baselines/analysis.py"
+      - "rebuttal/new_baselines/test_extension.py"
+  - action: "Executed and independently audited all formal extension runs."
+    provenance: ai-executed
+    files_changed:
+      - "rebuttal/reports/THREE_BASELINE_EXTENSION_REPORT.md"
+      - "rebuttal/reports/RECAP_EXPERIMENT_PROTOCOL_COMPLETION_REPORT.md"
+
+claims_touched:
+  - id: C08
+    action: revised
+    provenance: ai-suggested
+  - id: C10
+    action: revised
+    provenance: ai-suggested
+  - id: C11
+    action: created
+    provenance: ai-suggested
+  - id: C12
+    action: created
+    provenance: ai-suggested
+  - id: C13
+    action: created
+    provenance: ai-suggested
+
+open_threads:
+  - "Investigate DiffGAD's high Facebook/Weibo seed variance only as a separately labeled diagnostic."
+  - "Explain GUIDE's gain over RECAP by motif family without changing the accepted confirmatory runs."
+
+ai_suggestions_pending:
+  - "Describe OWLEYE as source-label supervised, target-label-free zero-shot rather than fully unsupervised."
+  - "Revise any paper claim that RECAP leads the expanded full-graph unsupervised OFO group."

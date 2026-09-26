@@ -1,0 +1,578 @@
+project:
+  title: "RECAP rebuttal experiments"
+  question: "Does RECAP remain effective under the locked OFO/OFA protocol, and how does it compare with the expanded supervised, unsupervised, and source-supervised zero-shot baselines?"
+  status: active
+  started: "2026-07-26"
+  domain: "graph anomaly detection"
+
+protocol:
+  classification: confirmatory
+  base_commit: "c94c4d7985d2cb1438c430173ad868d68d0c1efe"
+  locked_protocol: "rebuttal/PHASE1_EXECUTION_LOCK.md"
+  ofo_datasets: 11
+  ofo_training_runs: 33
+  ofa_training_runs: 9
+  total_training_runs: 42
+  final_evaluations: 87
+  stability_pairs: 87
+  seeds: [0, 1, 2]
+
+experiments:
+  proxy_metric: "per-dataset AUROC/AUPRC plus cross-seed community stability"
+  total_runs: 45
+  completed_runs: 45
+  failed_runs: 0
+  final_evaluations_completed: 90
+  stability_pairs_completed: 90
+  current_stage: "complete"
+  active_run: null
+  formal_phase1_training_runs: 42
+  user_requested_addendum_training_runs: 3
+  trajectory:
+    - stage: "OFO"
+      auroc_dataset_macro: 0.7177466675
+      auprc_dataset_macro: 0.2531751373
+    - stage: "OFA-A"
+      auroc_dataset_macro: 0.7465154224
+      auprc_dataset_macro: 0.2704448673
+    - stage: "OFA-B"
+      auroc_dataset_macro: 0.6774504735
+      auprc_dataset_macro: 0.2197561250
+    - stage: "OFA-C"
+      auroc_dataset_macro: 0.6731004716
+      auprc_dataset_macro: 0.1750072323
+
+quality_gates:
+  paper_implementation_restored: true
+  ann_isolation_verified: true
+  data_manifest_verified: true
+  label_isolation_verified: true
+  cache_equivalence_verified: true
+  checkpoint_reload_verified: true
+  seed0_gate_passed: true
+  formal_manifest_complete: true
+  raw_record_validation_passed: true
+  artifact_validation_passed: true
+  stability_analysis_complete: true
+  final_report_generated: true
+  questions_ofo_addendum_complete: true
+  questions_ofo_artifact_validation_passed: true
+
+outer_loop:
+  cycle: 5
+  last_direction: conclude
+  last_reflection: "The user-requested Questions OFO addendum passed all three seeds and audits. Preserve the original 11-dataset result and label the new 12-dataset macro as a post hoc scope addition."
+
+addenda:
+  ofo_questions:
+    classification: "confirmatory user-requested addendum"
+    status: "complete"
+    protocol: "rebuttal/QUESTIONS_OFO_ADDENDUM_PROTOCOL.md"
+    training_runs: 3
+    final_evaluations: 3
+    seeds: [0, 1, 2]
+    original_phase1_results_immutable: true
+    questions_auroc_mean: 0.6346933324
+    questions_auroc_std: 0.0004681145
+    questions_auprc_mean: 0.0477512134
+    questions_auprc_std: 0.0005224704
+    combined_ofo_12_auroc_mean: 0.7108255563
+    combined_ofo_12_auroc_std: 0.0035445911
+    combined_ofo_12_auprc_mean: 0.2360564769
+    combined_ofo_12_auprc_std: 0.0026123169
+    report: "rebuttal/reports/QUESTIONS_OFO_ADDENDUM_REPORT.md"
+
+workspace:
+  findings: "rebuttal/findings.md"
+  log: "rebuttal/research-log.md"
+  protocol: "rebuttal/PHASE1_EXECUTION_LOCK.md"
+  run_root: "rebuttal/artifacts/phase1/runs/"
+  artifacts_root: "rebuttal/artifacts/phase1/"
+  reports_root: "rebuttal/reports/"
+
+phase2_baselines:
+  status: complete
+  classification: confirmatory
+  protocol: "rebuttal/BASELINE_OFA_REPROTOCOL.md"
+  upstream_manifest: "rebuttal/baselines/upstream_manifest.json"
+  environment_matrix: "rebuttal/baselines/environment_matrix.md"
+  methods: [ARC, UNPrompt, AnomalyGFM-ZS, IA-GGAD]
+  settings:
+    A: [ARC, UNPrompt, AnomalyGFM-ZS, IA-GGAD]
+    B: [ARC, IA-GGAD]
+    C: [ARC, IA-GGAD]
+  seeds: [0, 1, 2]
+  planned_training_runs: 24
+  planned_final_evaluations: 156
+  completed_training_runs: 24
+  completed_final_evaluations: 156
+  current_stage: complete
+  dataset_summary_rows: 52
+  macro_summary_rows: 10
+  formal_accounted_seconds: 957.4758505113423
+  checkpoint_reload_max_abs_diff: 0.000009655952453613281
+  calibration_weights:
+    AnomalyGFM-ZS_A: 6.0
+    IA-GGAD_A: 0.1
+    IA-GGAD_B: 0.3
+    IA-GGAD_C: 0.5
+  macro_results:
+    A:
+      ARC: {auroc: 0.7868803327, auprc: 0.3648878345}
+      IA-GGAD: {auroc: 0.7722309655, auprc: 0.3550994875}
+      UNPrompt: {auroc: 0.5802440568, auprc: 0.1022485404}
+      AnomalyGFM-ZS: {auroc: 0.5307151902, auprc: 0.0802408748}
+    B:
+      ARC: {auroc: 0.7275785175, auprc: 0.2949239394}
+      IA-GGAD: {auroc: 0.7284327675, auprc: 0.3073778973}
+    C:
+      ARC: {auroc: 0.6617509051, auprc: 0.1885740570}
+      IA-GGAD: {auroc: 0.6303469056, auprc: 0.1773807861}
+  quality_gates:
+    upstream_archives_verified: true
+    dataset_identity_verified: true
+    gpu_environment_selected: true
+    sparse_equivalence_verified: true
+    label_access_guards_verified: true
+    method_smokes_passed: true
+    unprompt_deterministic_reload_verified: true
+    formal_manifest_complete: true
+    formal_runs_complete: true
+    raw_metric_recomputation_passed: true
+    artifact_validation_passed: true
+    source_only_calibration_verified: true
+    final_report_generated: true
+  outer_loop:
+    cycle: 4
+    last_direction: conclude
+    last_reflection: "The complete 24-run/156-evaluation reproduction passed independent score, hash, label, checkpoint, calibration, and aggregation audits. ARC/IA lead A/B; label-free RECAP has higher C dataset-macro AUROC but slightly lower AUPRC. Preserve weak and high-variance baseline results without tuning."
+
+phase2_bc_supplement:
+  status: complete
+  classification: confirmatory_user_revised_scope
+  protocol: "rebuttal/BASELINE_BC_SUPPLEMENT_PROTOCOL.md"
+  methods: [UNPrompt, AnomalyGFM-ZS]
+  settings: [B, C]
+  seeds: [0, 1, 2]
+  planned_training_runs: 12
+  planned_final_evaluations: 60
+  completed_training_runs: 12
+  completed_final_evaluations: 60
+  original_phase2_artifacts_immutable: true
+  current_stage: complete
+  dataset_summary_rows: 20
+  macro_summary_rows: 6
+  formal_accounted_seconds: 971.1676302030683
+  checkpoint_reload_max_abs_diff: 0.000003337860107421875
+  calibration_weights:
+    AnomalyGFM-ZS_B: 2.0
+    AnomalyGFM-ZS_C: 4.0
+  macro_results:
+    B:
+      UNPrompt: {auroc: 0.5791631289, auprc: 0.1168802127}
+      AnomalyGFM-ZS: {auroc: 0.4963893376, auprc: 0.0843491334}
+    C:
+      UNPrompt: {auroc: 0.5924514757, auprc: 0.1136911456}
+      AnomalyGFM-ZS: {auroc: 0.5103329031, auprc: 0.0556794858}
+  quality_gates:
+    protocol_committed_before_results: true
+    primary_manifest_unchanged: true
+    supplement_manifest_verified: true
+    compatibility_tests_passed: true
+    method_setting_smokes_passed: true
+    label_access_guards_verified: true
+    checkpoint_reload_verified: true
+    formal_runs_complete: true
+    raw_metric_recomputation_passed: true
+    artifact_validation_passed: true
+    source_only_calibration_verified: true
+    final_report_generated: true
+  outer_loop:
+    cycle: 3
+    last_direction: conclude
+    last_reflection: "The 12-run/60-evaluation supplement passed independent score, hash, label, checkpoint, calibration, and aggregation audits. RECAP exceeds both added zero-context baselines in B/C; retain weak and high-variance transfer results without tuning."
+
+phase2_ofo_12_baselines:
+  status: complete
+  classification: confirmatory_user_revised_scope
+  protocol: "rebuttal/OFO_12_BASELINE_PROTOCOL.md"
+  methods: [GCN, GAT, BWGNN, XGBGraph, DOMINANT, AnomalyDAE, CoLA, ADA-GAD]
+  datasets: [pubmed, cora, citeseer, ACM, Flickr, BlogCatalog, Facebook, weibo, Reddit, questions, YelpChi, Amazon]
+  seeds: [0, 1, 2]
+  planned_training_runs: 288
+  planned_final_evaluations: 288
+  completed_training_runs: 288
+  completed_final_evaluations: 288
+  current_stage: completed_and_independently_audited
+  original_phase1_and_ofa_artifacts_immutable: true
+  quality_gates:
+    protocol_committed_before_formal_results: true
+    upstream_archives_verified: true
+    isolated_environment_verified: true
+    all_dataset_preprocessing_verified: true
+    all_supervised_splits_verified: true
+    sparse_equivalence_verified: true
+    label_access_guards_verified: true
+    small_and_questions_smokes_passed: true
+    checkpoint_reload_verified: true
+    formal_runs_complete: true
+    raw_metric_recomputation_passed: true
+    artifact_validation_passed: true
+    environment_signature_unique: true
+    final_report_generated: true
+  results:
+    GCN: {auroc_mean: 0.8152498865, auroc_std: 0.0046506935, auprc_mean: 0.4282692735, auprc_std: 0.0065936414}
+    GAT: {auroc_mean: 0.8308508233, auroc_std: 0.0089312858, auprc_mean: 0.4333605124, auprc_std: 0.0473094890}
+    BWGNN: {auroc_mean: 0.7437794545, auroc_std: 0.0081459067, auprc_mean: 0.2968741463, auprc_std: 0.0078158260}
+    XGBGraph: {auroc_mean: 0.8884011985, auroc_std: 0.0028975098, auprc_mean: 0.6198103896, auprc_std: 0.0161217603}
+    DOMINANT: {auroc_mean: 0.5332117117, auroc_std: 0.0017809809, auprc_mean: 0.1040240539, auprc_std: 0.0001239002}
+    AnomalyDAE: {auroc_mean: 0.5623811303, auroc_std: 0.0032570482, auprc_mean: 0.0996852611, auprc_std: 0.0010937299}
+    CoLA: {auroc_mean: 0.5436274280, auroc_std: 0.0019009214, auprc_mean: 0.1188070708, auprc_std: 0.0024180274}
+    ADA-GAD: {auroc_mean: 0.5757474312, auroc_std: 0.0074553755, auprc_mean: 0.0717176895, auprc_std: 0.0006136292}
+  timing:
+    train_seconds_sum: 2156.2791303024
+    inference_seconds_sum: 33.6181254014
+    total_seconds_sum: 2344.4068407416
+    slowest_method: XGBGraph
+    slowest_method_total_seconds: 1306.9876912069
+  audit:
+    recomputed_metrics: 576
+    label_audits_passed: 288
+    checkpoint_reloads_passed: 288
+    maximum_reload_abs_difference: 0.0001754761
+    environment: "Python 3.12.3; PyTorch 2.11.0+cu128; CUDA 12.8"
+  artifacts:
+    report: "rebuttal/reports/OFO_12_BASELINE_REPORT.md"
+    global_audit: "rebuttal/artifacts/ofo_12_baselines/formal/analysis/global_audit.json"
+    run_records: "rebuttal/artifacts/ofo_12_baselines/formal/analysis/run_records.csv"
+    dataset_summary: "rebuttal/artifacts/ofo_12_baselines/formal/analysis/dataset_summary.csv"
+    method_summary: "rebuttal/artifacts/ofo_12_baselines/formal/analysis/method_macro_summary.json"
+    domain_summary: "rebuttal/artifacts/ofo_12_baselines/formal/analysis/domain_summary.csv"
+    timing_summary: "rebuttal/artifacts/ofo_12_baselines/formal/analysis/timing_resource_summary.csv"
+  outer_loop:
+    cycle: 9
+    last_direction: conclude
+    last_reflection: "At the original eight-baseline scope, all 288 runs and 576 independently recomputed metrics passed and RECAP led the four-method full-graph unsupervised subset. The later three-baseline extension revises expanded-group leadership because GUIDE is higher."
+
+three_baseline_extension:
+  status: complete
+  classification: confirmatory_user_revised_scope
+  protocol: "rebuttal/THREE_BASELINE_EXTENSION_PROTOCOL.md"
+  upstream_manifest: "rebuttal/new_baselines/upstream_manifest.json"
+  methods:
+    ofo_unsupervised: [DiffGAD, GUIDE]
+    ofa_source_supervised_target_zero_shot: [OWLEYE]
+  datasets: [pubmed, cora, citeseer, ACM, Flickr, BlogCatalog, Facebook, weibo, Reddit, questions, YelpChi, Amazon]
+  settings: [A, B, C]
+  seeds: [0, 1, 2]
+  planned_training_runs: 81
+  completed_training_runs: 81
+  planned_final_evaluations: 126
+  completed_final_evaluations: 126
+  current_stage: completed_and_independently_audited
+  quality_gates:
+    protocol_committed_before_formal_results: true
+    upstream_archives_verified: true
+    raw_dataset_identity_verified: true
+    supervision_taxonomy_verified: true
+    diffgad_label_selection_removed: true
+    diffgad_exact_structure_forward_and_gradient_verified: true
+    guide_exact_orca_motifs_verified: true
+    owleye_tau1_normalization_verified: true
+    owleye_chunked_inference_verified: true
+    label_access_guards_verified: true
+    method_smokes_passed: true
+    formal_runs_complete: true
+    raw_metric_recomputation_passed: true
+    artifact_validation_passed: true
+    final_report_generated: true
+  results:
+    DiffGAD_OFO: {auroc_mean: 0.5503, auroc_std: 0.0217, auprc_mean: 0.1061, auprc_std: 0.0024}
+    GUIDE_OFO: {auroc_mean: 0.7519, auroc_std: 0.0014, auprc_mean: 0.3309, auprc_std: 0.0009}
+    OWLEYE_A: {auroc_mean: 0.7604, auroc_std: 0.0005, auprc_mean: 0.3567, auprc_std: 0.0052}
+    OWLEYE_B: {auroc_mean: 0.7179, auroc_std: 0.0020, auprc_mean: 0.2866, auprc_std: 0.0022}
+    OWLEYE_C_dataset: {auroc_mean: 0.6033, auroc_std: 0.0068, auprc_mean: 0.1801, auprc_std: 0.0009}
+    OWLEYE_C_domain: {auroc_mean: 0.5624, auroc_std: 0.0107, auprc_mean: 0.1234, auprc_std: 0.0025}
+  timing:
+    DiffGAD_total_seconds: 695.81
+    GUIDE_total_seconds: 237.11
+    OWLEYE_total_seconds: 206.09
+  audit:
+    score_files_verified: 126
+    label_events_checked: 288
+    maximum_metric_difference: 0.0
+    maximum_reload_abs_difference: 0.000008791685104370117
+    problems: 0
+  artifacts:
+    report: "rebuttal/reports/THREE_BASELINE_EXTENSION_REPORT.md"
+    gates: "rebuttal/gate_reports/THREE_BASELINE_EXTENSION_GATES.md"
+    global_audit: "rebuttal/artifacts/three_baseline_extension/formal/analysis/global_audit.json"
+  outer_loop:
+    cycle: 5
+    last_direction: conclude
+    last_reflection: "All 81 runs and 126 evaluations pass independent audit. GUIDE exceeds RECAP on the expanded full-graph unsupervised OFO macro; OWLEYE is source-label supervised and target-label-free. Preserve all supervision strata, weak results, and high-variance cells."
+
+protocol_completion:
+  status: complete
+  successful_training_runs: 450
+  final_evaluations: 720
+  recap: {training_runs: 45, final_evaluations: 90}
+  ofa_baselines: {training_runs: 45, final_evaluations: 270}
+  ofo_baselines: {training_runs: 360, final_evaluations: 360}
+  source_artifact_audits_passed: 6
+  missing_experiments: 0
+  reruns_required: 0
+  report: "rebuttal/reports/RECAP_EXPERIMENT_PROTOCOL_COMPLETION_REPORT.md"
+
+large_target_inference:
+  status: complete
+  classification: confirmatory_target_inference_scalability
+  claim_scope: "target-side full-graph inference only; not large-target training"
+  protocol: "rebuttal/LARGE_TARGET_INFERENCE_PROTOCOL.md"
+  checkpoints: "accepted RECAP-OFA Setting-A seeds 0/1/2"
+  targets: [tfinance, dgraphfin, tsocial]
+  planned_training_runs: 0
+  planned_primary_evaluations: 9
+  completed_primary_evaluations: 9
+  seeds: [0, 1, 2]
+  primary_knn:
+    tfinance: exact
+    dgraphfin: faiss_ivfpq
+    tsocial: faiss_ivfpq
+  label_isolation: "freeze and hash full scores/query mask before label access"
+  current_stage: completed_and_independently_audited
+  results:
+    tfinance: {auroc_mean: 0.2556559088, auroc_std: 0.0200247884, auprc_mean: 0.0280124715, auprc_std: 0.0007657334}
+    dgraphfin: {auroc_mean: 0.3674655592, auroc_std: 0.0065073943, auprc_mean: 0.0090436456, auprc_std: 0.0000885418}
+    tsocial: {auroc_mean: 0.4378514881, auroc_std: 0.0051522914, auprc_mean: 0.0259523938, auprc_std: 0.0001160948}
+  scalability:
+    formal_accounted_seconds: 1420.2915887497
+    tfinance: {setup_seconds: 9.7069, warm_inference_seconds: 0.1589, peak_gpu_allocated_gib: 0.9840, peak_gpu_reserved_gib: 1.2539, peak_rss_gib: 3.1785}
+    dgraphfin: {setup_seconds: 503.7273, warm_inference_seconds: 6.6075, peak_gpu_allocated_gib: 48.0972, peak_gpu_reserved_gib: 65.7539, peak_rss_gib: 4.9684}
+    tsocial: {setup_seconds: 841.6924, warm_inference_seconds: 10.5141, peak_gpu_allocated_gib: 75.1327, peak_gpu_reserved_gib: 80.6641, peak_rss_gib: 9.2554}
+  ann_fidelity_recall_at_64:
+    tfinance_all_nodes: 0.893414
+    dgraphfin_512_queries: 0.573547
+    tsocial_512_queries: 0.433777
+  quality_gates:
+    protocol_committed_before_results: true
+    canonical_data_and_checkpoint_preflight_passed: true
+    native_chunked_numerical_equivalence_passed: true
+    fixed_seed_faiss_determinism_passed: true
+    tfinance_end_to_end_smoke_passed: true
+    unit_regression_tests: "31 passed, 1 skipped"
+    formal_manifest_complete: true
+    score_and_mask_hashes_verified: true
+    label_isolation_verified: true
+    independent_metrics_recomputed: true
+    final_report_generated: true
+  interpretation:
+    computational_target_inference_scalability: supported
+    million_node_training_scalability: not_tested
+    unadapted_checkpoint_predictive_effectiveness: not_supported
+  environment:
+    python: "3.12.3"
+    torch: "2.11.0+cu128"
+    faiss: "1.14.3"
+    gpu: "NVIDIA RTX PRO 6000 Blackwell Server Edition"
+    gpu_memory_mib: 97887
+    host_memory: "approximately 1 TiB"
+    free_data_disk_gib: 66
+  artifacts:
+    report: "rebuttal/reports/LARGE_TARGET_INFERENCE_REPORT.md"
+    per_run_results: "rebuttal/reports/LARGE_TARGET_INFERENCE_RESULTS.csv"
+    aggregate_results: "rebuttal/reports/LARGE_TARGET_INFERENCE_AGGREGATE.csv"
+    summary: "rebuttal/reports/LARGE_TARGET_INFERENCE_SUMMARY.json"
+    audit: "rebuttal/reports/LARGE_TARGET_INFERENCE_AUDIT.json"
+    independent_audit_sha256: "a060c0f654da78973a8e2e477070a436b0f741393dee28b1a3058b95e9c9dac6"
+  outer_loop:
+    cycle: 4
+    last_direction: conclude
+    last_reflection: "All nine full-node score vectors and independent audits pass. The adapter establishes target-side computational scalability on the recorded hardware, but every target mean is below its random-ranking AUROC/AUPRC reference, so predictive effectiveness of the unadapted checkpoints is not supported."
+
+large_target_optimization:
+  status: complete
+  classification: mixed_confirmatory_and_exploratory
+  started: "2026-07-27"
+  protocol: "rebuttal/LARGE_TARGET_OPTIMIZATION_PROTOCOL.md"
+  infrastructure_commit: "b7a379e"
+  targets: [tfinance, dgraphfin, tsocial]
+  server_mode:
+    gpu_available: true
+    gpu_name: "NVIDIA RTX PRO 6000 Blackwell Server Edition"
+    gpu_memory_mib: 97887
+    cgroup_memory_bytes: 128849018880
+    migrated_endpoint: "connect.westd.seetacloud.com:37791"
+  source_scan:
+    tfinance:
+      status: completed_and_independently_audited
+      checkpoint_records: 45
+      predeclared_ensemble_records: 9
+      score_hashes: 162
+      metric_rows: 162
+      maximum_metric_difference: 0.0
+      best_full_three_seed_family: "OFA-A"
+      best_full_auroc_mean: 0.2556559088
+      best_full_auprc_mean: 0.0280124715
+      best_context_only_family: "OFO-BlogCatalog"
+      best_context_only_auroc_mean: 0.370733
+      conclusion: "Changing among the 15 accepted small-graph source families does not fix T-Finance; every full-score family remains below random."
+    dgraphfin:
+      status: completed_and_independently_audited
+      checkpoint_records: 45
+      predeclared_ensemble_records: 9
+      score_hashes: 162
+      metric_rows: 162
+      maximum_metric_difference: 0.0
+      best_full_three_seed_family: "OFA-C"
+      best_full_auroc_mean: 0.3838852144
+      best_full_auprc_mean: 0.0093059130
+    tsocial:
+      status: completed_and_independently_audited
+      checkpoint_records: 45
+      predeclared_ensemble_records: 9
+      score_hashes: 162
+      metric_rows: 162
+      maximum_metric_difference: 0.0
+      best_full_three_seed_family: "OFO-Facebook"
+      best_full_auroc_mean: 0.4845054129
+      best_full_auprc_mean: 0.0293199602
+      predeclared_domain_ensemble_adhesion_auroc_mean: 0.502224
+      oracle_ofo_weibo_adhesion_auroc_mean: 0.512550
+  target_adaptation:
+    method: "label-free deterministic sample training with full-graph propagated features and algebraically exact chunked fixed-candidate loss"
+    tfinance:
+      status: completed_and_independently_audited
+      planned_sample_nodes: 39357
+      full_auroc_mean: 0.3116017167
+      full_auprc_mean: 0.0301882220
+      adhesion_auroc_mean: 0.3134008000
+      adhesion_auprc_mean: 0.0303296726
+    dgraphfin:
+      status: completed_and_independently_audited
+      planned_sample_nodes: 131072
+      full_auroc_mean: 0.3711288853
+      full_auprc_mean: 0.0090826768
+      context_auroc_mean: 0.4203842352
+      context_auprc_mean: 0.0102149776
+    tsocial:
+      status: completed_and_independently_audited
+      planned_sample_nodes: 131072
+      full_auroc_mean: 0.4215621793
+      full_auprc_mean: 0.0248546019
+      adhesion_auroc_mean: 0.4992567642
+      adhesion_auprc_mean: 0.0305951715
+  shared_schema:
+    status: completed_exploratory_and_independently_audited
+    source: tfinance
+    target: tsocial
+    strict_pointwise_gate_passed: false
+    source_alignment_max_abs_difference: 0.0003175735
+    source_alignment_mean_abs_difference: 0.0000000867
+    target_feature_sha256: "6f6e36ec03a1aa85e245693887fef4f781f0b36d485712a57235986c74709966"
+    classification: "exploratory_shared_schema_strict_max_gate_failed"
+    results:
+      full_auroc_mean: 0.4548856
+      full_auroc_std: 0.0125410
+      full_auprc_mean: 0.02656137
+      full_auprc_std: 0.0009470
+      adhesion_auroc_mean: 0.5187004
+      adhesion_auroc_std: 0.0045802
+      adhesion_auprc_mean: 0.03045465
+      adhesion_auprc_std: 0.0003845
+  robust_core_adaptation:
+    classification: exploratory
+    protocol: "rebuttal/LARGE_TARGET_ROBUST_CORE_PROTOCOL.md"
+    method: "fixed label-free feature-norm/robust-degree rank proxy; retain lowest 90 percent"
+    status: completed_and_independently_audited
+    tfinance: {full_auroc_mean: 0.3211384, full_auprc_mean: 0.03056597, adhesion_auroc_mean: 0.3221107}
+    dgraphfin: {full_auroc_mean: 0.3700244, full_auprc_mean: 0.00904816, context_auroc_mean: 0.4127838}
+    tsocial: {full_auroc_mean: 0.4190737, full_auprc_mean: 0.02461841, adhesion_auroc_mean: 0.4863630}
+    conclusion: "A small T-Finance gain does not transfer; the fixed robust-core hypothesis degrades DGraph-Fin and T-Social."
+  milestone_diagnostic:
+    classification: oracle_target_metric_diagnostic
+    protocol: "rebuttal/LARGE_TARGET_MILESTONE_DIAGNOSTIC_PROTOCOL.md"
+    epochs: [25, 50, 75, 100]
+    status: completed_and_independently_audited
+    tfinance: {best_full_epoch: 100, full_auroc_mean: 0.3116017, full_auprc_mean: 0.03018822}
+    dgraphfin: {best_full_epoch: 75, full_auroc_mean: 0.3715896, full_auprc_mean: 0.00909192}
+    tsocial: {best_full_epoch: 25, full_auroc_mean: 0.4316411, full_auprc_mean: 0.02528405}
+    conclusion: "Earlier stopping yields only negligible DGraph-Fin and small T-Social gains; epoch-100 overfitting is not the main failure mechanism."
+  quality_gates:
+    checkpoint_inventory_45_passed: true
+    chunked_loss_algebra_exact_passed: true
+    chunked_loss_residual_and_cluster_gradients_passed: true
+    built_in_unit_tests: "5 passed with OMP_NUM_THREADS=1 and MKL_NUM_THREADS=1"
+    tfinance_source_scan_hash_audit_passed: true
+    score_inversion_forbidden: true
+    global_score_freeze_before_labels: true
+    target_adaptation_smoke: "passed after migration to 120-GiB cgroup/GPU instance"
+    final_combined_independent_audit_passed: true
+    final_score_hashes: 657
+    final_metric_rows: 657
+    final_maximum_metric_difference: 0.0
+    independent_audit_sha256: "d70681e4388052bd661f451707acd99607b9da0b617f734e79705fac61c9bf88"
+  artifacts:
+    report: "rebuttal/reports/LARGE_TARGET_OPTIMIZATION_REPORT.md"
+    audit: "rebuttal/reports/LARGE_TARGET_OPTIMIZATION_AUDIT.json"
+  next_action: "Concluded. Preserve computational scalability and the negative predictive result; do not claim approximately 0.70 AUROC."
+  outer_loop:
+    cycle: 4
+    last_direction: conclude
+    last_reflection: "Exhausted the highest-value label-free hypotheses under the locked evidence strata. Confirmatory target adaptation is not a general fix; robust-core and milestone diagnostics rule out two simple failure explanations; shared coordinates help only T-Social adhesion and fail the strict coordinate gate. No primary full score approaches 0.70 AUROC."
+
+tfinance_source_transfer:
+  status: complete
+  classification: confirmatory_user_requested_single_source_transfer
+  protocol: "rebuttal/TFINANCE_SOURCE_TRANSFER_PROTOCOL.md"
+  source: tfinance
+  source_training: "label-free full-graph uniform adaptation, epoch 100"
+  seeds: [0, 1, 2]
+  targets: [tfinance, dgraphfin, tsocial]
+  planned_score_vectors: 27
+  planned_primary_evaluations: 9
+  score_routes: [full, adhesion_only, context_only]
+  label_policy: "freeze and hash all 27 scores globally before reading any target label"
+  reporting_boundary: "T-Finance same-graph unsupervised; DGraph-Fin/T-Social cross-graph zero-shot; no combined macro"
+  current_stage: completed_and_independently_audited
+  completed_score_vectors: 27
+  completed_primary_evaluations: 9
+  results:
+    tfinance:
+      evidence: same_graph_unsupervised
+      full_auroc_mean: 0.3116016429
+      full_auroc_std: 0.0186243039
+      full_auprc_mean: 0.0301882078
+      full_auprc_std: 0.0007717296
+    dgraphfin:
+      evidence: cross_graph_target_label_free
+      full_auroc_mean: 0.3648534809
+      full_auroc_std: 0.0013158244
+      full_auprc_mean: 0.0090235280
+      full_auprc_std: 0.0000163845
+    tsocial:
+      evidence: cross_graph_target_label_free
+      full_auroc_mean: 0.4384924553
+      full_auroc_std: 0.0031581535
+      full_auprc_mean: 0.0257034192
+      full_auprc_std: 0.0002754115
+  comparison_to_original_setting_a:
+    tfinance: {auroc_delta: 0.0559457341, auprc_delta: 0.0021757363}
+    dgraphfin: {auroc_delta: -0.0026120783, auprc_delta: -0.0000201176}
+    tsocial: {auroc_delta: 0.0006409672, auprc_delta: -0.0002489746}
+  quality_gates:
+    checkpoint_hashes_passed: true
+    candidate_hashes_passed: true
+    unit_tests: "5 passed"
+    global_score_freeze_before_labels: true
+    score_hashes: 27
+    metric_rows: 27
+    maximum_metric_difference: 0.0
+    independent_audit_sha256: "95a083a823edbae120f5c12ff0f66927f9ba7640e5dd410a3b36b64ed60f97d2"
+  artifacts:
+    report: "rebuttal/reports/TFINANCE_SOURCE_TRANSFER_REPORT.md"
+    results: "rebuttal/reports/TFINANCE_SOURCE_TRANSFER_RESULTS.json"
+    global_freeze: "rebuttal/reports/TFINANCE_SOURCE_TRANSFER_GLOBAL_FREEZE.json"
+    audit: "rebuttal/reports/TFINANCE_SOURCE_TRANSFER_AUDIT.json"
+  conclusion: "T-Finance training improves only its same-graph score; it does not improve DGraph-Fin and is effectively unchanged on T-Social. Broad financial-domain matching is insufficient."
+  next_action: "Concluded; report the negative transfer result without combining same-graph and cross-graph strata."

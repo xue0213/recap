@@ -1,0 +1,27 @@
+{
+  "run_id": "comm__gain2_hard_assign",
+  "stage": "community_profile",
+  "rank": 1,
+  "selection_score": 0.9662850195486635,
+  "AUROC_mean": 0.7313242585689302,
+  "AUROC_std": 0.0010637063593993527,
+  "AUPRC_mean": 0.2349607609797333,
+  "AUPRC_std": 0.0007636205636711073,
+  "overrides": {
+    "assignment_entropy_lower": 0.35,
+    "assignment_entropy_upper": 0.8,
+    "beta": 0.02,
+    "cluster_init_gain": 2.0,
+    "knn_k": 20,
+    "lambda_E": 0.1,
+    "lambda_H": 0.35,
+    "lambda_bal": 0.0,
+    "lambda_usage_entropy": 0.5,
+    "num_clusters": 28,
+    "num_hops": 4,
+    "tau_c": 0.3,
+    "tau_s": 0.05,
+    "usage_entropy_lower": 0.65,
+    "usage_entropy_upper": 0.9
+  }
+}

@@ -1,0 +1,56 @@
+session:
+  id: "2026-07-26_004"
+  timestamp: "2026-07-26T21:16+08:00"
+  summary: >
+    Audited every experiment in the user-revised protocol, corrected
+    aggregation-only reporting gaps, and generated one consolidated result
+    report.
+
+events_logged:
+  - type: question
+    id: N21
+    provenance: user
+    summary: "User requested a complete protocol audit and consolidated tables."
+  - type: experiment
+    id: N22
+    provenance: ai-executed
+    summary: "Verified all 369 training runs and 594 final evaluations."
+  - type: experiment
+    id: N23
+    provenance: ai-executed
+    summary: "Recomputed stability and timing with protocol-correct aggregation."
+  - type: claim
+    id: C10
+    provenance: ai-suggested
+    summary: "The full revised experiment protocol is complete."
+  - type: heuristic
+    id: H09
+    provenance: ai-suggested
+    summary: "Form macros within seeds or seed pairs before uncertainty."
+
+ai_actions:
+  - action: "Locked and implemented a protocol-wide completion auditor."
+    provenance: ai-executed
+    files_changed:
+      - "rebuttal/EXPERIMENT_PROTOCOL_COMPLETION_AUDIT.md"
+      - "rebuttal/protocol_completion_audit.py"
+  - action: "Generated consolidated machine-readable results and the final report."
+    provenance: ai-executed
+    files_changed:
+      - "rebuttal/artifacts/protocol_completion/analysis/"
+      - "rebuttal/reports/RECAP_EXPERIMENT_PROTOCOL_COMPLETION_REPORT.md"
+  - action: "Repeated generation for deterministic hashes and ran 28 tests."
+    provenance: ai-executed
+    files_changed: []
+
+claims_touched:
+  - id: C10
+    action: created
+    provenance: ai-suggested
+
+open_threads:
+  - "Investigate weak YelpChi OFO and low Setting-C community identity stability only as separately labeled follow-up work."
+
+ai_suggestions_pending:
+  - "Preserve supervised-test versus unsupervised-full-graph interpretation strata."
+  - "Use the corrected seed-first and seed-pair-first consolidated tables in future paper text."

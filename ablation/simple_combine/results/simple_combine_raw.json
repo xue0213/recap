@@ -1,0 +1,2536 @@
+{
+  "config": {
+    "device": "cuda:0",
+    "trials": 5,
+    "epochs": 100,
+    "dims": 32,
+    "model": "recap_auprc_best",
+    "json_dir": "params",
+    "output_dir": "ablation/simple_combine/results",
+    "train_datasets": null,
+    "test_datasets": null,
+    "methods": [
+      "Residual + KMeans",
+      "Residual + Spectral Clustering",
+      "Residual + GMM",
+      "Residual + LOF"
+    ],
+    "no_recap": false,
+    "save_recap_checkpoints": false,
+    "no_diagnostics": true,
+    "diagnostics_interval": 10,
+    "num_clusters": null,
+    "knn_k": 64,
+    "kmeans_n_init": 20,
+    "gmm_covariance": "diag",
+    "gmm_max_iter": 300,
+    "gmm_reg_covar": 1e-06,
+    "gmm_reg_covar_retries": [
+      1e-06,
+      1e-05,
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "gmm_min_std": 1e-08,
+    "gmm_no_component_reduction": false,
+    "spectral_neighbors": null,
+    "spectral_n_init": 5,
+    "spectral_max_nodes": 3000,
+    "spectral_large_mode": "sample",
+    "lof_neighbors": 20,
+    "n_jobs": -1,
+    "continue_on_error": true,
+    "quick": false,
+    "project_root": "/autodl-fs/data/recap",
+    "model_config": {
+      "model": "recap_auprc_best",
+      "lr": 5e-05,
+      "dropout_rate": 0.2,
+      "h_feats": 256,
+      "num_hops": 4,
+      "weight_decay": 5e-05,
+      "dims": 32,
+      "num_layers": 2,
+      "activation": "ELU",
+      "num_views": 1,
+      "num_clusters": 36,
+      "knn_k": 64,
+      "cluster_lr_multiplier": 10.0,
+      "tau_s": 0.3,
+      "tau_c": 0.3,
+      "cluster_init_gain": 1.5,
+      "sim_block_size": 256,
+      "knn_cache_enabled": true,
+      "knn_cache_dir": "./knn_cache",
+      "knn_search_dtype": "auto",
+      "lambda_H": 0.1,
+      "lambda_bal": 0.0,
+      "lambda_E": 0.1,
+      "lambda_usage_entropy": 0.1,
+      "assignment_entropy_lower": 0.45,
+      "assignment_entropy_upper": 0.85,
+      "usage_entropy_lower": 0.65,
+      "usage_entropy_upper": 0.9,
+      "gamma": 0.1,
+      "tau_e": 1.0,
+      "beta": 0.02,
+      "eps": 1e-08,
+      "lambda_ortho": 0.1,
+      "lambda_min_usage": 0.0,
+      "lambda_diversity": 0.1,
+      "min_cluster_ratio": 0.1
+    }
+  },
+  "records": [
+    {
+      "method": "Residual + KMeans",
+      "trial": 0,
+      "dataset": "Facebook",
+      "AUROC": 0.4714015151515152,
+      "AUPRC": 0.02116991722402728,
+      "seconds": 0.30012843711301684,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 0,
+      "dataset": "Facebook",
+      "AUROC": 0.4821969696969697,
+      "AUPRC": 0.023399648114865904,
+      "seconds": 0.2614287110045552,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 0,
+      "dataset": "Facebook",
+      "AUROC": 0.48071969696969696,
+      "AUPRC": 0.02260109858739528,
+      "seconds": 0.22556855529546738,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 0,
+      "dataset": "Facebook",
+      "AUROC": 0.44681818181818184,
+      "AUPRC": 0.020930390424606513,
+      "seconds": 0.019058840814977884,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 0,
+      "dataset": "cora",
+      "AUROC": 0.7178003648683868,
+      "AUPRC": 0.2401365017416162,
+      "seconds": 0.6846846137195826,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 0,
+      "dataset": "cora",
+      "AUROC": 0.4857571019025281,
+      "AUPRC": 0.05582052194876949,
+      "seconds": 2.6037633270025253,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 0,
+      "dataset": "cora",
+      "AUROC": 0.7290826166275737,
+      "AUPRC": 0.27005498516925025,
+      "seconds": 0.9999974137172103,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 0,
+      "dataset": "cora",
+      "AUROC": 0.7526374771957259,
+      "AUPRC": 0.24983055786491426,
+      "seconds": 0.06286186119541526,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 0,
+      "dataset": "citeseer",
+      "AUROC": 0.8315769593956562,
+      "AUPRC": 0.3574669532547761,
+      "seconds": 0.8205649987794459,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 0,
+      "dataset": "citeseer",
+      "AUROC": 0.47405099150141644,
+      "AUPRC": 0.04219522760358793,
+      "seconds": 3.91691411472857,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 0,
+      "dataset": "citeseer",
+      "AUROC": 0.8542251600041968,
+      "AUPRC": 0.394574219793768,
+      "seconds": 1.282796097919345,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 0,
+      "dataset": "citeseer",
+      "AUROC": 0.4738957087399013,
+      "AUPRC": 0.03963793136393485,
+      "seconds": 0.07106257975101471,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 0,
+      "dataset": "ACM",
+      "AUROC": 0.7602448047290438,
+      "AUPRC": 0.2277115075836828,
+      "seconds": 3.4915983672253788,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 0,
+      "dataset": "ACM",
+      "AUROC": 0.40029894969064916,
+      "AUPRC": 0.06681681328351151,
+      "seconds": 3.4125172891654074,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 0,
+      "dataset": "ACM",
+      "AUROC": 0.7269045970499989,
+      "AUPRC": 0.19504790838292285,
+      "seconds": 9.60356126120314,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 0,
+      "dataset": "ACM",
+      "AUROC": 0.7654554428001192,
+      "AUPRC": 0.3360536991533101,
+      "seconds": 0.3682677890174091,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 0,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.5537819989106754,
+      "AUPRC": 0.13373322305738494,
+      "seconds": 0.985330075956881,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 0,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.5191346677559913,
+      "AUPRC": 0.183601847734838,
+      "seconds": 2.7142379200085998,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 0,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.5017977260348584,
+      "AUPRC": 0.11191627339324386,
+      "seconds": 0.9588506789878011,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 0,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.7039777369281046,
+      "AUPRC": 0.3179224526962296,
+      "seconds": 0.13923626532778144,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 0,
+      "dataset": "weibo",
+      "AUROC": 0.7528062021523312,
+      "AUPRC": 0.2668060061757136,
+      "seconds": 1.4997401349246502,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 0,
+      "dataset": "weibo",
+      "AUROC": 0.6324520995959106,
+      "AUPRC": 0.19399611801854058,
+      "seconds": 1.493771937675774,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 0,
+      "dataset": "weibo",
+      "AUROC": 0.8117378230529695,
+      "AUPRC": 0.28980902855600216,
+      "seconds": 3.7496776902116835,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 0,
+      "dataset": "weibo",
+      "AUROC": 0.5758633750914842,
+      "AUPRC": 0.14550736308185996,
+      "seconds": 0.1974427937529981,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 0,
+      "dataset": "Reddit",
+      "AUROC": 0.5703432258037955,
+      "AUPRC": 0.03905173175297923,
+      "seconds": 2.356277505401522,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 0,
+      "dataset": "Reddit",
+      "AUROC": 0.525943804056829,
+      "AUPRC": 0.03310770658325206,
+      "seconds": 1.4630127754062414,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 0,
+      "dataset": "Reddit",
+      "AUROC": 0.5730310782700168,
+      "AUPRC": 0.04267943463402996,
+      "seconds": 4.019963390659541,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 0,
+      "dataset": "Reddit",
+      "AUROC": 0.5517765738559226,
+      "AUPRC": 0.03862963827927322,
+      "seconds": 0.28767153806984425,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 0,
+      "dataset": "Amazon",
+      "AUROC": 0.7510452335759229,
+      "AUPRC": 0.134635831063255,
+      "seconds": 2.0929105482064188,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 0,
+      "dataset": "Amazon",
+      "AUROC": 0.5934280981495335,
+      "AUPRC": 0.08282516287697156,
+      "seconds": 0.8099974989891052,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 0,
+      "dataset": "Amazon",
+      "AUROC": 0.6477653311144026,
+      "AUPRC": 0.10213514908310294,
+      "seconds": 5.532635964918882,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 0,
+      "dataset": "Amazon",
+      "AUROC": 0.44312430478625003,
+      "AUPRC": 0.06162404777117144,
+      "seconds": 0.2597548267804086,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 1,
+      "dataset": "Facebook",
+      "AUROC": 0.47564393939393934,
+      "AUPRC": 0.023972619133682545,
+      "seconds": 0.2985302801243961,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 1,
+      "dataset": "Facebook",
+      "AUROC": 0.474280303030303,
+      "AUPRC": 0.022650680064013134,
+      "seconds": 0.2531618596985936,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 1,
+      "dataset": "Facebook",
+      "AUROC": 0.4808333333333334,
+      "AUPRC": 0.024433220975256655,
+      "seconds": 0.236301199067384,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 1,
+      "dataset": "Facebook",
+      "AUROC": 0.44681818181818184,
+      "AUPRC": 0.020930390424606513,
+      "seconds": 0.016869662329554558,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 1,
+      "dataset": "cora",
+      "AUROC": 0.7081678394579098,
+      "AUPRC": 0.24497844273300726,
+      "seconds": 0.6517244610004127,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 1,
+      "dataset": "cora",
+      "AUROC": 0.4897419859265051,
+      "AUPRC": 0.05586605222166084,
+      "seconds": 2.6041146055795252,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 1,
+      "dataset": "cora",
+      "AUROC": 0.7349700286682304,
+      "AUPRC": 0.2825772674463597,
+      "seconds": 0.8320283447392285,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 1,
+      "dataset": "cora",
+      "AUROC": 0.7526374771957259,
+      "AUPRC": 0.24983055786491426,
+      "seconds": 0.03989301901310682,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 1,
+      "dataset": "citeseer",
+      "AUROC": 0.8124226209212045,
+      "AUPRC": 0.324910075177217,
+      "seconds": 0.7730414750985801,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 1,
+      "dataset": "citeseer",
+      "AUROC": 0.5062008183821215,
+      "AUPRC": 0.049378326206807314,
+      "seconds": 3.7415791018866003,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 1,
+      "dataset": "citeseer",
+      "AUROC": 0.8134340572867486,
+      "AUPRC": 0.34426221080791136,
+      "seconds": 1.5067494688555598,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 1,
+      "dataset": "citeseer",
+      "AUROC": 0.4738957087399013,
+      "AUPRC": 0.03963793136393485,
+      "seconds": 0.05016944697126746,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 1,
+      "dataset": "ACM",
+      "AUROC": 0.763159706549786,
+      "AUPRC": 0.2349708040489399,
+      "seconds": 3.492272477596998,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 1,
+      "dataset": "ACM",
+      "AUROC": 0.39375619626847436,
+      "AUPRC": 0.06202348059474597,
+      "seconds": 3.497577819041908,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 1,
+      "dataset": "ACM",
+      "AUROC": 0.7277009457180786,
+      "AUPRC": 0.19767271674048068,
+      "seconds": 7.8915690700523555,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 1,
+      "dataset": "ACM",
+      "AUROC": 0.7654554428001192,
+      "AUPRC": 0.3360536991533101,
+      "seconds": 0.3775906558148563,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 1,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.5521323529411765,
+      "AUPRC": 0.13321119690013628,
+      "seconds": 1.0143451169133186,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 1,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.5038636982570806,
+      "AUPRC": 0.17447798375193382,
+      "seconds": 2.6803747238591313,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 1,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.4915982434640523,
+      "AUPRC": 0.1208057254503826,
+      "seconds": 1.344639603048563,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 1,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.7039777369281046,
+      "AUPRC": 0.3179224526962296,
+      "seconds": 0.08819891512393951,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 1,
+      "dataset": "weibo",
+      "AUROC": 0.757438648290553,
+      "AUPRC": 0.27494371869000833,
+      "seconds": 1.5409734570421278,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 1,
+      "dataset": "weibo",
+      "AUROC": 0.6665896783242609,
+      "AUPRC": 0.20238142365101972,
+      "seconds": 2.013006268069148,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 1,
+      "dataset": "weibo",
+      "AUROC": 0.8199698690759992,
+      "AUPRC": 0.3016300754508809,
+      "seconds": 3.4120185752399266,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 1,
+      "dataset": "weibo",
+      "AUROC": 0.5758633750914842,
+      "AUPRC": 0.14550736308185996,
+      "seconds": 0.26059677079319954,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 1,
+      "dataset": "Reddit",
+      "AUROC": 0.573669621747584,
+      "AUPRC": 0.03982194975942112,
+      "seconds": 2.1722246687859297,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 1,
+      "dataset": "Reddit",
+      "AUROC": 0.5199707270981229,
+      "AUPRC": 0.03266496580549054,
+      "seconds": 1.3771264008246362,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 1,
+      "dataset": "Reddit",
+      "AUROC": 0.5539450227317876,
+      "AUPRC": 0.03877647788942144,
+      "seconds": 3.9920977489091456,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 1,
+      "dataset": "Reddit",
+      "AUROC": 0.5517765738559226,
+      "AUPRC": 0.03862963827927322,
+      "seconds": 0.254474728833884,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 1,
+      "dataset": "Amazon",
+      "AUROC": 0.7708464957441981,
+      "AUPRC": 0.14572561416606977,
+      "seconds": 2.029488098807633,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 1,
+      "dataset": "Amazon",
+      "AUROC": 0.5944813938203929,
+      "AUPRC": 0.08605341682030401,
+      "seconds": 0.7865536161698401,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 1,
+      "dataset": "Amazon",
+      "AUROC": 0.6398027065323256,
+      "AUPRC": 0.09766556473305518,
+      "seconds": 3.989446063991636,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 1,
+      "dataset": "Amazon",
+      "AUROC": 0.44312430478625003,
+      "AUPRC": 0.06162404777117144,
+      "seconds": 0.2974454811774194,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 2,
+      "dataset": "Facebook",
+      "AUROC": 0.45022727272727275,
+      "AUPRC": 0.020139536384333367,
+      "seconds": 0.2962657720781863,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 2,
+      "dataset": "Facebook",
+      "AUROC": 0.43079545454545454,
+      "AUPRC": 0.019506466252780953,
+      "seconds": 0.2499067266471684,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 2,
+      "dataset": "Facebook",
+      "AUROC": 0.5081060606060606,
+      "AUPRC": 0.022898789454609658,
+      "seconds": 0.29950824473053217,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 2,
+      "dataset": "Facebook",
+      "AUROC": 0.44681818181818184,
+      "AUPRC": 0.020930390424606513,
+      "seconds": 0.01784758921712637,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 2,
+      "dataset": "cora",
+      "AUROC": 0.7219859265050821,
+      "AUPRC": 0.25869790363198747,
+      "seconds": 0.6352341929450631,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 2,
+      "dataset": "cora",
+      "AUROC": 0.48938754235079496,
+      "AUPRC": 0.05528286284732425,
+      "seconds": 2.609737227205187,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 2,
+      "dataset": "cora",
+      "AUROC": 0.7064529580401354,
+      "AUPRC": 0.25640860014081457,
+      "seconds": 0.8634098558686674,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 2,
+      "dataset": "cora",
+      "AUROC": 0.7526374771957259,
+      "AUPRC": 0.24983055786491426,
+      "seconds": 0.04236554494127631,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 2,
+      "dataset": "citeseer",
+      "AUROC": 0.8581324100304272,
+      "AUPRC": 0.4127203946315749,
+      "seconds": 0.8511139899492264,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 2,
+      "dataset": "citeseer",
+      "AUROC": 0.4993977546952051,
+      "AUPRC": 0.047080563522998276,
+      "seconds": 3.6871675848960876,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 2,
+      "dataset": "citeseer",
+      "AUROC": 0.8525737068513273,
+      "AUPRC": 0.3901197312138096,
+      "seconds": 1.4756690617650747,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 2,
+      "dataset": "citeseer",
+      "AUROC": 0.4738957087399013,
+      "AUPRC": 0.03963793136393485,
+      "seconds": 0.07329704891890287,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 2,
+      "dataset": "ACM",
+      "AUROC": 0.7648026962617794,
+      "AUPRC": 0.24224499024705648,
+      "seconds": 3.400385235901922,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 2,
+      "dataset": "ACM",
+      "AUROC": 0.4081022809859288,
+      "AUPRC": 0.05898929334493315,
+      "seconds": 3.449609071947634,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 2,
+      "dataset": "ACM",
+      "AUROC": 0.7261373483729678,
+      "AUPRC": 0.19711597520491458,
+      "seconds": 7.2573147509247065,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 2,
+      "dataset": "ACM",
+      "AUROC": 0.7654554428001192,
+      "AUPRC": 0.3360536991533101,
+      "seconds": 0.3606530041433871,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 2,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.5537826797385621,
+      "AUPRC": 0.1337332600844542,
+      "seconds": 0.9585429732687771,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 2,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.543760552832244,
+      "AUPRC": 0.20797248127858603,
+      "seconds": 2.7297911662608385,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 2,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.5052685866013071,
+      "AUPRC": 0.11466374098960191,
+      "seconds": 1.072721231263131,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 2,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.7039777369281046,
+      "AUPRC": 0.3179224526962296,
+      "seconds": 0.10802076198160648,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 2,
+      "dataset": "weibo",
+      "AUROC": 0.7563234127918245,
+      "AUPRC": 0.27401476009751274,
+      "seconds": 1.4680983377620578,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 2,
+      "dataset": "weibo",
+      "AUROC": 0.6496861260179427,
+      "AUPRC": 0.19662402023151168,
+      "seconds": 1.5051290271803737,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 2,
+      "dataset": "weibo",
+      "AUROC": 0.8124353038069028,
+      "AUPRC": 0.30283334006812873,
+      "seconds": 4.724343018606305,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 2,
+      "dataset": "weibo",
+      "AUROC": 0.5758633750914842,
+      "AUPRC": 0.14550736308185996,
+      "seconds": 0.2023316673003137,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 2,
+      "dataset": "Reddit",
+      "AUROC": 0.5719548308007745,
+      "AUPRC": 0.039553351322497945,
+      "seconds": 2.268985188100487,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 2,
+      "dataset": "Reddit",
+      "AUROC": 0.5235427364810967,
+      "AUPRC": 0.03305820926345586,
+      "seconds": 1.3706182786263525,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 2,
+      "dataset": "Reddit",
+      "AUROC": 0.5548065353503226,
+      "AUPRC": 0.03848188763593301,
+      "seconds": 3.5087716011330485,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 2,
+      "dataset": "Reddit",
+      "AUROC": 0.5517765738559226,
+      "AUPRC": 0.03862963827927322,
+      "seconds": 0.23778382409363985,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 2,
+      "dataset": "Amazon",
+      "AUROC": 0.7477069963692562,
+      "AUPRC": 0.13091015639034956,
+      "seconds": 2.0739392917603254,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 2,
+      "dataset": "Amazon",
+      "AUROC": 0.6748172553964181,
+      "AUPRC": 0.11515006205061092,
+      "seconds": 0.7638188637793064,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 2,
+      "dataset": "Amazon",
+      "AUROC": 0.6417049067348091,
+      "AUPRC": 0.09964714253189129,
+      "seconds": 6.378311933018267,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 2,
+      "dataset": "Amazon",
+      "AUROC": 0.44312430478625003,
+      "AUPRC": 0.06162404777117144,
+      "seconds": 0.251291124150157,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 3,
+      "dataset": "Facebook",
+      "AUROC": 0.5057575757575757,
+      "AUPRC": 0.022955170886183207,
+      "seconds": 0.2921447861008346,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 3,
+      "dataset": "Facebook",
+      "AUROC": 0.4699621212121212,
+      "AUPRC": 0.026259793078584795,
+      "seconds": 0.2524366988800466,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 3,
+      "dataset": "Facebook",
+      "AUROC": 0.4924242424242424,
+      "AUPRC": 0.021919047188533436,
+      "seconds": 0.2677537598647177,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 3,
+      "dataset": "Facebook",
+      "AUROC": 0.44681818181818184,
+      "AUPRC": 0.020930390424606513,
+      "seconds": 0.014488006010651588,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 3,
+      "dataset": "cora",
+      "AUROC": 0.7331925983841543,
+      "AUPRC": 0.25702550271440905,
+      "seconds": 0.6501049348153174,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 3,
+      "dataset": "cora",
+      "AUROC": 0.4852905916080271,
+      "AUPRC": 0.053730572195985205,
+      "seconds": 2.5836660559289157,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 3,
+      "dataset": "cora",
+      "AUROC": 0.6917591868647381,
+      "AUPRC": 0.20914731955484125,
+      "seconds": 0.8907668190076947,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 3,
+      "dataset": "cora",
+      "AUROC": 0.7526374771957259,
+      "AUPRC": 0.24983055786491426,
+      "seconds": 0.055584671441465616,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 3,
+      "dataset": "citeseer",
+      "AUROC": 0.8557066414856784,
+      "AUPRC": 0.3700198831713293,
+      "seconds": 0.8036159221082926,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 3,
+      "dataset": "citeseer",
+      "AUROC": 0.4794753960759627,
+      "AUPRC": 0.047205848895146806,
+      "seconds": 3.7827577772550285,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 3,
+      "dataset": "citeseer",
+      "AUROC": 0.8233448746196622,
+      "AUPRC": 0.34568761187276775,
+      "seconds": 0.9185384470038116,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 3,
+      "dataset": "citeseer",
+      "AUROC": 0.4738957087399013,
+      "AUPRC": 0.03963793136393485,
+      "seconds": 0.067680558655411,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 3,
+      "dataset": "ACM",
+      "AUROC": 0.762307582898863,
+      "AUPRC": 0.23390141950873097,
+      "seconds": 3.5575048932805657,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 3,
+      "dataset": "ACM",
+      "AUROC": 0.4135239994268567,
+      "AUPRC": 0.06610227213448072,
+      "seconds": 3.410032940097153,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 3,
+      "dataset": "ACM",
+      "AUROC": 0.7297761124710437,
+      "AUPRC": 0.19938278810062718,
+      "seconds": 8.774762449786067,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 3,
+      "dataset": "ACM",
+      "AUROC": 0.7654554428001192,
+      "AUPRC": 0.3360536991533101,
+      "seconds": 0.35382917197421193,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 3,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.544953022875817,
+      "AUPRC": 0.12570669252619598,
+      "seconds": 0.9661474437452853,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 3,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.49155501089324616,
+      "AUPRC": 0.14411543469254634,
+      "seconds": 2.831766237039119,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 3,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.493744212962963,
+      "AUPRC": 0.11372782338596475,
+      "seconds": 1.1710768709890544,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 3,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.7039777369281046,
+      "AUPRC": 0.3179224526962296,
+      "seconds": 0.12952190591022372,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 3,
+      "dataset": "weibo",
+      "AUROC": 0.759211316338628,
+      "AUPRC": 0.2700483287379187,
+      "seconds": 1.4759391881525517,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 3,
+      "dataset": "weibo",
+      "AUROC": 0.6320270842033372,
+      "AUPRC": 0.2056863743107539,
+      "seconds": 1.495481365825981,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 3,
+      "dataset": "weibo",
+      "AUROC": 0.8156883797230131,
+      "AUPRC": 0.30445338312354425,
+      "seconds": 3.646508418954909,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 3,
+      "dataset": "weibo",
+      "AUROC": 0.5758633750914842,
+      "AUPRC": 0.14550736308185996,
+      "seconds": 0.1837750682607293,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 3,
+      "dataset": "Reddit",
+      "AUROC": 0.5712062823517544,
+      "AUPRC": 0.039944421694835336,
+      "seconds": 2.189869733992964,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 3,
+      "dataset": "Reddit",
+      "AUROC": 0.5297564091083602,
+      "AUPRC": 0.03354454359632196,
+      "seconds": 1.3391276369802654,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 3,
+      "dataset": "Reddit",
+      "AUROC": 0.5570050908499538,
+      "AUPRC": 0.03987120356529371,
+      "seconds": 3.603417070582509,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 3,
+      "dataset": "Reddit",
+      "AUROC": 0.5517765738559226,
+      "AUPRC": 0.03862963827927322,
+      "seconds": 0.24778390722349286,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 3,
+      "dataset": "Amazon",
+      "AUROC": 0.7455510483524334,
+      "AUPRC": 0.1304288846203238,
+      "seconds": 2.0712445680983365,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 3,
+      "dataset": "Amazon",
+      "AUROC": 0.6206637473555949,
+      "AUPRC": 0.09012086936212156,
+      "seconds": 0.8486789311282337,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 3,
+      "dataset": "Amazon",
+      "AUROC": 0.6360325227180752,
+      "AUPRC": 0.10026509277592824,
+      "seconds": 5.386040830053389,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 3,
+      "dataset": "Amazon",
+      "AUROC": 0.44312430478625003,
+      "AUPRC": 0.06162404777117144,
+      "seconds": 0.22381565114483237,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 4,
+      "dataset": "Facebook",
+      "AUROC": 0.4401136363636363,
+      "AUPRC": 0.01976887869209078,
+      "seconds": 0.29703250294551253,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 4,
+      "dataset": "Facebook",
+      "AUROC": 0.5243181818181818,
+      "AUPRC": 0.035500240267983596,
+      "seconds": 0.25813136994838715,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 4,
+      "dataset": "Facebook",
+      "AUROC": 0.4890530303030303,
+      "AUPRC": 0.03465218252071908,
+      "seconds": 0.2505639339797199,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 4,
+      "dataset": "Facebook",
+      "AUROC": 0.44681818181818184,
+      "AUPRC": 0.020930390424606513,
+      "seconds": 0.01766478130593896,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 4,
+      "dataset": "cora",
+      "AUROC": 0.7326270523846757,
+      "AUPRC": 0.2640897396719357,
+      "seconds": 0.6677314350381494,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 4,
+      "dataset": "cora",
+      "AUROC": 0.501722700026062,
+      "AUPRC": 0.05794149021687258,
+      "seconds": 2.6056072781793773,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 4,
+      "dataset": "cora",
+      "AUROC": 0.7188767266093303,
+      "AUPRC": 0.2377158410733053,
+      "seconds": 1.0090842870995402,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 4,
+      "dataset": "cora",
+      "AUROC": 0.7526374771957259,
+      "AUPRC": 0.24983055786491426,
+      "seconds": 0.03747805114835501,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 4,
+      "dataset": "citeseer",
+      "AUROC": 0.841024026859721,
+      "AUPRC": 0.3806808562063919,
+      "seconds": 0.801087899133563,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 4,
+      "dataset": "citeseer",
+      "AUROC": 0.478707375931172,
+      "AUPRC": 0.04371311425478701,
+      "seconds": 3.858714503236115,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 4,
+      "dataset": "citeseer",
+      "AUROC": 0.8608162837058022,
+      "AUPRC": 0.3989496372422031,
+      "seconds": 1.1374481818638742,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 4,
+      "dataset": "citeseer",
+      "AUROC": 0.4738957087399013,
+      "AUPRC": 0.03963793136393485,
+      "seconds": 0.04879983700811863,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 4,
+      "dataset": "ACM",
+      "AUROC": 0.7635893531567534,
+      "AUPRC": 0.2380696668929484,
+      "seconds": 4.389743136707693,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 4,
+      "dataset": "ACM",
+      "AUROC": 0.403886208913264,
+      "AUPRC": 0.04057980559960184,
+      "seconds": 3.453158014919609,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 4,
+      "dataset": "ACM",
+      "AUROC": 0.7324611138190269,
+      "AUPRC": 0.20731040862272238,
+      "seconds": 8.116935328114778,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 4,
+      "dataset": "ACM",
+      "AUROC": 0.7654554428001192,
+      "AUPRC": 0.3360536991533101,
+      "seconds": 0.33101095678284764,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 4,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.547786628540305,
+      "AUPRC": 0.1310374438235109,
+      "seconds": 1.3524156683124602,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 4,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.5225020424836602,
+      "AUPRC": 0.18385510005632588,
+      "seconds": 2.6750462469644845,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 4,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.5052726715686275,
+      "AUPRC": 0.11467696964058159,
+      "seconds": 1.1264935890212655,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 4,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.7039777369281046,
+      "AUPRC": 0.3179224526962296,
+      "seconds": 0.13979368517175317,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 4,
+      "dataset": "weibo",
+      "AUROC": 0.7565565177994398,
+      "AUPRC": 0.27812607639032505,
+      "seconds": 2.051158501300961,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 4,
+      "dataset": "weibo",
+      "AUROC": 0.6982194293100276,
+      "AUPRC": 0.23499942924136252,
+      "seconds": 1.508162060752511,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 4,
+      "dataset": "weibo",
+      "AUROC": 0.8152073427007409,
+      "AUPRC": 0.3045141190629543,
+      "seconds": 2.9824479962699115,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 4,
+      "dataset": "weibo",
+      "AUROC": 0.5758633750914842,
+      "AUPRC": 0.14550736308185996,
+      "seconds": 0.20065757911652327,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 4,
+      "dataset": "Reddit",
+      "AUROC": 0.5638314461369341,
+      "AUPRC": 0.03835998246696481,
+      "seconds": 2.835564617998898,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 4,
+      "dataset": "Reddit",
+      "AUROC": 0.5192208920412498,
+      "AUPRC": 0.032670449121022904,
+      "seconds": 1.476186302024871,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 4,
+      "dataset": "Reddit",
+      "AUROC": 0.5599743244536806,
+      "AUPRC": 0.03890511582468448,
+      "seconds": 4.2746895626187325,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 4,
+      "dataset": "Reddit",
+      "AUROC": 0.5517765738559226,
+      "AUPRC": 0.03862963827927322,
+      "seconds": 0.301499234046787,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 4,
+      "dataset": "Amazon",
+      "AUROC": 0.7561951332804339,
+      "AUPRC": 0.13580367240865057,
+      "seconds": 2.773688410874456,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "trial": 4,
+      "dataset": "Amazon",
+      "AUROC": 0.6056828609551304,
+      "AUPRC": 0.08635691484851937,
+      "seconds": 0.7904531890526414,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + GMM",
+      "trial": 4,
+      "dataset": "Amazon",
+      "AUROC": 0.6399229188023648,
+      "AUPRC": 0.09844458136333054,
+      "seconds": 5.15041321888566,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + LOF",
+      "trial": 4,
+      "dataset": "Amazon",
+      "AUROC": 0.44312430478625003,
+      "AUPRC": 0.06162404777117144,
+      "seconds": 0.22371073393151164,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 0,
+      "dataset": "Facebook",
+      "AUROC": 0.5975757575757576,
+      "AUPRC": 0.07193663404451656,
+      "seconds": 0.02035143773537129,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 0,
+      "dataset": "cora",
+      "AUROC": 0.8236565024758926,
+      "AUPRC": 0.4264546338284441,
+      "seconds": 0.02035143773537129,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 0,
+      "dataset": "citeseer",
+      "AUROC": 0.9049606547056973,
+      "AUPRC": 0.46223989938363774,
+      "seconds": 0.02035143773537129,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 0,
+      "dataset": "ACM",
+      "AUROC": 0.7827949255098218,
+      "AUPRC": 0.37302268123524207,
+      "seconds": 0.02035143773537129,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 0,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.7213235294117647,
+      "AUPRC": 0.3295906102708372,
+      "seconds": 0.02035143773537129,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 0,
+      "dataset": "weibo",
+      "AUROC": 0.8053487587196559,
+      "AUPRC": 0.34762428555942393,
+      "seconds": 0.02035143773537129,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 0,
+      "dataset": "Reddit",
+      "AUROC": 0.592425662371455,
+      "AUPRC": 0.04778088639625737,
+      "seconds": 0.02035143773537129,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 0,
+      "dataset": "Amazon",
+      "AUROC": 0.7176690689438565,
+      "AUPRC": 0.12963637074316292,
+      "seconds": 0.02035143773537129,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 1,
+      "dataset": "Facebook",
+      "AUROC": 0.5978787878787879,
+      "AUPRC": 0.05570629921813879,
+      "seconds": 0.017364432103931904,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 1,
+      "dataset": "cora",
+      "AUROC": 0.8267748240813135,
+      "AUPRC": 0.41964591210631097,
+      "seconds": 0.017364432103931904,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 1,
+      "dataset": "citeseer",
+      "AUROC": 0.9038652817123072,
+      "AUPRC": 0.47440599976060227,
+      "seconds": 0.017364432103931904,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 1,
+      "dataset": "ACM",
+      "AUROC": 0.7849215971382478,
+      "AUPRC": 0.371832276987371,
+      "seconds": 0.017364432103931904,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 1,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.7276899509803922,
+      "AUPRC": 0.3296691016866973,
+      "seconds": 0.017364432103931904,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 1,
+      "dataset": "weibo",
+      "AUROC": 0.8094073843997874,
+      "AUPRC": 0.34159629867698543,
+      "seconds": 0.017364432103931904,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 1,
+      "dataset": "Reddit",
+      "AUROC": 0.5924021174477406,
+      "AUPRC": 0.04690314782076967,
+      "seconds": 0.017364432103931904,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 1,
+      "dataset": "Amazon",
+      "AUROC": 0.7408853285466444,
+      "AUPRC": 0.138031459797517,
+      "seconds": 0.017364432103931904,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 2,
+      "dataset": "Facebook",
+      "AUROC": 0.5882954545454545,
+      "AUPRC": 0.0359486890595052,
+      "seconds": 0.018478744837921113,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 2,
+      "dataset": "cora",
+      "AUROC": 0.8236226218399791,
+      "AUPRC": 0.4078167418337719,
+      "seconds": 0.018478744837921113,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 2,
+      "dataset": "citeseer",
+      "AUROC": 0.9044465428601407,
+      "AUPRC": 0.4616605309437097,
+      "seconds": 0.018478744837921113,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 2,
+      "dataset": "ACM",
+      "AUROC": 0.7827888102943117,
+      "AUPRC": 0.37216761508218765,
+      "seconds": 0.018478744837921113,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 2,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.7340774782135076,
+      "AUPRC": 0.3244748764392793,
+      "seconds": 0.018478744837921113,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 2,
+      "dataset": "weibo",
+      "AUROC": 0.8218662738477885,
+      "AUPRC": 0.338513012669022,
+      "seconds": 0.018478744837921113,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 2,
+      "dataset": "Reddit",
+      "AUROC": 0.5917700070094396,
+      "AUPRC": 0.046264853750301115,
+      "seconds": 0.018478744837921113,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 2,
+      "dataset": "Amazon",
+      "AUROC": 0.7298117194245617,
+      "AUPRC": 0.13523935735660858,
+      "seconds": 0.018478744837921113,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 3,
+      "dataset": "Facebook",
+      "AUROC": 0.5721969696969698,
+      "AUPRC": 0.0362145610620266,
+      "seconds": 0.017159752373117954,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 3,
+      "dataset": "cora",
+      "AUROC": 0.8191373468855877,
+      "AUPRC": 0.3944594676478725,
+      "seconds": 0.017159752373117954,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 3,
+      "dataset": "citeseer",
+      "AUROC": 0.896447382226419,
+      "AUPRC": 0.42423543832660143,
+      "seconds": 0.017159752373117954,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 3,
+      "dataset": "ACM",
+      "AUROC": 0.7765458605842624,
+      "AUPRC": 0.37635014144943096,
+      "seconds": 0.017159752373117954,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 3,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.7292980664488017,
+      "AUPRC": 0.3294168422109517,
+      "seconds": 0.017159752373117954,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 3,
+      "dataset": "weibo",
+      "AUROC": 0.8178317993750034,
+      "AUPRC": 0.33749855567270826,
+      "seconds": 0.017159752373117954,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 3,
+      "dataset": "Reddit",
+      "AUROC": 0.596913479224371,
+      "AUPRC": 0.045973791022697594,
+      "seconds": 0.017159752373117954,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 3,
+      "dataset": "Amazon",
+      "AUROC": 0.7231824820745186,
+      "AUPRC": 0.12761021330080574,
+      "seconds": 0.017159752373117954,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 4,
+      "dataset": "Facebook",
+      "AUROC": 0.5855303030303031,
+      "AUPRC": 0.0415821428397654,
+      "seconds": 0.017324174114037305,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 4,
+      "dataset": "cora",
+      "AUROC": 0.8151368256450353,
+      "AUPRC": 0.37974484886291626,
+      "seconds": 0.017324174114037305,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 4,
+      "dataset": "citeseer",
+      "AUROC": 0.8987829188962334,
+      "AUPRC": 0.4516264881060626,
+      "seconds": 0.017324174114037305,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 4,
+      "dataset": "ACM",
+      "AUROC": 0.775313064767829,
+      "AUPRC": 0.36633969109306425,
+      "seconds": 0.017324174114037305,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 4,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.7369270833333333,
+      "AUPRC": 0.32658118500349687,
+      "seconds": 0.017324174114037305,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 4,
+      "dataset": "weibo",
+      "AUROC": 0.8174553921086083,
+      "AUPRC": 0.34622527429000827,
+      "seconds": 0.017324174114037305,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 4,
+      "dataset": "Reddit",
+      "AUROC": 0.5955427272175202,
+      "AUPRC": 0.04754987642830308,
+      "seconds": 0.017324174114037305,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "RECAP",
+      "trial": 4,
+      "dataset": "Amazon",
+      "AUROC": 0.7270663679225216,
+      "AUPRC": 0.12776325138337907,
+      "seconds": 0.017324174114037305,
+      "status": "ok",
+      "error": ""
+    }
+  ],
+  "summary": [
+    {
+      "method": "RECAP",
+      "dataset": "ACM",
+      "n": 5,
+      "AUROC_mean": 0.7804728516588946,
+      "AUROC_std": 0.003810293620487568,
+      "AUPRC_mean": 0.3719424811694592,
+      "AUPRC_std": 0.0032264032050045455,
+      "seconds_mean": 0.018135708232875913
+    },
+    {
+      "method": "RECAP",
+      "dataset": "Amazon",
+      "n": 5,
+      "AUROC_mean": 0.7277229933824205,
+      "AUROC_std": 0.0077425918141486565,
+      "AUPRC_mean": 0.13165613051629466,
+      "AUPRC_std": 0.004221083311956714,
+      "seconds_mean": 0.018135708232875913
+    },
+    {
+      "method": "RECAP",
+      "dataset": "BlogCatalog",
+      "n": 5,
+      "AUROC_mean": 0.7298632216775599,
+      "AUROC_std": 0.005396794411369152,
+      "AUPRC_mean": 0.3279465231222525,
+      "AUPRC_std": 0.002085599029312449,
+      "seconds_mean": 0.018135708232875913
+    },
+    {
+      "method": "RECAP",
+      "dataset": "Facebook",
+      "n": 5,
+      "AUROC_mean": 0.5882954545454545,
+      "AUROC_std": 0.009431559568074305,
+      "AUPRC_mean": 0.04827766524479051,
+      "AUPRC_std": 0.01383678838426126,
+      "seconds_mean": 0.018135708232875913
+    },
+    {
+      "method": "RECAP",
+      "dataset": "Reddit",
+      "n": 5,
+      "AUROC_mean": 0.5938107986541054,
+      "AUROC_std": 0.0020344050270038826,
+      "AUPRC_mean": 0.04689451108366576,
+      "AUPRC_std": 0.0007013463211681324,
+      "seconds_mean": 0.018135708232875913
+    },
+    {
+      "method": "RECAP",
+      "dataset": "citeseer",
+      "n": 5,
+      "AUROC_mean": 0.9017005560801594,
+      "AUROC_std": 0.0034340403544860587,
+      "AUPRC_mean": 0.4548336713041228,
+      "AUPRC_std": 0.016917873114108212,
+      "seconds_mean": 0.018135708232875913
+    },
+    {
+      "method": "RECAP",
+      "dataset": "cora",
+      "n": 5,
+      "AUROC_mean": 0.8216656241855617,
+      "AUROC_std": 0.004072216994449096,
+      "AUPRC_mean": 0.4056243208558632,
+      "AUPRC_std": 0.016909847351554572,
+      "seconds_mean": 0.018135708232875913
+    },
+    {
+      "method": "RECAP",
+      "dataset": "weibo",
+      "n": 5,
+      "AUROC_mean": 0.8143819216901687,
+      "AUROC_std": 0.006061476027797999,
+      "AUPRC_mean": 0.3422914853736296,
+      "AUPRC_std": 0.004040934760692414,
+      "seconds_mean": 0.018135708232875913
+    },
+    {
+      "method": "Residual + GMM",
+      "dataset": "ACM",
+      "n": 5,
+      "AUROC_mean": 0.7285960234862232,
+      "AUROC_std": 0.0022820475107040894,
+      "AUPRC_mean": 0.19930595941033355,
+      "AUPRC_std": 0.004234893642867795,
+      "seconds_mean": 8.32882857201621
+    },
+    {
+      "method": "Residual + GMM",
+      "dataset": "Amazon",
+      "n": 5,
+      "AUROC_mean": 0.6410456771803955,
+      "AUROC_std": 0.003834725874654213,
+      "AUPRC_mean": 0.09963150609746163,
+      "AUPRC_std": 0.0015455497759399009,
+      "seconds_mean": 5.287369602173567
+    },
+    {
+      "method": "Residual + GMM",
+      "dataset": "BlogCatalog",
+      "n": 5,
+      "AUROC_mean": 0.4995362881263617,
+      "AUROC_std": 0.005786883962476323,
+      "AUPRC_mean": 0.11515810657195495,
+      "AUPRC_std": 0.0029975550511187363,
+      "seconds_mean": 1.134756394661963
+    },
+    {
+      "method": "Residual + GMM",
+      "dataset": "Facebook",
+      "n": 5,
+      "AUROC_mean": 0.49022727272727273,
+      "AUROC_std": 0.010044866064393613,
+      "AUPRC_mean": 0.025300867745302824,
+      "AUPRC_std": 0.004747532892888394,
+      "seconds_mean": 0.25593913858756423
+    },
+    {
+      "method": "Residual + GMM",
+      "dataset": "Reddit",
+      "n": 5,
+      "AUROC_mean": 0.5597524103311523,
+      "AUROC_std": 0.006958555345693949,
+      "AUPRC_mean": 0.03974282390987252,
+      "AUPRC_std": 0.0015405001548412824,
+      "seconds_mean": 3.8797878747805954
+    },
+    {
+      "method": "Residual + GMM",
+      "dataset": "citeseer",
+      "n": 5,
+      "AUROC_mean": 0.8408788164935472,
+      "AUROC_std": 0.018831101242255777,
+      "AUPRC_mean": 0.374718682186092,
+      "AUPRC_std": 0.024449840736178167,
+      "seconds_mean": 1.264240251481533
+    },
+    {
+      "method": "Residual + GMM",
+      "dataset": "cora",
+      "n": 5,
+      "AUROC_mean": 0.7162283033620016,
+      "AUROC_std": 0.015606375754793109,
+      "AUPRC_mean": 0.2511808026769142,
+      "AUPRC_std": 0.02575818908796522,
+      "seconds_mean": 0.9190573440864682
+    },
+    {
+      "method": "Residual + GMM",
+      "dataset": "weibo",
+      "n": 5,
+      "AUROC_mean": 0.8150077436719252,
+      "AUROC_std": 0.002913266944360914,
+      "AUPRC_mean": 0.3006479892523021,
+      "AUPRC_std": 0.005525419489843442,
+      "seconds_mean": 3.702999139856547
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "ACM",
+      "n": 5,
+      "AUROC_mean": 0.7628208287192451,
+      "AUROC_std": 0.001518722346017407,
+      "AUPRC_mean": 0.2353796776562717,
+      "AUPRC_std": 0.004806699826332314,
+      "seconds_mean": 3.6663008221425115
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "Amazon",
+      "n": 5,
+      "AUROC_mean": 0.7542689814644489,
+      "AUROC_std": 0.009033034895287336,
+      "AUPRC_mean": 0.13550083172972974,
+      "AUPRC_std": 0.005516974932922994,
+      "seconds_mean": 2.208254183549434
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "BlogCatalog",
+      "n": 5,
+      "AUROC_mean": 0.5504873366013072,
+      "AUROC_std": 0.003531079645841253,
+      "AUPRC_mean": 0.13148436327833646,
+      "AUPRC_std": 0.0030554239583733,
+      "seconds_mean": 1.0553562556393445
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "Facebook",
+      "n": 5,
+      "AUROC_mean": 0.4686287878787878,
+      "AUROC_std": 0.02274720590516986,
+      "AUPRC_mean": 0.021601224464063436,
+      "AUPRC_std": 0.001620909164565831,
+      "seconds_mean": 0.2968203556723893
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "Reddit",
+      "n": 5,
+      "AUROC_mean": 0.5702010813681684,
+      "AUROC_std": 0.0033677677019938604,
+      "AUPRC_mean": 0.03934628739933969,
+      "AUPRC_std": 0.0005807676356254447,
+      "seconds_mean": 2.3645843428559603
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "citeseer",
+      "n": 5,
+      "AUROC_mean": 0.8397725317385374,
+      "AUROC_std": 0.01677934594737677,
+      "AUPRC_mean": 0.36915963248825784,
+      "AUPRC_std": 0.028725461512699318,
+      "seconds_mean": 0.8098848570138216
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "cora",
+      "n": 5,
+      "AUROC_mean": 0.7227547563200418,
+      "AUROC_std": 0.009426834187854323,
+      "AUPRC_mean": 0.2529856180985911,
+      "AUPRC_std": 0.00896065888347595,
+      "seconds_mean": 0.6578959275037051
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "weibo",
+      "n": 5,
+      "AUROC_mean": 0.7564672194745553,
+      "AUROC_std": 0.002093105058539333,
+      "AUPRC_mean": 0.2727877780182957,
+      "AUPRC_std": 0.003948092487466371,
+      "seconds_mean": 1.6071819238364697
+    },
+    {
+      "method": "Residual + LOF",
+      "dataset": "ACM",
+      "n": 5,
+      "AUROC_mean": 0.7654554428001192,
+      "AUROC_std": 0.0,
+      "AUPRC_mean": 0.3360536991533101,
+      "AUPRC_std": 0.0,
+      "seconds_mean": 0.35827031554654243
+    },
+    {
+      "method": "Residual + LOF",
+      "dataset": "Amazon",
+      "n": 5,
+      "AUROC_mean": 0.44312430478625,
+      "AUROC_std": 5.551115123125783e-17,
+      "AUPRC_mean": 0.06162404777117144,
+      "AUPRC_std": 0.0,
+      "seconds_mean": 0.2512035634368658
+    },
+    {
+      "method": "Residual + LOF",
+      "dataset": "BlogCatalog",
+      "n": 5,
+      "AUROC_mean": 0.7039777369281046,
+      "AUROC_std": 0.0,
+      "AUPRC_mean": 0.3179224526962296,
+      "AUPRC_std": 0.0,
+      "seconds_mean": 0.12095430670306087
+    },
+    {
+      "method": "Residual + LOF",
+      "dataset": "Facebook",
+      "n": 5,
+      "AUROC_mean": 0.4468181818181819,
+      "AUROC_std": 5.551115123125783e-17,
+      "AUPRC_mean": 0.020930390424606513,
+      "AUPRC_std": 0.0,
+      "seconds_mean": 0.01718577593564987
+    },
+    {
+      "method": "Residual + LOF",
+      "dataset": "Reddit",
+      "n": 5,
+      "AUROC_mean": 0.5517765738559226,
+      "AUROC_std": 0.0,
+      "AUPRC_mean": 0.03862963827927322,
+      "AUPRC_std": 0.0,
+      "seconds_mean": 0.2658426464535296
+    },
+    {
+      "method": "Residual + LOF",
+      "dataset": "citeseer",
+      "n": 5,
+      "AUROC_mean": 0.4738957087399013,
+      "AUROC_std": 0.0,
+      "AUPRC_mean": 0.03963793136393485,
+      "AUPRC_std": 0.0,
+      "seconds_mean": 0.062201894260942935
+    },
+    {
+      "method": "Residual + LOF",
+      "dataset": "cora",
+      "n": 5,
+      "AUROC_mean": 0.7526374771957259,
+      "AUROC_std": 0.0,
+      "AUPRC_mean": 0.24983055786491426,
+      "AUPRC_std": 0.0,
+      "seconds_mean": 0.0476366295479238
+    },
+    {
+      "method": "Residual + LOF",
+      "dataset": "weibo",
+      "n": 5,
+      "AUROC_mean": 0.5758633750914842,
+      "AUROC_std": 0.0,
+      "AUPRC_mean": 0.14550736308185996,
+      "AUPRC_std": 0.0,
+      "seconds_mean": 0.20896077584475278
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "dataset": "ACM",
+      "n": 5,
+      "AUROC_mean": 0.40391352705703465,
+      "AUROC_std": 0.006725237887461519,
+      "AUPRC_mean": 0.05890233299145463,
+      "AUPRC_std": 0.009591061009569695,
+      "seconds_mean": 3.4445790270343424
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "dataset": "Amazon",
+      "n": 5,
+      "AUROC_mean": 0.617814671135414,
+      "AUROC_std": 0.030145445554003898,
+      "AUPRC_mean": 0.09210128519170549,
+      "AUPRC_std": 0.011754055548831308,
+      "seconds_mean": 0.7999004198238253
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "dataset": "BlogCatalog",
+      "n": 5,
+      "AUROC_mean": 0.5161631944444445,
+      "AUROC_std": 0.01770573433801942,
+      "AUPRC_mean": 0.178804569502846,
+      "AUPRC_std": 0.020597787419095633,
+      "seconds_mean": 2.7262432588264347
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "dataset": "Facebook",
+      "n": 5,
+      "AUROC_mean": 0.47631060606060605,
+      "AUROC_std": 0.02985106703182443,
+      "AUPRC_mean": 0.025463365555645677,
+      "AUPRC_std": 0.005459449229458085,
+      "seconds_mean": 0.2550130732357502
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "dataset": "Reddit",
+      "n": 5,
+      "AUROC_mean": 0.5236869137571316,
+      "AUROC_std": 0.0038912339426382704,
+      "AUPRC_mean": 0.03300917487390866,
+      "AUPRC_std": 0.0003261740506208733,
+      "seconds_mean": 1.4052142787724733
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "dataset": "citeseer",
+      "n": 5,
+      "AUROC_mean": 0.4875664673171755,
+      "AUROC_std": 0.012758020388567238,
+      "AUPRC_mean": 0.04591461609666547,
+      "AUPRC_std": 0.0025963229533390764,
+      "seconds_mean": 3.79742661640048
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "dataset": "cora",
+      "n": 5,
+      "AUROC_mean": 0.49037998436278346,
+      "AUROC_std": 0.00595520180385755,
+      "AUPRC_mean": 0.05572829988612247,
+      "AUPRC_std": 0.00135018681184386,
+      "seconds_mean": 2.601377698779106
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "dataset": "weibo",
+      "n": 5,
+      "AUROC_mean": 0.6557948834902958,
+      "AUROC_std": 0.024752698617561138,
+      "AUPRC_mean": 0.20673747309063767,
+      "AUPRC_std": 0.01472034101940564,
+      "seconds_mean": 1.6031101319007575
+    }
+  ],
+  "average": [
+    {
+      "method": "RECAP",
+      "dataset": "Average",
+      "n": 5,
+      "AUROC_mean": 0.7447391777342907,
+      "AUROC_std": 0.002439377239162858,
+      "AUPRC_mean": 0.2661833485837598,
+      "AUPRC_std": 0.005849169393577552
+    },
+    {
+      "method": "Residual + GMM",
+      "dataset": "Average",
+      "n": 5,
+      "AUROC_mean": 0.6614090669223599,
+      "AUROC_std": 0.004268777307605575,
+      "AUPRC_mean": 0.17571084223127922,
+      "AUPRC_std": 0.004594343028292406
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "Average",
+      "n": 5,
+      "AUROC_mean": 0.6781751904456365,
+      "AUROC_std": 0.0034125647059319794,
+      "AUPRC_mean": 0.1822806766416107,
+      "AUPRC_std": 0.00447542935995906
+    },
+    {
+      "method": "Residual + LOF",
+      "dataset": "Average",
+      "n": 5,
+      "AUROC_mean": 0.5891936001519613,
+      "AUROC_std": 0.0,
+      "AUPRC_mean": 0.1512670100794125,
+      "AUPRC_std": 0.0
+    },
+    {
+      "method": "Residual + Spectral Clustering",
+      "dataset": "Average",
+      "n": 5,
+      "AUROC_mean": 0.5214537809531106,
+      "AUROC_std": 0.006955272009705365,
+      "AUPRC_mean": 0.08708263964862326,
+      "AUPRC_std": 0.0030459291301199675
+    }
+  ]
+}

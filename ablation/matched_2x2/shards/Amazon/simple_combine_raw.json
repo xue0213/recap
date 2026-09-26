@@ -1,0 +1,237 @@
+{
+  "config": {
+    "device": "cpu",
+    "trials": 5,
+    "epochs": 100,
+    "dims": 32,
+    "model": "recap_auprc_best",
+    "json_dir": "params",
+    "output_dir": "ablation/matched_2x2/shards/Amazon",
+    "train_datasets": null,
+    "test_datasets": [
+      "Amazon"
+    ],
+    "methods": [
+      "Non-residual + KMeans",
+      "Residual + KMeans"
+    ],
+    "no_recap": true,
+    "save_recap_checkpoints": false,
+    "no_diagnostics": false,
+    "diagnostics_interval": 10,
+    "num_clusters": null,
+    "knn_k": 64,
+    "kmeans_n_init": 20,
+    "gmm_covariance": "diag",
+    "gmm_max_iter": 300,
+    "gmm_reg_covar": 1e-06,
+    "gmm_reg_covar_retries": [
+      1e-06,
+      1e-05,
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "gmm_min_std": 1e-08,
+    "gmm_no_component_reduction": false,
+    "spectral_neighbors": null,
+    "spectral_n_init": 5,
+    "spectral_max_nodes": 3000,
+    "spectral_large_mode": "sample",
+    "lof_neighbors": 20,
+    "n_jobs": -1,
+    "continue_on_error": true,
+    "quick": false,
+    "project_root": "/root/autodl-tmp/recap",
+    "model_config": {
+      "model": "recap_auprc_best",
+      "lr": 5e-05,
+      "dropout_rate": 0.2,
+      "h_feats": 256,
+      "num_hops": 4,
+      "weight_decay": 5e-05,
+      "dims": 32,
+      "num_layers": 2,
+      "activation": "ELU",
+      "num_views": 1,
+      "num_clusters": 36,
+      "knn_k": 64,
+      "cluster_lr_multiplier": 10.0,
+      "tau_s": 0.3,
+      "sim_block_size": 256,
+      "knn_cache_enabled": true,
+      "knn_cache_dir": "./knn_cache",
+      "knn_search_dtype": "auto",
+      "ann_large_datasets": [
+        "tsocial",
+        "dgraphfin"
+      ],
+      "ann_backend": "faiss_ivfpq",
+      "ann_nlist": 4096,
+      "ann_nprobe": 16,
+      "ann_pq_m": 16,
+      "ann_train_size": 262144,
+      "ann_query_batch_size": 4096,
+      "ann_add_batch_size": 262144,
+      "ann_rerank_factor": 32,
+      "ann_max_rerank_candidates": 256,
+      "ann_score_batch_size": 2048,
+      "ann_seed": 0,
+      "lambda_H": 0.1,
+      "lambda_bal": 0.1,
+      "lambda_E": 0.1,
+      "gamma": 0.01,
+      "tau_e": 1.0,
+      "beta": 0.02,
+      "eps": 1e-08,
+      "lambda_ortho": 0.1,
+      "lambda_min_usage": 0.1,
+      "lambda_diversity": 0.1,
+      "min_cluster_ratio": 0.01
+    }
+  },
+  "records": [
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 0,
+      "dataset": "Amazon",
+      "AUROC": 0.5339981192987173,
+      "AUPRC": 0.07990653171824297,
+      "seconds": 18.791619159281254,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 0,
+      "dataset": "Amazon",
+      "AUROC": 0.7510452335759229,
+      "AUPRC": 0.134635831063255,
+      "seconds": 19.189950179308653,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 1,
+      "dataset": "Amazon",
+      "AUROC": 0.517162496860325,
+      "AUPRC": 0.07611459935545756,
+      "seconds": 18.590661108493805,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 1,
+      "dataset": "Amazon",
+      "AUROC": 0.7708464957441981,
+      "AUPRC": 0.14572546707123168,
+      "seconds": 18.498820770531893,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 2,
+      "dataset": "Amazon",
+      "AUROC": 0.5367984293070853,
+      "AUPRC": 0.08079821855798469,
+      "seconds": 19.89026242867112,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 2,
+      "dataset": "Amazon",
+      "AUROC": 0.7477068449684124,
+      "AUPRC": 0.1309100856822353,
+      "seconds": 18.497097646817565,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 3,
+      "dataset": "Amazon",
+      "AUROC": 0.5164830098730004,
+      "AUPRC": 0.07662843165651799,
+      "seconds": 19.302591985091567,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 3,
+      "dataset": "Amazon",
+      "AUROC": 0.7455510483524332,
+      "AUPRC": 0.1304288846203238,
+      "seconds": 15.39684807881713,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 4,
+      "dataset": "Amazon",
+      "AUROC": 0.5292990913072751,
+      "AUPRC": 0.07912093953846572,
+      "seconds": 13.300900351256132,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 4,
+      "dataset": "Amazon",
+      "AUROC": 0.7561951332804338,
+      "AUPRC": 0.13580367240865057,
+      "seconds": 21.590143783017993,
+      "status": "ok",
+      "error": ""
+    }
+  ],
+  "summary": [
+    {
+      "method": "Non-residual + KMeans",
+      "dataset": "Amazon",
+      "n": 5,
+      "AUROC_mean": 0.5267482293292807,
+      "AUROC_std": 0.00845381947341633,
+      "AUPRC_mean": 0.07851374416533378,
+      "AUPRC_std": 0.0018350839606962213,
+      "seconds_mean": 17.975207006558776
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "Amazon",
+      "n": 5,
+      "AUROC_mean": 0.7542689511842801,
+      "AUROC_std": 0.00903305689228063,
+      "AUPRC_mean": 0.13550078816913927,
+      "AUPRC_std": 0.005516932177219711,
+      "seconds_mean": 18.634572091698647
+    }
+  ],
+  "average": [
+    {
+      "method": "Non-residual + KMeans",
+      "dataset": "Average",
+      "n": 5,
+      "AUROC_mean": 0.5267482293292807,
+      "AUROC_std": 0.00845381947341633,
+      "AUPRC_mean": 0.07851374416533378,
+      "AUPRC_std": 0.0018350839606962213
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "Average",
+      "n": 5,
+      "AUROC_mean": 0.7542689511842801,
+      "AUROC_std": 0.00903305689228063,
+      "AUPRC_mean": 0.13550078816913927,
+      "AUPRC_std": 0.005516932177219711
+    }
+  ]
+}

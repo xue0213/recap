@@ -1,0 +1,237 @@
+{
+  "config": {
+    "device": "cpu",
+    "trials": 5,
+    "epochs": 100,
+    "dims": 32,
+    "model": "recap_auprc_best",
+    "json_dir": "params",
+    "output_dir": "ablation/matched_2x2/shards/citeseer",
+    "train_datasets": null,
+    "test_datasets": [
+      "citeseer"
+    ],
+    "methods": [
+      "Non-residual + KMeans",
+      "Residual + KMeans"
+    ],
+    "no_recap": true,
+    "save_recap_checkpoints": false,
+    "no_diagnostics": false,
+    "diagnostics_interval": 10,
+    "num_clusters": null,
+    "knn_k": 64,
+    "kmeans_n_init": 20,
+    "gmm_covariance": "diag",
+    "gmm_max_iter": 300,
+    "gmm_reg_covar": 1e-06,
+    "gmm_reg_covar_retries": [
+      1e-06,
+      1e-05,
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "gmm_min_std": 1e-08,
+    "gmm_no_component_reduction": false,
+    "spectral_neighbors": null,
+    "spectral_n_init": 5,
+    "spectral_max_nodes": 3000,
+    "spectral_large_mode": "sample",
+    "lof_neighbors": 20,
+    "n_jobs": -1,
+    "continue_on_error": true,
+    "quick": false,
+    "project_root": "/root/autodl-tmp/recap",
+    "model_config": {
+      "model": "recap_auprc_best",
+      "lr": 5e-05,
+      "dropout_rate": 0.2,
+      "h_feats": 256,
+      "num_hops": 4,
+      "weight_decay": 5e-05,
+      "dims": 32,
+      "num_layers": 2,
+      "activation": "ELU",
+      "num_views": 1,
+      "num_clusters": 36,
+      "knn_k": 64,
+      "cluster_lr_multiplier": 10.0,
+      "tau_s": 0.3,
+      "sim_block_size": 256,
+      "knn_cache_enabled": true,
+      "knn_cache_dir": "./knn_cache",
+      "knn_search_dtype": "auto",
+      "ann_large_datasets": [
+        "tsocial",
+        "dgraphfin"
+      ],
+      "ann_backend": "faiss_ivfpq",
+      "ann_nlist": 4096,
+      "ann_nprobe": 16,
+      "ann_pq_m": 16,
+      "ann_train_size": 262144,
+      "ann_query_batch_size": 4096,
+      "ann_add_batch_size": 262144,
+      "ann_rerank_factor": 32,
+      "ann_max_rerank_candidates": 256,
+      "ann_score_batch_size": 2048,
+      "ann_seed": 0,
+      "lambda_H": 0.1,
+      "lambda_bal": 0.1,
+      "lambda_E": 0.1,
+      "gamma": 0.01,
+      "tau_e": 1.0,
+      "beta": 0.02,
+      "eps": 1e-08,
+      "lambda_ortho": 0.1,
+      "lambda_min_usage": 0.1,
+      "lambda_diversity": 0.1,
+      "min_cluster_ratio": 0.01
+    }
+  },
+  "records": [
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 0,
+      "dataset": "citeseer",
+      "AUROC": 0.33944077221697616,
+      "AUPRC": 0.041637135565323294,
+      "seconds": 7.301244203001261,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 0,
+      "dataset": "citeseer",
+      "AUROC": 0.8315769593956562,
+      "AUPRC": 0.3574669532547761,
+      "seconds": 7.617658516392112,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 1,
+      "dataset": "citeseer",
+      "AUROC": 0.3373087818696884,
+      "AUPRC": 0.04086432713723794,
+      "seconds": 7.117087444290519,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 1,
+      "dataset": "citeseer",
+      "AUROC": 0.8124226209212045,
+      "AUPRC": 0.324910075177217,
+      "seconds": 7.201103808358312,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 2,
+      "dataset": "citeseer",
+      "AUROC": 0.3267149302276781,
+      "AUPRC": 0.04003406770724912,
+      "seconds": 6.301207160577178,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 2,
+      "dataset": "citeseer",
+      "AUROC": 0.8581324100304271,
+      "AUPRC": 0.4127203946315749,
+      "seconds": 7.40193597227335,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 3,
+      "dataset": "citeseer",
+      "AUROC": 0.3344717238484944,
+      "AUPRC": 0.040502710148479094,
+      "seconds": 6.610639527440071,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 3,
+      "dataset": "citeseer",
+      "AUROC": 0.8557066414856784,
+      "AUPRC": 0.3700198831713293,
+      "seconds": 6.0133644081652164,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 4,
+      "dataset": "citeseer",
+      "AUROC": 0.33532368062113105,
+      "AUPRC": 0.040509103000274424,
+      "seconds": 5.915977619588375,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 4,
+      "dataset": "citeseer",
+      "AUROC": 0.8410240268597209,
+      "AUPRC": 0.38068085620639197,
+      "seconds": 7.2998462319374084,
+      "status": "ok",
+      "error": ""
+    }
+  ],
+  "summary": [
+    {
+      "method": "Non-residual + KMeans",
+      "dataset": "citeseer",
+      "n": 5,
+      "AUROC_mean": 0.3346519777567937,
+      "AUROC_std": 0.004323691944739456,
+      "AUPRC_mean": 0.04070946871171277,
+      "AUPRC_std": 0.0005335932836655537,
+      "seconds_mean": 6.649231190979481
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "citeseer",
+      "n": 5,
+      "AUROC_mean": 0.8397725317385374,
+      "AUROC_std": 0.016779345947376744,
+      "AUPRC_mean": 0.36915963248825784,
+      "AUPRC_std": 0.02872546151269932,
+      "seconds_mean": 7.106781787425279
+    }
+  ],
+  "average": [
+    {
+      "method": "Non-residual + KMeans",
+      "dataset": "Average",
+      "n": 5,
+      "AUROC_mean": 0.3346519777567937,
+      "AUROC_std": 0.004323691944739456,
+      "AUPRC_mean": 0.04070946871171277,
+      "AUPRC_std": 0.0005335932836655537
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "Average",
+      "n": 5,
+      "AUROC_mean": 0.8397725317385374,
+      "AUROC_std": 0.016779345947376744,
+      "AUPRC_mean": 0.36915963248825784,
+      "AUPRC_std": 0.02872546151269932
+    }
+  ]
+}

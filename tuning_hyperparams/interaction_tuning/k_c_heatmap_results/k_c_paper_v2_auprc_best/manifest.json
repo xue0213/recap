@@ -1,0 +1,47 @@
+{
+  "base_config": "/root/autodl-fs/recap/params/recap_auprc_best.json",
+  "output_dir": "/autodl-fs/data/recap/tuning_hyperparams/interaction_tuning/k_c_heatmap_results/k_c_paper_v2_auprc_best",
+  "device": "cuda:0",
+  "epochs": 100,
+  "trials": 3,
+  "train_datasets": [
+    "pubmed",
+    "Flickr",
+    "questions",
+    "YelpChi"
+  ],
+  "test_datasets": [
+    "Facebook",
+    "cora",
+    "citeseer",
+    "ACM",
+    "BlogCatalog",
+    "weibo",
+    "Reddit",
+    "Amazon"
+  ],
+  "knn_cache_dir": "/autodl-fs/data/recap/knn_cache",
+  "knn_search_dtype": "auto",
+  "k_values": [
+    16,
+    24,
+    30,
+    36,
+    48,
+    64,
+    80,
+    96
+  ],
+  "c_values": [
+    16,
+    20,
+    24,
+    28,
+    32,
+    36,
+    40,
+    48
+  ],
+  "reuse_results": [],
+  "num_jobs": 64
+}

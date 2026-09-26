@@ -1,0 +1,340 @@
+{
+  "evaluations": 108,
+  "format": "recap_ofa_adapted_analysis_v1",
+  "macros": {
+    "DiffGAD-OFA-adapted": {
+      "A": {
+        "AUPRC_mean": 0.21114885057368346,
+        "AUPRC_std": 0.00019373173649737274,
+        "AUROC_mean": 0.6693504641051765,
+        "AUROC_std": 3.5744564007435585e-05
+      },
+      "B": {
+        "AUPRC_mean": 0.18469346220571914,
+        "AUPRC_std": 2.4841019015165377e-06,
+        "AUROC_mean": 0.5960704583746184,
+        "AUROC_std": 2.709194127034225e-05
+      },
+      "C": {
+        "AUPRC_mean": 0.1798602475470078,
+        "AUPRC_std": 4.135156177387659e-06,
+        "AUROC_mean": 0.6961365562800742,
+        "AUROC_std": 6.26319585051127e-05
+      }
+    },
+    "GUIDE-OFA-adapted": {
+      "A": {
+        "AUPRC_mean": 0.277420731174556,
+        "AUPRC_std": 0.0003641278839670219,
+        "AUROC_mean": 0.6385571905526425,
+        "AUROC_std": 0.002419264908961424
+      },
+      "B": {
+        "AUPRC_mean": 0.06897541356166464,
+        "AUPRC_std": 0.0005314619581063863,
+        "AUROC_mean": 0.5066190801824644,
+        "AUROC_std": 0.002369467427558462
+      },
+      "C": {
+        "AUPRC_mean": 0.0701345654188471,
+        "AUPRC_std": 0.0003610382495292726,
+        "AUROC_mean": 0.5567671219075314,
+        "AUROC_std": 0.001402277789236212
+      }
+    }
+  },
+  "max_metric_recomputation_difference": 0.0,
+  "max_reload_score_difference": 9.5367431640625e-07,
+  "passed": true,
+  "per_dataset": {
+    "DiffGAD-OFA-adapted": {
+      "A": {
+        "ACM": {
+          "AUPRC_mean": 0.3305048184483275,
+          "AUPRC_std": 0.00017929529721227367,
+          "AUROC_mean": 0.8020282096297283,
+          "AUROC_std": 3.8532815215376876e-05
+        },
+        "Amazon": {
+          "AUPRC_mean": 0.14002297100445313,
+          "AUPRC_std": 2.980917948213393e-06,
+          "AUROC_mean": 0.7442919232343216,
+          "AUROC_std": 1.5485994937792627e-05
+        },
+        "BlogCatalog": {
+          "AUPRC_mean": 0.3397834596477837,
+          "AUPRC_std": 3.0321023616408567e-07,
+          "AUROC_mean": 0.7797156408859841,
+          "AUROC_std": 6.418906872696267e-07
+        },
+        "Facebook": {
+          "AUPRC_mean": 0.023931281430323064,
+          "AUPRC_std": 1.613041148300848e-06,
+          "AUROC_mean": 0.3986994949494949,
+          "AUROC_std": 4.724314882288011e-05
+        },
+        "Reddit": {
+          "AUPRC_mean": 0.04052285085852376,
+          "AUPRC_std": 6.568549215095774e-05,
+          "AUROC_mean": 0.5617543464186497,
+          "AUROC_std": 4.1233456637651536e-05
+        },
+        "citeseer": {
+          "AUPRC_mean": 0.31196706019843895,
+          "AUPRC_std": 0.001681100168757529,
+          "AUROC_mean": 0.8352624768299934,
+          "AUROC_std": 0.00013849896858726164
+        },
+        "cora": {
+          "AUPRC_mean": 0.31174385835823154,
+          "AUPRC_std": 0.00015469554668113276,
+          "AUROC_mean": 0.7689636000347494,
+          "AUROC_std": 3.760726404647112e-05
+        },
+        "weibo": {
+          "AUPRC_mean": 0.1907145046433861,
+          "AUPRC_std": 1.8344635180127637e-06,
+          "AUROC_mean": 0.4640880208584908,
+          "AUROC_std": 1.5804171749259315e-05
+        }
+      },
+      "B": {
+        "BlogCatalog": {
+          "AUPRC_mean": 0.3393167042989779,
+          "AUPRC_std": 5.421118391729746e-06,
+          "AUROC_mean": 0.7792271468772692,
+          "AUROC_std": 5.785924465773959e-07
+        },
+        "Facebook": {
+          "AUPRC_mean": 0.02390671472605219,
+          "AUPRC_std": 1.3662089745120067e-06,
+          "AUROC_mean": 0.398030303030303,
+          "AUROC_std": 5.3568695544425955e-05
+        },
+        "Flickr": {
+          "AUPRC_mean": 0.3276219652438581,
+          "AUPRC_std": 1.0741900428386906e-05,
+          "AUROC_mean": 0.7702308512020792,
+          "AUROC_std": 1.2817495003128486e-06
+        },
+        "Reddit": {
+          "AUPRC_mean": 0.04057703354925596,
+          "AUPRC_std": 1.8766453961362614e-05,
+          "AUROC_mean": 0.5625517859660932,
+          "AUROC_std": 0.0001372434111596771
+        },
+        "weibo": {
+          "AUPRC_mean": 0.19204489321045157,
+          "AUPRC_std": 2.9615601340174605e-07,
+          "AUROC_mean": 0.4703122047973469,
+          "AUROC_std": 5.212855210088747e-05
+        }
+      },
+      "C": {
+        "Amazon": {
+          "AUPRC_mean": 0.14249858903237372,
+          "AUPRC_std": 7.189649270730639e-06,
+          "AUROC_mean": 0.7489706130457363,
+          "AUROC_std": 2.573401176482475e-05
+        },
+        "BlogCatalog": {
+          "AUPRC_mean": 0.3397340913905304,
+          "AUPRC_std": 5.055056686887789e-06,
+          "AUROC_mean": 0.7802671114742193,
+          "AUROC_std": 2.567562749418693e-06
+        },
+        "Flickr": {
+          "AUPRC_mean": 0.32801292258971315,
+          "AUPRC_std": 2.203860916930445e-06,
+          "AUROC_mean": 0.7709059389213776,
+          "AUROC_std": 9.31011421104732e-06
+        },
+        "Reddit": {
+          "AUPRC_mean": 0.0404263288984733,
+          "AUPRC_std": 1.0518297855983593e-05,
+          "AUROC_mean": 0.5607326082354568,
+          "AUROC_std": 3.487843890781715e-05
+        },
+        "questions": {
+          "AUPRC_mean": 0.04862930582394848,
+          "AUPRC_std": 3.8768923512374645e-05,
+          "AUROC_mean": 0.6198065097235808,
+          "AUROC_std": 0.0003655154740806028
+        }
+      }
+    },
+    "GUIDE-OFA-adapted": {
+      "A": {
+        "ACM": {
+          "AUPRC_mean": 0.562383178760203,
+          "AUPRC_std": 0.0070708153516314785,
+          "AUROC_mean": 0.8902790987873352,
+          "AUROC_std": 0.0012309382662897628
+        },
+        "Amazon": {
+          "AUPRC_mean": 0.07196806648334221,
+          "AUPRC_std": 8.800436032199203e-05,
+          "AUROC_mean": 0.4900603579650899,
+          "AUROC_std": 0.003772093058204447
+        },
+        "BlogCatalog": {
+          "AUPRC_mean": 0.10822872224365437,
+          "AUPRC_std": 0.0030478867540535614,
+          "AUROC_mean": 0.6881312409222949,
+          "AUROC_std": 0.0028769462241406457
+        },
+        "Facebook": {
+          "AUPRC_mean": 0.014551019876716908,
+          "AUPRC_std": 4.346640847253144e-05,
+          "AUROC_mean": 0.23686868686868687,
+          "AUROC_std": 0.004371386449149442
+        },
+        "Reddit": {
+          "AUPRC_mean": 0.0351156987744163,
+          "AUPRC_std": 0.0008289062210708361,
+          "AUROC_mean": 0.5236298398327616,
+          "AUROC_std": 0.011194598226801652
+        },
+        "citeseer": {
+          "AUPRC_mean": 0.6840888512627744,
+          "AUPRC_std": 0.002701599125153114,
+          "AUROC_mean": 0.9484608120868744,
+          "AUROC_std": 0.002042947515906624
+        },
+        "cora": {
+          "AUPRC_mean": 0.6574885719095311,
+          "AUPRC_std": 0.00410583492013502,
+          "AUROC_mean": 0.9239379723742508,
+          "AUROC_std": 0.0038271393195869027
+        },
+        "weibo": {
+          "AUPRC_mean": 0.08554174008580946,
+          "AUPRC_std": 0.003757192772972698,
+          "AUROC_mean": 0.40708951558384676,
+          "AUROC_std": 0.016222379786620472
+        }
+      },
+      "B": {
+        "BlogCatalog": {
+          "AUPRC_mean": 0.11010689756358016,
+          "AUPRC_std": 0.0010990613785418727,
+          "AUROC_mean": 0.687885348583878,
+          "AUROC_std": 0.0011711998324728866
+        },
+        "Facebook": {
+          "AUPRC_mean": 0.01415826752791465,
+          "AUPRC_std": 6.786003410648966e-05,
+          "AUROC_mean": 0.20650252525252524,
+          "AUROC_std": 0.004209642162223053
+        },
+        "Flickr": {
+          "AUPRC_mean": 0.09751938293757778,
+          "AUPRC_std": 0.0016358441378294597,
+          "AUROC_mean": 0.6740113320337882,
+          "AUROC_std": 0.0023402697067821158
+        },
+        "Reddit": {
+          "AUPRC_mean": 0.03838627879250684,
+          "AUPRC_std": 0.0004948803692132736,
+          "AUROC_mean": 0.549415777105997,
+          "AUROC_std": 0.005105631745829917
+        },
+        "weibo": {
+          "AUPRC_mean": 0.08470624098674384,
+          "AUPRC_std": 0.0033567351978160205,
+          "AUROC_mean": 0.41528041793613363,
+          "AUROC_std": 0.019247474370854376
+        }
+      },
+      "C": {
+        "Amazon": {
+          "AUPRC_mean": 0.07924683565267972,
+          "AUPRC_std": 0.00310030455143086,
+          "AUROC_mean": 0.520723697043076,
+          "AUROC_std": 0.010586360008954456
+        },
+        "BlogCatalog": {
+          "AUPRC_mean": 0.1105942231515606,
+          "AUPRC_std": 0.0005332436114093209,
+          "AUROC_mean": 0.6897836102033406,
+          "AUROC_std": 0.0006211621029778335
+        },
+        "Flickr": {
+          "AUPRC_mean": 0.09967407466478358,
+          "AUPRC_std": 0.0012255516279795218,
+          "AUROC_mean": 0.6340288499025343,
+          "AUROC_std": 0.010149718175601632
+        },
+        "Reddit": {
+          "AUPRC_mean": 0.03348413143021727,
+          "AUPRC_std": 0.0002136884215233979,
+          "AUROC_mean": 0.5079750816652892,
+          "AUROC_std": 0.005408312666111301
+        },
+        "questions": {
+          "AUPRC_mean": 0.027673562194994325,
+          "AUPRC_std": 0.00039784918390524014,
+          "AUROC_mean": 0.43132437072341734,
+          "AUROC_std": 0.0036921350791767455
+        }
+      }
+    }
+  },
+  "recap_macros": {
+    "A": {
+      "AUPRC_mean": 0.2704448673033078,
+      "AUPRC_std": 0.0034284699137269586,
+      "AUROC_mean": 0.7465154223560516,
+      "AUROC_std": 0.002293390649875609
+    },
+    "B": {
+      "AUPRC_mean": 0.2197561249778864,
+      "AUPRC_std": 0.00318492729459628,
+      "AUROC_mean": 0.6774504734814718,
+      "AUROC_std": 0.0021823793817379016
+    },
+    "C": {
+      "AUPRC_mean": 0.1750072322969464,
+      "AUPRC_std": 0.0009240562194644741,
+      "AUROC_mean": 0.6731004716023836,
+      "AUROC_std": 0.0043218807398381544
+    }
+  },
+  "runs": 18,
+  "timing": {
+    "DiffGAD-OFA-adapted": {
+      "A": {
+        "inference_mean_seconds": 5.7078406636913614,
+        "max_gpu_allocated_mb": 340.30078125,
+        "training_mean_seconds": 16.78236184641719
+      },
+      "B": {
+        "inference_mean_seconds": 3.6339209967603288,
+        "max_gpu_allocated_mb": 316.36962890625,
+        "training_mean_seconds": 14.997747716183463
+      },
+      "C": {
+        "inference_mean_seconds": 3.8264473297943673,
+        "max_gpu_allocated_mb": 209.4677734375,
+        "training_mean_seconds": 12.691041573882103
+      }
+    },
+    "GUIDE-OFA-adapted": {
+      "A": {
+        "inference_mean_seconds": 0.4555321081231038,
+        "max_gpu_allocated_mb": 1494.40087890625,
+        "training_mean_seconds": 12.936347860222062
+      },
+      "B": {
+        "inference_mean_seconds": 0.41106487438082695,
+        "max_gpu_allocated_mb": 1313.18701171875,
+        "training_mean_seconds": 8.621855366354188
+      },
+      "C": {
+        "inference_mean_seconds": 0.6464323134471973,
+        "max_gpu_allocated_mb": 760.22705078125,
+        "training_mean_seconds": 5.786138029769063
+      }
+    }
+  }
+}

@@ -1,0 +1,237 @@
+{
+  "config": {
+    "device": "cpu",
+    "trials": 5,
+    "epochs": 100,
+    "dims": 32,
+    "model": "recap_auprc_best",
+    "json_dir": "params",
+    "output_dir": "ablation/matched_2x2/shards/cora",
+    "train_datasets": null,
+    "test_datasets": [
+      "cora"
+    ],
+    "methods": [
+      "Non-residual + KMeans",
+      "Residual + KMeans"
+    ],
+    "no_recap": true,
+    "save_recap_checkpoints": false,
+    "no_diagnostics": false,
+    "diagnostics_interval": 10,
+    "num_clusters": null,
+    "knn_k": 64,
+    "kmeans_n_init": 20,
+    "gmm_covariance": "diag",
+    "gmm_max_iter": 300,
+    "gmm_reg_covar": 1e-06,
+    "gmm_reg_covar_retries": [
+      1e-06,
+      1e-05,
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "gmm_min_std": 1e-08,
+    "gmm_no_component_reduction": false,
+    "spectral_neighbors": null,
+    "spectral_n_init": 5,
+    "spectral_max_nodes": 3000,
+    "spectral_large_mode": "sample",
+    "lof_neighbors": 20,
+    "n_jobs": -1,
+    "continue_on_error": true,
+    "quick": false,
+    "project_root": "/root/autodl-tmp/recap",
+    "model_config": {
+      "model": "recap_auprc_best",
+      "lr": 5e-05,
+      "dropout_rate": 0.2,
+      "h_feats": 256,
+      "num_hops": 4,
+      "weight_decay": 5e-05,
+      "dims": 32,
+      "num_layers": 2,
+      "activation": "ELU",
+      "num_views": 1,
+      "num_clusters": 36,
+      "knn_k": 64,
+      "cluster_lr_multiplier": 10.0,
+      "tau_s": 0.3,
+      "sim_block_size": 256,
+      "knn_cache_enabled": true,
+      "knn_cache_dir": "./knn_cache",
+      "knn_search_dtype": "auto",
+      "ann_large_datasets": [
+        "tsocial",
+        "dgraphfin"
+      ],
+      "ann_backend": "faiss_ivfpq",
+      "ann_nlist": 4096,
+      "ann_nprobe": 16,
+      "ann_pq_m": 16,
+      "ann_train_size": 262144,
+      "ann_query_batch_size": 4096,
+      "ann_add_batch_size": 262144,
+      "ann_rerank_factor": 32,
+      "ann_max_rerank_candidates": 256,
+      "ann_score_batch_size": 2048,
+      "ann_seed": 0,
+      "lambda_H": 0.1,
+      "lambda_bal": 0.1,
+      "lambda_E": 0.1,
+      "gamma": 0.01,
+      "tau_e": 1.0,
+      "beta": 0.02,
+      "eps": 1e-08,
+      "lambda_ortho": 0.1,
+      "lambda_min_usage": 0.1,
+      "lambda_diversity": 0.1,
+      "min_cluster_ratio": 0.01
+    }
+  },
+  "records": [
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 0,
+      "dataset": "cora",
+      "AUROC": 0.43603075319259843,
+      "AUPRC": 0.054766674125760986,
+      "seconds": 5.617407348006964,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 0,
+      "dataset": "cora",
+      "AUROC": 0.7178003648683868,
+      "AUPRC": 0.2401365017416162,
+      "seconds": 4.902139782905579,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 1,
+      "dataset": "cora",
+      "AUROC": 0.4268543132655721,
+      "AUPRC": 0.053298196629548183,
+      "seconds": 5.402711121365428,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 1,
+      "dataset": "cora",
+      "AUROC": 0.7081678394579098,
+      "AUPRC": 0.24497844273300723,
+      "seconds": 4.214569021016359,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 2,
+      "dataset": "cora",
+      "AUROC": 0.42344279384936145,
+      "AUPRC": 0.04911910129175428,
+      "seconds": 6.299123207107186,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 2,
+      "dataset": "cora",
+      "AUROC": 0.7219859265050821,
+      "AUPRC": 0.25869790363198747,
+      "seconds": 5.903251780197024,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 3,
+      "dataset": "cora",
+      "AUROC": 0.4290852228303362,
+      "AUPRC": 0.0533643521488496,
+      "seconds": 5.403695130720735,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 3,
+      "dataset": "cora",
+      "AUROC": 0.7331925983841543,
+      "AUPRC": 0.25702550271440905,
+      "seconds": 5.619280207902193,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 4,
+      "dataset": "cora",
+      "AUROC": 0.4197993223872818,
+      "AUPRC": 0.05005341009613988,
+      "seconds": 4.700201295316219,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 4,
+      "dataset": "cora",
+      "AUROC": 0.7326270523846757,
+      "AUPRC": 0.2640897396719357,
+      "seconds": 5.3044642675668,
+      "status": "ok",
+      "error": ""
+    }
+  ],
+  "summary": [
+    {
+      "method": "Non-residual + KMeans",
+      "dataset": "cora",
+      "n": 5,
+      "AUROC_mean": 0.4270424811050299,
+      "AUROC_std": 0.00548485792999945,
+      "AUPRC_mean": 0.052120346858410584,
+      "AUPRC_std": 0.0021548842095357066,
+      "seconds_mean": 5.484627620503306
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "cora",
+      "n": 5,
+      "AUROC_mean": 0.7227547563200418,
+      "AUROC_std": 0.009426834187854323,
+      "AUPRC_mean": 0.2529856180985911,
+      "AUPRC_std": 0.008960658883475955,
+      "seconds_mean": 5.188741011917591
+    }
+  ],
+  "average": [
+    {
+      "method": "Non-residual + KMeans",
+      "dataset": "Average",
+      "n": 5,
+      "AUROC_mean": 0.4270424811050299,
+      "AUROC_std": 0.00548485792999945,
+      "AUPRC_mean": 0.052120346858410584,
+      "AUPRC_std": 0.0021548842095357066
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "Average",
+      "n": 5,
+      "AUROC_mean": 0.7227547563200418,
+      "AUROC_std": 0.009426834187854323,
+      "AUPRC_mean": 0.2529856180985911,
+      "AUPRC_std": 0.008960658883475955
+    }
+  ]
+}

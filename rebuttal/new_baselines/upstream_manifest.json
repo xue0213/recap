@@ -1,0 +1,32 @@
+{
+  "format": "recap_three_baseline_upstream_manifest_v1",
+  "generated_at": "2026-07-26",
+  "repositories": {
+    "DiffGAD": {
+      "archive_sha256": "6f6f8dbc22f7b486a127f3c24fa19a342753468384fbb2d3dc3dd780ff940ce8",
+      "commit": "197d60fe341f3a2080b242f04d4f81025e5f96b6",
+      "license_file": null,
+      "url": "https://github.com/fortunato-all/DiffGAD"
+    },
+    "GUIDE": {
+      "archive_sha256": "b0cf88353dca694240fae9f9e98c00e3067f2ac2e320dca43a29d7116a19f8a4",
+      "commit": "482103ef137ef88fb4d01c847dc266944e88e6fa",
+      "license_file": null,
+      "url": "https://github.com/yushuowiki/GUIDE_pytorch"
+    },
+    "ORCA": {
+      "archive_sha256": "efa21bbae4de2089f7cc6d3bc222ab7fe7bef05efc3153b32f8cde41dea6b08b",
+      "commit": "e146a8b1a99a90f5e3096b7bcc2ab0ea246c3ca7",
+      "license": "MIT",
+      "orca_cpp_sha256": "01c580febfd3653a632a04d6b466f7c6f2bf2f9baf3a75a2e553be30ac7ee778",
+      "url": "https://github.com/thocevar/orca"
+    },
+    "OWLEYE": {
+      "archive_sha256": "4e0358ce61e37ffbd05a4111a2acc44201da7160248e3cf499a3e8552e03fe52",
+      "commit": "370435cd0442671e33b2874efb4cd15d30177225",
+      "license_file": null,
+      "raw_data_hashes_match_recap": true,
+      "url": "https://github.com/zhenglecheng/ICLR-2026-OWLEYE"
+    }
+  }
+}

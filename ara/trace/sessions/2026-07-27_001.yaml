@@ -1,0 +1,90 @@
+session:
+  id: "2026-07-27_001"
+  timestamp: "2026-07-27T00:51+08:00"
+  summary: >
+    Completed and independently audited target-side full-graph inference on
+    T-Finance, DGraph-Fin, and T-Social.
+
+events_logged:
+  - type: question
+    id: N32
+    provenance: user
+    summary: "User requested only target-side inference scalability and recorded results."
+  - type: decision
+    id: N33
+    provenance: user
+    summary: "Locked the claim to inference, excluding large-target training."
+  - type: experiment
+    id: N34
+    provenance: ai-executed
+    summary: "Passed preflight, numerical equivalence, ANN determinism, regression, and smoke gates."
+  - type: experiment
+    id: N35
+    provenance: ai-executed
+    summary: "Completed all nine full-node checkpoint-target evaluations."
+  - type: experiment
+    id: N36
+    provenance: ai-executed
+    summary: "Independently verified hashes, label order, candidates, and all metrics."
+  - type: decision
+    id: N37
+    provenance: ai-suggested
+    summary: "Accepted computational scalability while rejecting predictive-effectiveness overclaiming."
+  - type: claim
+    id: C14
+    provenance: ai-suggested
+    summary: "Target-side full-graph inference scales on the recorded hardware."
+  - type: claim
+    id: C15
+    provenance: ai-suggested
+    summary: "Unadapted Setting-A checkpoints underperform random-ranking references."
+  - type: claim
+    id: C16
+    provenance: ai-suggested
+    summary: "Million-node fixed-IVFPQ recall@64 is limited."
+  - type: heuristic
+    id: H13
+    provenance: ai-suggested
+    summary: "Share label-free target candidates across immutable checkpoint seeds."
+  - type: heuristic
+    id: H14
+    provenance: ai-suggested
+    summary: "Use algebraically exact memory-bounded RECAP score components."
+
+ai_actions:
+  - action: "Locked the inference-only protocol and implemented the audited large-target adapter."
+    provenance: ai-executed
+    files_changed:
+      - "rebuttal/LARGE_TARGET_INFERENCE_PROTOCOL.md"
+      - "rebuttal/large_target_inference/"
+  - action: "Executed nine full-node evaluations and independent acceptance checks."
+    provenance: ai-executed
+    files_changed:
+      - "rebuttal/reports/LARGE_TARGET_INFERENCE_RESULTS.csv"
+      - "rebuttal/reports/LARGE_TARGET_INFERENCE_AUDIT.json"
+  - action: "Generated the compact report and preserved the negative predictive result."
+    provenance: ai-executed
+    files_changed:
+      - "rebuttal/reports/LARGE_TARGET_INFERENCE_REPORT.md"
+      - "rebuttal/findings.md"
+      - "rebuttal/research-log.md"
+      - "rebuttal/research-state.yaml"
+
+claims_touched:
+  - id: C14
+    action: created
+    provenance: ai-suggested
+  - id: C15
+    action: created
+    provenance: ai-suggested
+  - id: C16
+    action: created
+    provenance: ai-suggested
+
+open_threads:
+  - "If predictive large-target effectiveness is required later, define a separate target-adaptation protocol without rewriting this inference-only result."
+  - "Treat higher-recall ANN parameter studies as a new ablation because current nprobe=16 results are already locked."
+
+ai_suggestions_pending:
+  - "Phrase the paper claim as computational target-side scalability, not large-target training scalability."
+  - "Report the below-random predictive metrics and limited ANN recall without score inversion or post hoc tuning."

@@ -1,0 +1,440 @@
+{
+  "base_config": "/autodl-fs/data/recap/params/recap.json",
+  "output_dir": "/autodl-fs/data/recap/tuning_hyperparams/sensitivity_results/sensitivity_default_v2",
+  "device": "cuda:0",
+  "epochs": 100,
+  "trials": 3,
+  "params": [
+    "beta",
+    "lambda_H",
+    "cluster_init_gain",
+    "tau_c",
+    "tau_s",
+    "num_hops"
+  ],
+  "param_sweeps": {
+    "beta": [
+      0,
+      0.005,
+      0.01,
+      0.015,
+      0.02,
+      0.03,
+      0.04,
+      0.05,
+      0.08,
+      0.12
+    ],
+    "lambda_H": [
+      0,
+      0.025,
+      0.05,
+      0.075,
+      0.1,
+      0.15,
+      0.2,
+      0.3,
+      0.5,
+      0.8
+    ],
+    "cluster_init_gain": [
+      0.8,
+      1.0,
+      1.25,
+      1.5,
+      1.75,
+      2.0,
+      2.25,
+      2.5,
+      3.0,
+      3.5
+    ],
+    "tau_c": [
+      0.22,
+      0.25,
+      0.28,
+      0.3,
+      0.32,
+      0.35,
+      0.38,
+      0.42,
+      0.5,
+      0.65
+    ],
+    "tau_s": [
+      0.03,
+      0.05,
+      0.06,
+      0.08,
+      0.1,
+      0.12,
+      0.15,
+      0.2,
+      0.25,
+      0.3
+    ],
+    "num_hops": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      8,
+      10,
+      12,
+      14
+    ]
+  },
+  "train_datasets": [
+    "pubmed",
+    "Flickr",
+    "questions",
+    "YelpChi"
+  ],
+  "test_datasets": [
+    "Facebook",
+    "cora",
+    "citeseer",
+    "ACM",
+    "BlogCatalog",
+    "weibo",
+    "Reddit",
+    "Amazon"
+  ],
+  "knn_cache_dir": "/autodl-fs/data/recap/knn_cache",
+  "knn_search_dtype": "auto",
+  "include_heatmap": false,
+  "jobs": [
+    {
+      "run_id": "baseline",
+      "kind": "baseline",
+      "param": "baseline",
+      "value": "baseline"
+    },
+    {
+      "run_id": "beta__0",
+      "kind": "sensitivity",
+      "param": "beta",
+      "value": 0
+    },
+    {
+      "run_id": "beta__0p005",
+      "kind": "sensitivity",
+      "param": "beta",
+      "value": 0.005
+    },
+    {
+      "run_id": "beta__0p01",
+      "kind": "sensitivity",
+      "param": "beta",
+      "value": 0.01
+    },
+    {
+      "run_id": "beta__0p015",
+      "kind": "sensitivity",
+      "param": "beta",
+      "value": 0.015
+    },
+    {
+      "run_id": "beta__0p03",
+      "kind": "sensitivity",
+      "param": "beta",
+      "value": 0.03
+    },
+    {
+      "run_id": "beta__0p04",
+      "kind": "sensitivity",
+      "param": "beta",
+      "value": 0.04
+    },
+    {
+      "run_id": "beta__0p05",
+      "kind": "sensitivity",
+      "param": "beta",
+      "value": 0.05
+    },
+    {
+      "run_id": "beta__0p08",
+      "kind": "sensitivity",
+      "param": "beta",
+      "value": 0.08
+    },
+    {
+      "run_id": "beta__0p12",
+      "kind": "sensitivity",
+      "param": "beta",
+      "value": 0.12
+    },
+    {
+      "run_id": "lambda_H__0",
+      "kind": "sensitivity",
+      "param": "lambda_H",
+      "value": 0
+    },
+    {
+      "run_id": "lambda_H__0p025",
+      "kind": "sensitivity",
+      "param": "lambda_H",
+      "value": 0.025
+    },
+    {
+      "run_id": "lambda_H__0p05",
+      "kind": "sensitivity",
+      "param": "lambda_H",
+      "value": 0.05
+    },
+    {
+      "run_id": "lambda_H__0p075",
+      "kind": "sensitivity",
+      "param": "lambda_H",
+      "value": 0.075
+    },
+    {
+      "run_id": "lambda_H__0p15",
+      "kind": "sensitivity",
+      "param": "lambda_H",
+      "value": 0.15
+    },
+    {
+      "run_id": "lambda_H__0p2",
+      "kind": "sensitivity",
+      "param": "lambda_H",
+      "value": 0.2
+    },
+    {
+      "run_id": "lambda_H__0p3",
+      "kind": "sensitivity",
+      "param": "lambda_H",
+      "value": 0.3
+    },
+    {
+      "run_id": "lambda_H__0p5",
+      "kind": "sensitivity",
+      "param": "lambda_H",
+      "value": 0.5
+    },
+    {
+      "run_id": "lambda_H__0p8",
+      "kind": "sensitivity",
+      "param": "lambda_H",
+      "value": 0.8
+    },
+    {
+      "run_id": "cluster_init_gain__0p8",
+      "kind": "sensitivity",
+      "param": "cluster_init_gain",
+      "value": 0.8
+    },
+    {
+      "run_id": "cluster_init_gain__1p0",
+      "kind": "sensitivity",
+      "param": "cluster_init_gain",
+      "value": 1.0
+    },
+    {
+      "run_id": "cluster_init_gain__1p25",
+      "kind": "sensitivity",
+      "param": "cluster_init_gain",
+      "value": 1.25
+    },
+    {
+      "run_id": "cluster_init_gain__1p75",
+      "kind": "sensitivity",
+      "param": "cluster_init_gain",
+      "value": 1.75
+    },
+    {
+      "run_id": "cluster_init_gain__2p0",
+      "kind": "sensitivity",
+      "param": "cluster_init_gain",
+      "value": 2.0
+    },
+    {
+      "run_id": "cluster_init_gain__2p25",
+      "kind": "sensitivity",
+      "param": "cluster_init_gain",
+      "value": 2.25
+    },
+    {
+      "run_id": "cluster_init_gain__2p5",
+      "kind": "sensitivity",
+      "param": "cluster_init_gain",
+      "value": 2.5
+    },
+    {
+      "run_id": "cluster_init_gain__3p0",
+      "kind": "sensitivity",
+      "param": "cluster_init_gain",
+      "value": 3.0
+    },
+    {
+      "run_id": "cluster_init_gain__3p5",
+      "kind": "sensitivity",
+      "param": "cluster_init_gain",
+      "value": 3.5
+    },
+    {
+      "run_id": "tau_c__0p22",
+      "kind": "sensitivity",
+      "param": "tau_c",
+      "value": 0.22
+    },
+    {
+      "run_id": "tau_c__0p25",
+      "kind": "sensitivity",
+      "param": "tau_c",
+      "value": 0.25
+    },
+    {
+      "run_id": "tau_c__0p28",
+      "kind": "sensitivity",
+      "param": "tau_c",
+      "value": 0.28
+    },
+    {
+      "run_id": "tau_c__0p32",
+      "kind": "sensitivity",
+      "param": "tau_c",
+      "value": 0.32
+    },
+    {
+      "run_id": "tau_c__0p35",
+      "kind": "sensitivity",
+      "param": "tau_c",
+      "value": 0.35
+    },
+    {
+      "run_id": "tau_c__0p38",
+      "kind": "sensitivity",
+      "param": "tau_c",
+      "value": 0.38
+    },
+    {
+      "run_id": "tau_c__0p42",
+      "kind": "sensitivity",
+      "param": "tau_c",
+      "value": 0.42
+    },
+    {
+      "run_id": "tau_c__0p5",
+      "kind": "sensitivity",
+      "param": "tau_c",
+      "value": 0.5
+    },
+    {
+      "run_id": "tau_c__0p65",
+      "kind": "sensitivity",
+      "param": "tau_c",
+      "value": 0.65
+    },
+    {
+      "run_id": "tau_s__0p03",
+      "kind": "sensitivity",
+      "param": "tau_s",
+      "value": 0.03
+    },
+    {
+      "run_id": "tau_s__0p05",
+      "kind": "sensitivity",
+      "param": "tau_s",
+      "value": 0.05
+    },
+    {
+      "run_id": "tau_s__0p06",
+      "kind": "sensitivity",
+      "param": "tau_s",
+      "value": 0.06
+    },
+    {
+      "run_id": "tau_s__0p1",
+      "kind": "sensitivity",
+      "param": "tau_s",
+      "value": 0.1
+    },
+    {
+      "run_id": "tau_s__0p12",
+      "kind": "sensitivity",
+      "param": "tau_s",
+      "value": 0.12
+    },
+    {
+      "run_id": "tau_s__0p15",
+      "kind": "sensitivity",
+      "param": "tau_s",
+      "value": 0.15
+    },
+    {
+      "run_id": "tau_s__0p2",
+      "kind": "sensitivity",
+      "param": "tau_s",
+      "value": 0.2
+    },
+    {
+      "run_id": "tau_s__0p25",
+      "kind": "sensitivity",
+      "param": "tau_s",
+      "value": 0.25
+    },
+    {
+      "run_id": "tau_s__0p3",
+      "kind": "sensitivity",
+      "param": "tau_s",
+      "value": 0.3
+    },
+    {
+      "run_id": "num_hops__1",
+      "kind": "sensitivity",
+      "param": "num_hops",
+      "value": 1
+    },
+    {
+      "run_id": "num_hops__2",
+      "kind": "sensitivity",
+      "param": "num_hops",
+      "value": 2
+    },
+    {
+      "run_id": "num_hops__3",
+      "kind": "sensitivity",
+      "param": "num_hops",
+      "value": 3
+    },
+    {
+      "run_id": "num_hops__5",
+      "kind": "sensitivity",
+      "param": "num_hops",
+      "value": 5
+    },
+    {
+      "run_id": "num_hops__6",
+      "kind": "sensitivity",
+      "param": "num_hops",
+      "value": 6
+    },
+    {
+      "run_id": "num_hops__8",
+      "kind": "sensitivity",
+      "param": "num_hops",
+      "value": 8
+    },
+    {
+      "run_id": "num_hops__10",
+      "kind": "sensitivity",
+      "param": "num_hops",
+      "value": 10
+    },
+    {
+      "run_id": "num_hops__12",
+      "kind": "sensitivity",
+      "param": "num_hops",
+      "value": 12
+    },
+    {
+      "run_id": "num_hops__14",
+      "kind": "sensitivity",
+      "param": "num_hops",
+      "value": 14
+    }
+  ]
+}

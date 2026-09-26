@@ -1,0 +1,237 @@
+{
+  "config": {
+    "device": "cpu",
+    "trials": 5,
+    "epochs": 100,
+    "dims": 32,
+    "model": "recap_auprc_best",
+    "json_dir": "params",
+    "output_dir": "ablation/matched_2x2/shards/BlogCatalog",
+    "train_datasets": null,
+    "test_datasets": [
+      "BlogCatalog"
+    ],
+    "methods": [
+      "Non-residual + KMeans",
+      "Residual + KMeans"
+    ],
+    "no_recap": true,
+    "save_recap_checkpoints": false,
+    "no_diagnostics": false,
+    "diagnostics_interval": 10,
+    "num_clusters": null,
+    "knn_k": 64,
+    "kmeans_n_init": 20,
+    "gmm_covariance": "diag",
+    "gmm_max_iter": 300,
+    "gmm_reg_covar": 1e-06,
+    "gmm_reg_covar_retries": [
+      1e-06,
+      1e-05,
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "gmm_min_std": 1e-08,
+    "gmm_no_component_reduction": false,
+    "spectral_neighbors": null,
+    "spectral_n_init": 5,
+    "spectral_max_nodes": 3000,
+    "spectral_large_mode": "sample",
+    "lof_neighbors": 20,
+    "n_jobs": -1,
+    "continue_on_error": true,
+    "quick": false,
+    "project_root": "/root/autodl-tmp/recap",
+    "model_config": {
+      "model": "recap_auprc_best",
+      "lr": 5e-05,
+      "dropout_rate": 0.2,
+      "h_feats": 256,
+      "num_hops": 4,
+      "weight_decay": 5e-05,
+      "dims": 32,
+      "num_layers": 2,
+      "activation": "ELU",
+      "num_views": 1,
+      "num_clusters": 36,
+      "knn_k": 64,
+      "cluster_lr_multiplier": 10.0,
+      "tau_s": 0.3,
+      "sim_block_size": 256,
+      "knn_cache_enabled": true,
+      "knn_cache_dir": "./knn_cache",
+      "knn_search_dtype": "auto",
+      "ann_large_datasets": [
+        "tsocial",
+        "dgraphfin"
+      ],
+      "ann_backend": "faiss_ivfpq",
+      "ann_nlist": 4096,
+      "ann_nprobe": 16,
+      "ann_pq_m": 16,
+      "ann_train_size": 262144,
+      "ann_query_batch_size": 4096,
+      "ann_add_batch_size": 262144,
+      "ann_rerank_factor": 32,
+      "ann_max_rerank_candidates": 256,
+      "ann_score_batch_size": 2048,
+      "ann_seed": 0,
+      "lambda_H": 0.1,
+      "lambda_bal": 0.1,
+      "lambda_E": 0.1,
+      "gamma": 0.01,
+      "tau_e": 1.0,
+      "beta": 0.02,
+      "eps": 1e-08,
+      "lambda_ortho": 0.1,
+      "lambda_min_usage": 0.1,
+      "lambda_diversity": 0.1,
+      "min_cluster_ratio": 0.01
+    }
+  },
+  "records": [
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 0,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.6455565767973857,
+      "AUPRC": 0.21053752335875686,
+      "seconds": 10.597717830911279,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 0,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.5537819989106754,
+      "AUPRC": 0.13373322305738494,
+      "seconds": 7.200833046808839,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 1,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.6500503812636165,
+      "AUPRC": 0.2029194771780135,
+      "seconds": 10.605305885896087,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 1,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.5521323529411765,
+      "AUPRC": 0.13321119690013628,
+      "seconds": 8.399106608703732,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 2,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.6450040849673202,
+      "AUPRC": 0.19905113594507842,
+      "seconds": 9.400662494823337,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 2,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.5537819989106754,
+      "AUPRC": 0.13373322305738494,
+      "seconds": 6.202256688848138,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 3,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.6363848039215687,
+      "AUPRC": 0.20213387261109125,
+      "seconds": 8.600119164213538,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 3,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.544953022875817,
+      "AUPRC": 0.12570669252619598,
+      "seconds": 5.207960261031985,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 4,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.6511070261437908,
+      "AUPRC": 0.19377349769486035,
+      "seconds": 8.799491224810481,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 4,
+      "dataset": "BlogCatalog",
+      "AUROC": 0.547786628540305,
+      "AUPRC": 0.1310374438235109,
+      "seconds": 6.29947629570961,
+      "status": "ok",
+      "error": ""
+    }
+  ],
+  "summary": [
+    {
+      "method": "Non-residual + KMeans",
+      "dataset": "BlogCatalog",
+      "n": 5,
+      "AUROC_mean": 0.6456205746187363,
+      "AUROC_std": 0.005203997556300302,
+      "AUPRC_mean": 0.2016831013575601,
+      "AUPRC_std": 0.005470314084240177,
+      "seconds_mean": 9.600659320130944
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "BlogCatalog",
+      "n": 5,
+      "AUROC_mean": 0.5504872004357299,
+      "AUROC_std": 0.003530952578956133,
+      "AUPRC_mean": 0.13148435587292262,
+      "AUPRC_std": 0.0030554185077658054,
+      "seconds_mean": 6.661926580220461
+    }
+  ],
+  "average": [
+    {
+      "method": "Non-residual + KMeans",
+      "dataset": "Average",
+      "n": 5,
+      "AUROC_mean": 0.6456205746187363,
+      "AUROC_std": 0.005203997556300302,
+      "AUPRC_mean": 0.2016831013575601,
+      "AUPRC_std": 0.005470314084240177
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "Average",
+      "n": 5,
+      "AUROC_mean": 0.5504872004357299,
+      "AUROC_std": 0.003530952578956133,
+      "AUPRC_mean": 0.13148435587292262,
+      "AUPRC_std": 0.0030554185077658054
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "base_config": "/autodl-fs/data/recap/tuning_hyperparams/sensitivity_results/sensitivity_default_v2/configs/baseline/recap.json",
+  "reference_summary": "/autodl-fs/data/recap/tuning_hyperparams/sensitivity_results/sensitivity_default_v2/sensitivity_summary.csv",
+  "output_dir": "/autodl-fs/data/recap/tuning_hyperparams/lambda_e0_invariance_results/lambda_e0_invariance_dryrun",
+  "reference_lambda_E": 0.1,
+  "probe_lambda_E": 0.0,
+  "device": "cuda:0",
+  "epochs": 100,
+  "trials": 3,
+  "params": [
+    "beta",
+    "lambda_H",
+    "cluster_init_gain",
+    "tau_c",
+    "tau_s",
+    "num_hops"
+  ],
+  "probe_values": {
+    "beta": [
+      0.0,
+      0.02,
+      0.05
+    ],
+    "lambda_H": [
+      0.0,
+      0.1,
+      0.8
+    ],
+    "cluster_init_gain": [
+      0.8,
+      1.5,
+      3.5
+    ],
+    "tau_c": [
+      0.25,
+      0.3,
+      0.32,
+      0.65
+    ],
+    "tau_s": [
+      0.03,
+      0.08,
+      0.25
+    ],
+    "num_hops": [
+      2,
+      4,
+      6
+    ]
+  },
+  "train_datasets": [
+    "pubmed",
+    "Flickr",
+    "questions",
+    "YelpChi"
+  ],
+  "test_datasets": [
+    "Facebook",
+    "cora",
+    "citeseer",
+    "ACM",
+    "BlogCatalog",
+    "weibo",
+    "Reddit",
+    "Amazon"
+  ],
+  "knn_cache_dir": "/autodl-fs/data/recap/knn_cache",
+  "knn_search_dtype": "auto",
+  "jobs": [
+    {
+      "run_id": "baseline",
+      "kind": "lambda_E0_baseline",
+      "param": "baseline",
+      "value": "baseline"
+    },
+    {
+      "run_id": "beta__0p0",
+      "kind": "lambda_E0_probe",
+      "param": "beta",
+      "value": 0.0
+    },
+    {
+      "run_id": "beta__0p05",
+      "kind": "lambda_E0_probe",
+      "param": "beta",
+      "value": 0.05
+    },
+    {
+      "run_id": "lambda_H__0p0",
+      "kind": "lambda_E0_probe",
+      "param": "lambda_H",
+      "value": 0.0
+    },
+    {
+      "run_id": "lambda_H__0p8",
+      "kind": "lambda_E0_probe",
+      "param": "lambda_H",
+      "value": 0.8
+    },
+    {
+      "run_id": "cluster_init_gain__0p8",
+      "kind": "lambda_E0_probe",
+      "param": "cluster_init_gain",
+      "value": 0.8
+    },
+    {
+      "run_id": "cluster_init_gain__3p5",
+      "kind": "lambda_E0_probe",
+      "param": "cluster_init_gain",
+      "value": 3.5
+    },
+    {
+      "run_id": "tau_c__0p25",
+      "kind": "lambda_E0_probe",
+      "param": "tau_c",
+      "value": 0.25
+    },
+    {
+      "run_id": "tau_c__0p32",
+      "kind": "lambda_E0_probe",
+      "param": "tau_c",
+      "value": 0.32
+    },
+    {
+      "run_id": "tau_c__0p65",
+      "kind": "lambda_E0_probe",
+      "param": "tau_c",
+      "value": 0.65
+    },
+    {
+      "run_id": "tau_s__0p03",
+      "kind": "lambda_E0_probe",
+      "param": "tau_s",
+      "value": 0.03
+    },
+    {
+      "run_id": "tau_s__0p25",
+      "kind": "lambda_E0_probe",
+      "param": "tau_s",
+      "value": 0.25
+    },
+    {
+      "run_id": "num_hops__2",
+      "kind": "lambda_E0_probe",
+      "param": "num_hops",
+      "value": 2
+    },
+    {
+      "run_id": "num_hops__6",
+      "kind": "lambda_E0_probe",
+      "param": "num_hops",
+      "value": 6
+    }
+  ]
+}

@@ -1,0 +1,452 @@
+tree:
+  - id: N01
+    type: question
+    title: "Reproduce OFA A/B/C baselines under the RECAP protocol"
+    provenance: user
+    timestamp: "2026-07-26T17:07+08:00"
+    description: >
+      Complete equivalent reproductions of the baselines required by
+      RECAP-OFA Settings A, B, and C.
+    children:
+      - id: N02
+        type: experiment
+        title: "Lock and gate four official baseline adapters"
+        provenance: ai-executed
+        timestamp: "2026-07-26T17:07+08:00"
+        result: >
+          Pinned upstreams, verified datasets, locked 24 runs and 156
+          evaluations, and passed method-specific smoke and equivalence gates.
+        evidence: [E02]
+        children:
+          - id: N03
+            type: dead_end
+            title: "CUDA sparse UNPrompt reload was nondeterministic"
+            provenance: ai-executed
+            timestamp: "2026-07-26T17:07+08:00"
+            hypothesis: >
+              Repeated frozen target inference would reproduce checkpoint
+              scores within the locked tolerance on CUDA.
+            failure_mode: >
+              Sparse CUDA reduction changed min-max scores by up to 1.36e-3.
+            lesson: >
+              Last-bit sparse reduction differences must be controlled in the
+              frozen target inference backend.
+            children:
+              - id: N04
+                type: experiment
+                title: "Deterministic UNPrompt target inference recovery"
+                provenance: ai-executed
+                timestamp: "2026-07-26T17:07+08:00"
+                result: >
+                  CPU sparse target aggregation matched the dense expression,
+                  repeated bitwise, and gave zero reload difference on all
+                  eight Setting-A smoke targets.
+                evidence: [C04, E02]
+                children:
+                  - id: N05
+                    type: experiment
+                    title: "Execute the amended formal manifest"
+                    provenance: ai-executed
+                    timestamp: "2026-07-26T17:07+08:00"
+                    result: >
+                      Completed 24/24 runs and 156/156 evaluations with one
+                      shared amended protocol hash.
+                    evidence: [C01, E01]
+                    children:
+                      - id: N06
+                        type: dead_end
+                        title: "Initial independent audit reported 145 mismatches"
+                        provenance: ai-executed
+                        timestamp: "2026-07-26T17:07+08:00"
+                        hypothesis: >
+                          A method-agnostic exact-key and global-dataset-hash
+                          schema would validate every output.
+                        failure_mode: >
+                          Auxiliary method score arrays, IA field naming, and
+                          per-run source-target hash scope invalidated those
+                          auditor assumptions.
+                        lesson: >
+                          Audit required invariants while explicitly allowing
+                          recorded method-specific auxiliary fields.
+                        children:
+                          - id: N07
+                            type: experiment
+                            title: "Independent artifact and metric validation"
+                            provenance: ai-executed
+                            timestamp: "2026-07-26T17:07+08:00"
+                            result: >
+                              Verified 24 checkpoints, 156 score files, 156
+                              recomputed metrics, and 462 label events with
+                              zero remaining problems.
+                            evidence: [C01, E01]
+                            children:
+                              - id: N08
+                                type: experiment
+                                title: "Compare baseline and RECAP macros"
+                                provenance: ai-executed
+                                timestamp: "2026-07-26T17:07+08:00"
+                                result: >
+                                  ARC and IA lead A/B. RECAP has higher C
+                                  dataset-macro AUROC but slightly lower AUPRC,
+                                  and exceeds UNPrompt/AnomalyGFM-ZS in A.
+                                evidence: [C02, C03, E01]
+                                children:
+                                  - id: N09
+                                    type: decision
+                                    title: "Require all four baselines in B/C"
+                                    provenance: user-revised
+                                    timestamp: "2026-07-26T18:01+08:00"
+                                    choice: >
+                                      Add UNPrompt and AnomalyGFM-ZS to
+                                      Settings B and C.
+                                    alternatives:
+                                      - "Retain the original ARC/IA-only B/C scope"
+                                    evidence: >
+                                      The user explicitly corrected the
+                                      completed protocol scope.
+                                    children:
+                                      - id: N10
+                                        type: experiment
+                                        title: "Gate isolated B/C supplement"
+                                        provenance: ai-executed
+                                        timestamp: "2026-07-26T18:01+08:00"
+                                        result: >
+                                          Ten tests and four method-setting
+                                          smokes passed with 20/20 finite
+                                          frozen scores and zero invalid label
+                                          events.
+                                        evidence: [E03]
+                                        children:
+                                          - id: N11
+                                            type: experiment
+                                            title: "Run B/C baseline supplement"
+                                            provenance: ai-executed
+                                            timestamp: "2026-07-26T18:01+08:00"
+                                            result: >
+                                              Completed 12/12 runs and 60/60
+                                              evaluations. AnomalyGFM source
+                                              calibration selected weights
+                                              2.0 for B and 4.0 for C.
+                                            evidence: [C05, E03]
+                                            children:
+                                              - id: N12
+                                                type: experiment
+                                                title: "Audit complete four-baseline comparison"
+                                                provenance: ai-executed
+                                                timestamp: "2026-07-26T18:01+08:00"
+                                                result: >
+                                                  Verified all supplementary
+                                                  checkpoints, scores, metrics,
+                                                  label events, and calibration
+                                                  locks. RECAP exceeds both
+                                                  added baselines in B/C.
+                                                evidence: [C05, C06, E03]
+
+  - id: N13
+    type: question
+    title: "Reproduce eight OFO baselines on all twelve RECAP datasets"
+    provenance: user
+    timestamp: "2026-07-26T20:10+08:00"
+    description: >
+      Run GCN, GAT, BWGNN, XGBGraph, DOMINANT, AnomalyDAE, CoLA, and ADA-GAD
+      independently on every RECAP-OFO dataset, including Questions, with
+      three seeds, periodic supervision, and completion-level validation.
+    children:
+      - id: N14
+        type: experiment
+        title: "Lock and gate the 288-run OFO protocol"
+        provenance: ai-executed
+        timestamp: "2026-07-26T20:10+08:00"
+        result: >
+          Locked supervision rights, evaluation populations, method settings,
+          scalable structure adaptations, and persistence rules. Eight
+          equivalence tests, all preprocessing/split gates, and 16
+          Cora/Questions method smokes passed.
+        evidence: [E04]
+        children:
+          - id: N15
+            type: dead_end
+            title: "XGBoost sklearn-wrapper persistence was incompatible"
+            provenance: ai-executed
+            timestamp: "2026-07-26T20:10+08:00"
+            hypothesis: >
+              The sklearn wrapper would persist and reload formal XGBGraph
+              scores under XGBoost 3.0.2 and scikit-learn 1.8.
+            failure_mode: >
+              Wrapper persistence failed during the pre-formal smoke gate.
+            lesson: >
+              Use XGBoost's native Booster JSON persistence without changing
+              features, trees, predictions, or the experimental objective.
+            children:
+              - id: N16
+                type: experiment
+                title: "Verify native XGBoost Booster reload"
+                provenance: ai-executed
+                timestamp: "2026-07-26T20:10+08:00"
+                result: >
+                  Native JSON persistence reproduced smoke and all 36 formal
+                  XGBGraph score vectors with zero reload difference.
+                evidence: [E04]
+
+          - id: N17
+            type: dead_end
+            title: "Fixed absolute reload tolerance rejected CUDA last bits"
+            provenance: ai-executed
+            timestamp: "2026-07-26T20:10+08:00"
+            hypothesis: >
+              Every AnomalyDAE score vector would reload within a fixed
+              1e-5 absolute threshold.
+            failure_mode: >
+              Questions reconstruction scores amplified harmless CUDA scatter
+              last-bit differences during the smoke gate.
+            lesson: >
+              Lock a scale-aware threshold before formal results and retain
+              exact metric recomputation as the independent acceptance check.
+            children:
+              - id: N18
+                type: experiment
+                title: "Gate scale-aware checkpoint reload threshold"
+                provenance: ai-executed
+                timestamp: "2026-07-26T20:10+08:00"
+                result: >
+                  The pre-result threshold passed all method smokes and all 288
+                  formal reloads; the largest difference was 1.75e-4.
+                evidence: [E04, H07]
+
+          - id: N19
+            type: experiment
+            title: "Execute and block-audit all OFO runs"
+            also_depends_on: [N16, N18]
+            provenance: ai-executed
+            timestamp: "2026-07-26T20:10+08:00"
+            result: >
+              Completed 288/288 runs method by method, auditing every 12-run
+              seed block and reflecting after every 36-run method. Questions
+              was retained throughout; no weak result triggered tuning.
+            evidence: [C07, E04]
+            children:
+              - id: N20
+                type: experiment
+                title: "Independently audit and aggregate the complete manifest"
+                provenance: ai-executed
+                timestamp: "2026-07-26T20:10+08:00"
+                result: >
+                  Recomputed all 576 metrics and verified all models, data,
+                  score/mask hashes, label events, reloads, dataset/domain
+                  macros, timing, and resources. XGBGraph leads the supervised
+                  test-split group; RECAP leads the full-graph unsupervised
+                  group.
+                evidence: [C07, C08, C09, E04]
+
+  - id: N21
+    type: question
+    title: "Verify the entire revised experiment protocol and consolidate results"
+    provenance: user
+    timestamp: "2026-07-26T21:16+08:00"
+    description: >
+      Check whether any experiment in the full revised protocol remains
+      incomplete, finish it if necessary, audit reporting consistency, and
+      present one consolidated set of tables.
+    children:
+      - id: N22
+        type: experiment
+        title: "Protocol-wide raw-record completeness and consistency audit"
+        provenance: ai-executed
+        timestamp: "2026-07-26T21:16+08:00"
+        result: >
+          Verified 369 training runs and 594 final evaluations, complete
+          seeds 0/1/2 for every required cell, five passing source artifact
+          audits, 90 stability pair records, 486 diagnostic rows, and 225
+          RECAP checkpoints. No experiment or rerun remained.
+        evidence: [C10, E05]
+        children:
+          - id: N23
+            type: experiment
+            title: "Correct seed-first stability and timing aggregation"
+            provenance: ai-executed
+            timestamp: "2026-07-26T21:16+08:00"
+            result: >
+              Recomputed stability by averaging datasets within each seed
+              pair and timing by averaging targets within each seed before
+              population-standard-deviation reporting. Deterministic output
+              regeneration and 28 protocol/equivalence tests passed.
+            evidence: [C10, E05, H09]
+
+  - id: N24
+    type: question
+    title: "Add DiffGAD, GUIDE, and OWLEYE to the completed experiment record"
+    provenance: user
+    timestamp: "2026-07-26T23:45+08:00"
+    description: >
+      Reproduce two unsupervised one-for-one baselines and one zero-shot
+      one-for-all baseline in their protocol-appropriate strata, then fill and
+      re-audit the consolidated tables.
+    children:
+      - id: N25
+        type: experiment
+        title: "Audit upstream supervision, leakage, data, and complexity"
+        provenance: ai-executed
+        timestamp: "2026-07-26T23:45+08:00"
+        result: >
+          Pinned all upstreams, proved OWLEYE uses source labels, found
+          DiffGAD's released trial/timestep label selection, verified OWLEYE's
+          twelve raw MAT files are byte-identical to RECAP, and identified
+          three quadratic paths requiring exact adaptations.
+        evidence: [C12, E06]
+        children:
+          - id: N26
+            type: dead_end
+            title: "Unmodified released DiffGAD path violates the locked protocol"
+            provenance: ai-executed
+            timestamp: "2026-07-26T23:45+08:00"
+            hypothesis: >
+              The released training and sampling script could enter formal
+              unsupervised evaluation unchanged.
+            failure_mode: >
+              It selects an autoencoder trial and one of 500 diffusion levels
+              using target anomaly labels and materializes dense N-by-N
+              structure reconstruction.
+            lesson: >
+              Freeze a result-independent diffusion grid and use the exact
+              algebraic structure error before formal execution.
+            children:
+              - id: N27
+                type: experiment
+                title: "Gate leakage-free scalable compatibility adapters"
+                provenance: ai-executed
+                timestamp: "2026-07-26T23:45+08:00"
+                result: >
+                  DiffGAD forward/gradient dense equivalence passed at
+                  5.6843e-14; GUIDE ORCA motifs matched independent induced
+                  enumeration exactly; OWLEYE chunking matched full inference
+                  at 1.1921e-7 and tau=1 normalization matched exactly.
+                evidence: [E06, H10, H11, H12]
+
+          - id: N28
+            type: dead_end
+            title: "Direct server archive download timed out"
+            provenance: ai-executed
+            timestamp: "2026-07-26T23:45+08:00"
+            hypothesis: >
+              The pinned GitHub archives could be fetched reliably from the
+              experiment server.
+            failure_mode: >
+              Server-side urllib downloads timed out before provenance
+              verification.
+            lesson: >
+              Download and hash-verify archives locally, then upload the exact
+              verified bytes to the server.
+            children:
+              - id: N29
+                type: experiment
+                title: "Upload locally verified pinned archives"
+                provenance: ai-executed
+                timestamp: "2026-07-26T23:45+08:00"
+                result: >
+                  Uploaded four verified archives and rechecked every
+                  preregistered SHA-256 before adapter gates and formal runs.
+                evidence: [E06]
+
+      - id: N30
+        type: experiment
+        title: "Execute the complete three-baseline manifest"
+        also_depends_on: [N27, N29]
+        provenance: ai-executed
+        timestamp: "2026-07-26T23:45+08:00"
+        result: >
+          Completed 81/81 training runs and 126/126 evaluations with 126
+          frozen score vectors. No weak or high-variance cell triggered
+          tuning, replacement, or selective rerun.
+        evidence: [C11, E06]
+        children:
+          - id: N31
+            type: experiment
+            title: "Independently audit and consolidate the expanded protocol"
+            provenance: ai-executed
+            timestamp: "2026-07-26T23:45+08:00"
+            result: >
+              Recomputed all 126 evaluations exactly, checked 288 label events
+              and every reload, then regenerated the complete 450-run,
+              720-evaluation protocol tables. GUIDE exceeds RECAP on both
+              expanded unsupervised OFO macro metrics.
+            evidence: [C10, C11, C13, E05, E06]
+
+  - id: N32
+    type: question
+    title: "Test RECAP target-side inference scalability on three large graphs"
+    provenance: user
+    timestamp: "2026-07-27T00:51+08:00"
+    description: >
+      Run and record only target-side full-graph inference scalability on
+      T-Finance, DGraph-Fin, and T-Social using the already accepted RECAP
+      checkpoints.
+    children:
+      - id: N33
+        type: decision
+        title: "Restrict the claim to target-side inference"
+        provenance: user
+        timestamp: "2026-07-27T00:51+08:00"
+        choice: >
+          Reuse accepted Setting-A checkpoints, perform zero large-target
+          training runs, and evaluate three seeds on all three full targets.
+        alternatives:
+          - "Claim or benchmark million-node target training"
+          - "Add new target-adaptation training"
+        evidence: >
+          The user explicitly requested only target-side inference
+          scalability and result recording.
+        children:
+          - id: N34
+            type: experiment
+            title: "Lock and gate the scalable inference adapter"
+            provenance: ai-executed
+            timestamp: "2026-07-27T00:51+08:00"
+            result: >
+              Canonical data/checkpoint preflight, 31 regression tests, native
+              scorer equivalence at 7.16e-7, fixed-seed FAISS determinism,
+              candidate validity, label isolation, and the T-Finance
+              end-to-end smoke all passed before formal execution.
+            evidence: [E07, H13, H14]
+            children:
+              - id: N35
+                type: experiment
+                title: "Execute nine full-node large-target evaluations"
+                provenance: ai-executed
+                timestamp: "2026-07-27T00:51+08:00"
+                result: >
+                  Completed 9/9 cells with no failure. T-Social scored
+                  5,781,065 nodes with 75.13 GiB peak allocated GPU memory;
+                  all shared setup and run phases accounted for 23.67 minutes.
+                evidence: [C14, E07]
+                children:
+                  - id: N36
+                    type: experiment
+                    title: "Independently audit hashes, labels, metrics, and ANN fidelity"
+                    provenance: ai-executed
+                    timestamp: "2026-07-27T00:51+08:00"
+                    result: >
+                      Verified every data, checkpoint, candidate, score, and
+                      mask hash; scanned all candidates; confirmed score
+                      freeze before labels; and reproduced all 18 metrics
+                      within 1e-12. Million-node recall@64 was 0.5735 and
+                      0.4338.
+                    evidence: [C14, C16, E07]
+                    children:
+                      - id: N37
+                        type: decision
+                        title: "Separate computational scalability from predictive effectiveness"
+                        provenance: ai-suggested
+                        timestamp: "2026-07-27T00:51+08:00"
+                        choice: >
+                          Accept the demonstrated target-side computational
+                          scalability but explicitly reject a predictive-
+                          effectiveness claim for the unadapted checkpoints.
+                        alternatives:
+                          - "Invert scores post hoc"
+                          - "Tune ANN or model parameters on target labels"
+                          - "Treat completion as proof of predictive quality"
+                        evidence: >
+                          All three target mean AUROCs are below 0.5, all mean
+                          AUPRCs are below anomaly prevalence, and the accepted
+                          score direction and ANN parameters were locked before
+                          results.

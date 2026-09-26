@@ -1,0 +1,76 @@
+session:
+  id: "2026-07-26_001"
+  timestamp: "2026-07-26T17:07+08:00"
+  summary: >
+    Completed and independently audited the 24-run, 156-evaluation RECAP-OFA
+    A/B/C baseline reproduction.
+
+events_logged:
+  - type: experiment
+    id: N02
+    provenance: ai-executed
+    summary: "Locked and gated four official baseline adapters."
+  - type: dead_end
+    id: N03
+    provenance: ai-executed
+    summary: "Rejected nondeterministic CUDA sparse UNPrompt inference."
+  - type: experiment
+    id: N04
+    provenance: ai-executed
+    summary: "Verified deterministic CPU target sparse aggregation."
+  - type: experiment
+    id: N05
+    provenance: ai-executed
+    summary: "Completed all 24 formal runs and 156 evaluations."
+  - type: dead_end
+    id: N06
+    provenance: ai-executed
+    summary: "Corrected three invalid method-agnostic audit assumptions."
+  - type: experiment
+    id: N07
+    provenance: ai-executed
+    summary: "Passed the independent full-artifact and metric audit."
+  - type: experiment
+    id: N08
+    provenance: ai-executed
+    summary: "Compared RECAP with ARC, IA-GGAD, UNPrompt, and AnomalyGFM-ZS."
+
+ai_actions:
+  - action: "Implemented protocol, adapters, label guards, runner, tests, analyzer, and report."
+    provenance: ai-executed
+    files_changed:
+      - "rebuttal/BASELINE_OFA_REPROTOCOL.md"
+      - "rebuttal/baselines/baseline_common.py"
+      - "rebuttal/baselines/baseline_models.py"
+      - "rebuttal/baselines/baseline_protocol.py"
+      - "rebuttal/baselines/baseline_runner.py"
+      - "rebuttal/baselines/baseline_analysis.py"
+      - "rebuttal/baselines/test_baselines.py"
+      - "rebuttal/reports/PHASE2_OFA_BASELINE_REPORT.md"
+  - action: "Executed 24 formal runs, 156 evaluations, and eight final tests."
+    provenance: ai-executed
+    files_changed: []
+  - action: "Preserved failed and superseded attempts outside accepted formal runs."
+    provenance: ai-executed
+    files_changed: []
+
+claims_touched:
+  - id: C01
+    action: created
+    provenance: ai-suggested
+  - id: C02
+    action: created
+    provenance: ai-suggested
+  - id: C03
+    action: created
+    provenance: ai-suggested
+  - id: C04
+    action: created
+    provenance: ai-suggested
+
+open_threads:
+  - "Investigate why UNPrompt and AnomalyGFM-ZS transfer weakly under the locked multi-source Setting A without target-driven tuning."
+  - "Investigate IA-GGAD's high Amazon variance without altering the confirmatory report."
+
+ai_suggestions_pending:
+  - "Treat the weak/high-variance results as follow-up diagnostics rather than selectively tuning the completed confirmatory runs."

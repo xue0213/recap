@@ -1,0 +1,126 @@
+# Heuristics
+
+## H01: Compute only the retained SVD subspace
+- **Rationale**: AnomalyGFM retains eight singular components, so deterministic
+  sparse ARPACK top-8 avoids computing and discarding the full dense basis.
+- **Provenance**: ai-suggested
+- **Sensitivity**: low
+- **Code ref**: [`rebuttal/baselines/baseline_common.py`]
+
+## H02: Make frozen sparse target aggregation deterministic
+- **Rationale**: CUDA sparse reduction order can change last bits that are
+  amplified by graph-level min-max scoring. CPU sparse aggregation is
+  deterministic while the learned encoder remains unchanged.
+- **Provenance**: ai-suggested
+- **Sensitivity**: low
+- **Code ref**: [`rebuttal/baselines/baseline_models.py`]
+
+## H03: Calibrate fusion weights on source scores once
+- **Rationale**: Source-only seed-0 selection prevents target-specific released
+  settings from leaking target labels or target identities into comparison.
+- **Provenance**: ai-suggested
+- **Sensitivity**: medium
+- **Code ref**: [`rebuttal/baselines/baseline_runner.py`]
+
+## H04: Expand a completed protocol through an isolated supplement
+- **Rationale**: A separate manifest, artifact root, and protocol preserve the
+  forensic integrity of already accepted results while allowing a
+  user-requested scope revision.
+- **Provenance**: ai-suggested
+- **Sensitivity**: low
+- **Code ref**: [`rebuttal/baselines/baseline_bc_runner.py`,
+  `rebuttal/baselines/baseline_bc_analysis.py`]
+
+## H05: Evaluate DOMINANT structure error without an N×N matrix
+- **Rationale**: Expanding the squared dot-product decoder row error through
+  `ZᵀZ`, positive-edge dot products, and node degree is exactly equal to the
+  dense decoder error while reducing memory below quadratic.
+- **Provenance**: ai-suggested
+- **Sensitivity**: low
+- **Code ref**: [`rebuttal/ofo_baselines/models.py`,
+  `rebuttal/ofo_baselines/test_ofo_baselines.py`]
+
+## H06: Estimate dense non-edge structure terms with locked weighting
+- **Rationale**: Keeping every positive edge and sampling one deterministic
+  row-wise non-edge per positive edge with inverse-probability weighting
+  preserves a scalable estimate of the released dense AnomalyDAE/ADA-GAD
+  objectives without labels.
+- **Provenance**: ai-suggested
+- **Sensitivity**: medium
+- **Code ref**: [`rebuttal/ofo_baselines/common.py`,
+  `rebuttal/ofo_baselines/runner.py`]
+
+## H07: Scale reload tolerance to anomaly-score magnitude
+- **Rationale**: A fixed `1e-5` absolute threshold rejects harmless CUDA
+  scatter last-bit differences when reconstruction scores are large. The
+  pre-result threshold `1e-5 + 5e-6 × max(abs(score))` remains tight relative
+  to score scale and is recorded per run.
+- **Provenance**: ai-suggested
+- **Sensitivity**: medium
+- **Code ref**: [`rebuttal/ofo_baselines/runner.py`]
+
+## H08: Recompute every final metric from frozen arrays
+- **Rationale**: Requiring the exact manifest and rebuilding AUROC/AUPRC from
+  hashed score/query arrays catches missing runs, label-population drift, and
+  aggregation errors independently of the training runner.
+- **Provenance**: ai-suggested
+- **Sensitivity**: low
+- **Code ref**: [`rebuttal/ofo_baselines/analysis.py`]
+
+## H09: Form seed-level or seed-pair-level macros before uncertainty
+- **Rationale**: Averaging already summarized dataset cells can preserve the
+  mean while losing the protocol-defined covariance structure. Aggregate
+  datasets within each seed (or seed pair for stability) first, then compute
+  the population standard deviation across the three independent units.
+- **Provenance**: ai-suggested
+- **Sensitivity**: medium
+- **Code ref**: [`rebuttal/protocol_completion_audit.py`,
+  `rebuttal/EXPERIMENT_PROTOCOL_COMPLETION_AUDIT.md`]
+
+## H10: Replace DiffGAD label selection with a fixed diffusion ensemble
+- **Rationale**: The released trial and timestep maxima inspect anomaly labels.
+  A preregistered ten-level average removes that leakage, while the exact
+  `ZᵀZ` structure identity eliminates dense `N×N` reconstruction without
+  changing node scores or gradients.
+- **Provenance**: ai-suggested
+- **Sensitivity**: medium
+- **Code ref**: [`rebuttal/new_baselines/diffgad.py`,
+  `rebuttal/new_baselines/test_extension.py`]
+
+## H11: Substitute exact ORCA node orbits for GUIDE motif loops
+- **Rationale**: ORCA's exact order-four induced graphlet orbits reproduce
+  GUIDE's six structural counts but scale beyond the released nested
+  Python/NetworkX enumeration.
+- **Provenance**: ai-suggested
+- **Sensitivity**: low
+- **Code ref**: [`rebuttal/new_baselines/guide.py`,
+  `rebuttal/new_baselines/test_extension.py`]
+
+## H12: Remove OWLEYE's cancelled pair distances and chunk target queries
+- **Rationale**: Under the locked released `tau=1`, the quadratic pair-distance
+  multiplier cancels to one. Computing only the effective normalization and
+  chunking the unchanged query axis preserves the released scores while
+  bounding memory.
+- **Provenance**: ai-suggested
+- **Sensitivity**: low
+- **Code ref**: [`rebuttal/new_baselines/owleye.py`,
+  `rebuttal/new_baselines/test_extension.py`]
+
+## H13: Share label-free target KNN candidates across checkpoint seeds
+- **Rationale**: Initial target residuals depend only on target features and
+  propagation, not on a trained checkpoint. Building and hashing one
+  target-only candidate cache amortizes the dominant ANN cost across all
+  immutable checkpoints without leaking labels or changing per-seed scores.
+- **Provenance**: ai-suggested
+- **Sensitivity**: low
+- **Code ref**: [`rebuttal/large_target_inference/ann.py`,
+  `rebuttal/large_target_inference/runner.py`]
+
+## H14: Factor RECAP scoring into memory-bounded exact components
+- **Rationale**: Chunked candidate scoring and algebraically equivalent
+  community terms avoid materializing `N×K×D` and `N×C×D` tensors while
+  preserving the native scorer within 7.16e-7 maximum absolute difference.
+- **Provenance**: ai-suggested
+- **Sensitivity**: low
+- **Code ref**: [`rebuttal/large_target_inference/scoring.py`,
+  `rebuttal/large_target_inference/test_large_target_inference.py`]

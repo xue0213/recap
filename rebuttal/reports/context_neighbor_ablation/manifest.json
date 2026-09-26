@@ -1,0 +1,123 @@
+{
+  "beta": 0.02,
+  "created_at_unix": 1785249926.8396552,
+  "datasets": [
+    "Cora",
+    "CiteSeer",
+    "ACM",
+    "BlogCatalog",
+    "Facebook",
+    "Weibo",
+    "Reddit",
+    "Amazon"
+  ],
+  "eps": 1e-08,
+  "faiss": "1.14.3",
+  "faiss_threads": 1,
+  "inputs": {
+    "/root/autodl-tmp/recap_phase1/dataset/ACM_32.npz": "e2528f4055e3f3643c9da185e93bdc581bc1444f596bf0cace0aeb116f285c8b",
+    "/root/autodl-tmp/recap_phase1/dataset/Amazon_32.npz": "a2cf966bbc13a432b584943464d23a656c097967cc830cfc166d1d898f4871a8",
+    "/root/autodl-tmp/recap_phase1/dataset/BlogCatalog_32.npz": "456f82bc64fc70335d65227f280971bd85049e0c1cb329bcfcd4cd8cf396190a",
+    "/root/autodl-tmp/recap_phase1/dataset/Facebook_32.npz": "44bcde0714691b062ed88979070e6e58e772db399fe1fd62c9035d407fc59eed",
+    "/root/autodl-tmp/recap_phase1/dataset/Reddit_32.npz": "9b5433b37d4235f000c7abab24f3918994a5c7fa351277c6510113a4b6160e10",
+    "/root/autodl-tmp/recap_phase1/dataset/citeseer_32.npz": "09df4ecfe3b3a965a2a2ee014b6eb64dc23d99f3f077500b7756dcce1c62f5e8",
+    "/root/autodl-tmp/recap_phase1/dataset/cora_32.npz": "50adcd74c59dfa7c15890b6d0a35c69ddf774beb050ae127fec7c9581d26d958",
+    "/root/autodl-tmp/recap_phase1/dataset/weibo_32.npz": "0d86bca72f6eb7ec06ef135e91f627f3c48e3d29e0e36da4f218ce1f3567daee",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/ACM/seed_0.npz": "6dceaf7d80ac5019d5358681c5d15cfc8ab39f0bafafdf9235229c8c2ac59f93",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/ACM/seed_1.npz": "23fb37c9699b80b3a128b56039b2b0421a331cdbbcabcd0e1cabc338d45f5046",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/ACM/seed_2.npz": "ddb4ae89ccee05046634632a05a4b89baf5c42f626940ad9a909f426464bd442",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/Amazon/seed_0.npz": "ae19e46e5308dd9469be6859f02b73c320ad512175650cb485015568653c9621",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/Amazon/seed_1.npz": "19e450f116ac41089745c6a125d85c436ec4e87d0ed90c48c6bdfd884d05a8f5",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/Amazon/seed_2.npz": "7b4d6386654f117ea6473a1f1f7f216ac89106bef56cec9b264a47a1249ace0e",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/BlogCatalog/seed_0.npz": "db0f06707e3027774d8bd6a0f65191cd0615c9dd7dda90c8c79ae6ba312c4ed2",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/BlogCatalog/seed_1.npz": "6ee69273ddc1c18d01ca658f77516e24f83947dfe428bc8f95d18d8bce3d4eac",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/BlogCatalog/seed_2.npz": "574f697aecb60539dfe8121bb43606cd19b7c2d3a795265c85018b7dc8b1707c",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/CiteSeer/seed_0.npz": "e084f97efacd45d5a473cca3fe8e761d78c10350f7bad35ebb0e1a82b37314f2",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/CiteSeer/seed_1.npz": "f781861bed4ef6596a900484813a92bb082d0219530d42adbc03635bcb157588",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/CiteSeer/seed_2.npz": "d9f6e1aef5992ebef0b0ddf621cad4ce809b6b2fbe0040ca5ec4ca37f574e536",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/Cora/seed_0.npz": "10f5398a934c3c630c50468d20dba6fac27490307bcbda23c6d0f6194eef394a",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/Cora/seed_1.npz": "adde0c52595b573b1baea2ffc52096bd827512b594ec0b773fd4bb20153b1865",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/Cora/seed_2.npz": "56c71986033b3e27e719535dc0950ef4dc60bd053d8343ccb624aea37ba93dae",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/Facebook/seed_0.npz": "1888668cd2a4f42fa0474cc653614fc3617a3a103665ec3c6264d0619366352e",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/Facebook/seed_1.npz": "87caabfb952eedb19dbd5b2e32e2d06fdcf4b6a85cda091d9091d69d8bee2bbe",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/Facebook/seed_2.npz": "1f9584f2ee99ffe3f3fbdafc747a304cabba850acf9b0ced0a695ced56048401",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/Reddit/seed_0.npz": "b8cc71133dbe960cb0c3603dda1fccbec8b37b2943a2d9b3f329f78d4035ca0d",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/Reddit/seed_1.npz": "c7feadeec249647e8ddc1e7a5a48f139bdf53d2f2fa80d4a62610e4ae7967812",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/Reddit/seed_2.npz": "ab2e6fc4449cfed1dda734af92c3c226fe64338a5163939a8a47b7c2fd53d562",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/Weibo/seed_0.npz": "7cab0eec2cddc247eddec4f1309a015a5ce2da885a3eddb720fd056d3b0c0edb",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/Weibo/seed_1.npz": "1f78f3be3d839a4844e32566c49416e406de1265880b7bbe70bd4dfa6369c785",
+    "/root/autodl-tmp/recap_phase1/rebuttal/artifacts/phase1/community_stability/one_for_all/setting_A/Weibo/seed_2.npz": "53076055b99478a55a155703460bc5ff5113d4e3022bb45c0191ab8c0328349a"
+  },
+  "intervention": "Replace only the inference-time context graph with exact cosine KNN over aligned input features; keep saved H and adhesion fixed.",
+  "k": 64,
+  "knn": {
+    "ACM": {
+      "cache_state": "reused",
+      "feature_dim": 32,
+      "feature_sha256": "ff5d1c885aba0174196b596dabed6e723193fccbc9a30a0669d70001b2b5e609",
+      "num_nodes": 16484,
+      "seconds": 0.0
+    },
+    "Amazon": {
+      "cache_state": "reused",
+      "feature_dim": 32,
+      "feature_sha256": "3d37f6d0d2079e894c4fa2d44e3e2b0d0709f54af7f91e2e063ba5218638127c",
+      "num_nodes": 10224,
+      "seconds": 0.0
+    },
+    "BlogCatalog": {
+      "cache_state": "reused",
+      "feature_dim": 32,
+      "feature_sha256": "d108f6cf9ce9a3705807c1e60dff62a7181f0a85a90f1408d394ee039199d848",
+      "num_nodes": 5196,
+      "seconds": 0.0
+    },
+    "CiteSeer": {
+      "cache_state": "reused",
+      "feature_dim": 32,
+      "feature_sha256": "5b60fdca794bd05c12ba2dd2c8061b61ed6e45ccf34db35f5e60e17e2ab34dc8",
+      "num_nodes": 3327,
+      "seconds": 0.0
+    },
+    "Cora": {
+      "cache_state": "reused",
+      "feature_dim": 32,
+      "feature_sha256": "42dd2c3af3989ff00ccaaf1dd2b9476de91d09c93ce975189363c598e77f80b0",
+      "num_nodes": 2708,
+      "seconds": 0.0
+    },
+    "Facebook": {
+      "cache_state": "reused",
+      "feature_dim": 32,
+      "feature_sha256": "1ad9d3e91a84a40394472e9bc8bbf0a1e5f7802f42e1b3e3e5cffd30710d9b32",
+      "num_nodes": 1081,
+      "seconds": 0.0
+    },
+    "Reddit": {
+      "cache_state": "reused",
+      "feature_dim": 32,
+      "feature_sha256": "3cd549b75dbb36903d8331fa9ecbc98feff5969f451ee8a47a1358e9bd7821b3",
+      "num_nodes": 10984,
+      "seconds": 0.0
+    },
+    "Weibo": {
+      "cache_state": "reused",
+      "feature_dim": 32,
+      "feature_sha256": "610f7342bf77b0346e808357c7f53b293f31dc11f369989dab9ca2215277d314",
+      "num_nodes": 8405,
+      "seconds": 0.0
+    }
+  },
+  "numpy": "2.1.3",
+  "platform": "Linux-5.15.0-78-generic-x86_64-with-glibc2.35",
+  "python": "3.12.3 | packaged by Anaconda, Inc. | (main, May  6 2024, 19:46:43) [GCC 11.2.0]",
+  "root": "/root/autodl-tmp/recap_phase1",
+  "script_sha256": "b7be0279c9ce36a5ca9725d5e8069bd0e090e5aa1c9d5ea11731e5892b622fe7",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "tau_s": 0.3,
+  "validation_status": "pass"
+}

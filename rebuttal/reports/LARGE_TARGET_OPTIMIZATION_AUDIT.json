@@ -1,0 +1,120 @@
+{
+  "created_at": "2026-07-27T19:10:47.615676+00:00",
+  "format": "recap_large_target_optimization_audit_v1",
+  "milestone_diagnostic": [
+    {
+      "base": "/root/autodl-tmp/recap_large_inference/rebuttal/artifacts/large_target_optimization/oracle_milestones/tfinance",
+      "max_metric_difference": 0.0,
+      "metric_rows": 36,
+      "passed": true,
+      "score_hashes": 36,
+      "target": "tfinance"
+    },
+    {
+      "base": "/root/autodl-tmp/recap_large_inference/rebuttal/artifacts/large_target_optimization/oracle_milestones/dgraphfin",
+      "max_metric_difference": 0.0,
+      "metric_rows": 36,
+      "passed": true,
+      "score_hashes": 36,
+      "target": "dgraphfin"
+    },
+    {
+      "base": "/root/autodl-tmp/recap_large_inference/rebuttal/artifacts/large_target_optimization/oracle_milestones/tsocial",
+      "max_metric_difference": 0.0,
+      "metric_rows": 36,
+      "passed": true,
+      "score_hashes": 36,
+      "target": "tsocial"
+    }
+  ],
+  "passed": true,
+  "robust_core_adaptation": [
+    {
+      "base": "/root/autodl-tmp/recap_large_inference/rebuttal/artifacts/large_target_optimization/robust_core_adapt/tfinance",
+      "max_metric_difference": 0.0,
+      "metric_rows": 9,
+      "passed": true,
+      "score_hashes": 9,
+      "target": "tfinance"
+    },
+    {
+      "base": "/root/autodl-tmp/recap_large_inference/rebuttal/artifacts/large_target_optimization/robust_core_adapt/dgraphfin",
+      "max_metric_difference": 0.0,
+      "metric_rows": 9,
+      "passed": true,
+      "score_hashes": 9,
+      "target": "dgraphfin"
+    },
+    {
+      "base": "/root/autodl-tmp/recap_large_inference/rebuttal/artifacts/large_target_optimization/robust_core_adapt/tsocial",
+      "max_metric_difference": 0.0,
+      "metric_rows": 9,
+      "passed": true,
+      "score_hashes": 9,
+      "target": "tsocial"
+    }
+  ],
+  "shared_transfer": {
+    "base": "/root/autodl-tmp/recap_large_inference/rebuttal/artifacts/large_target_optimization/shared_transfer",
+    "max_metric_difference": 0.0,
+    "metric_rows": 9,
+    "passed": true,
+    "score_hashes": 9,
+    "target": "tsocial"
+  },
+  "source_scans": [
+    {
+      "checkpoint_records": 45,
+      "ensemble_records": 9,
+      "max_metric_difference": 0.0,
+      "metric_rows": 162,
+      "passed": true,
+      "score_hashes": 162,
+      "target": "tfinance"
+    },
+    {
+      "checkpoint_records": 45,
+      "ensemble_records": 9,
+      "max_metric_difference": 0.0,
+      "metric_rows": 162,
+      "passed": true,
+      "score_hashes": 162,
+      "target": "dgraphfin"
+    },
+    {
+      "checkpoint_records": 45,
+      "ensemble_records": 9,
+      "max_metric_difference": 0.0,
+      "metric_rows": 162,
+      "passed": true,
+      "score_hashes": 162,
+      "target": "tsocial"
+    }
+  ],
+  "target_adaptation": [
+    {
+      "base": "/root/autodl-tmp/recap_large_inference/rebuttal/artifacts/large_target_optimization/target_adapt/tfinance",
+      "max_metric_difference": 0.0,
+      "metric_rows": 9,
+      "passed": true,
+      "score_hashes": 9,
+      "target": "tfinance"
+    },
+    {
+      "base": "/root/autodl-tmp/recap_large_inference/rebuttal/artifacts/large_target_optimization/target_adapt/dgraphfin",
+      "max_metric_difference": 0.0,
+      "metric_rows": 9,
+      "passed": true,
+      "score_hashes": 9,
+      "target": "dgraphfin"
+    },
+    {
+      "base": "/root/autodl-tmp/recap_large_inference/rebuttal/artifacts/large_target_optimization/target_adapt/tsocial",
+      "max_metric_difference": 0.0,
+      "metric_rows": 9,
+      "passed": true,
+      "score_hashes": 9,
+      "target": "tsocial"
+    }
+  ]
+}

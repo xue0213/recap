@@ -1,0 +1,237 @@
+{
+  "config": {
+    "device": "cpu",
+    "trials": 5,
+    "epochs": 100,
+    "dims": 32,
+    "model": "recap_auprc_best",
+    "json_dir": "params",
+    "output_dir": "ablation/matched_2x2/shards/ACM",
+    "train_datasets": null,
+    "test_datasets": [
+      "ACM"
+    ],
+    "methods": [
+      "Non-residual + KMeans",
+      "Residual + KMeans"
+    ],
+    "no_recap": true,
+    "save_recap_checkpoints": false,
+    "no_diagnostics": false,
+    "diagnostics_interval": 10,
+    "num_clusters": null,
+    "knn_k": 64,
+    "kmeans_n_init": 20,
+    "gmm_covariance": "diag",
+    "gmm_max_iter": 300,
+    "gmm_reg_covar": 1e-06,
+    "gmm_reg_covar_retries": [
+      1e-06,
+      1e-05,
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "gmm_min_std": 1e-08,
+    "gmm_no_component_reduction": false,
+    "spectral_neighbors": null,
+    "spectral_n_init": 5,
+    "spectral_max_nodes": 3000,
+    "spectral_large_mode": "sample",
+    "lof_neighbors": 20,
+    "n_jobs": -1,
+    "continue_on_error": true,
+    "quick": false,
+    "project_root": "/root/autodl-tmp/recap",
+    "model_config": {
+      "model": "recap_auprc_best",
+      "lr": 5e-05,
+      "dropout_rate": 0.2,
+      "h_feats": 256,
+      "num_hops": 4,
+      "weight_decay": 5e-05,
+      "dims": 32,
+      "num_layers": 2,
+      "activation": "ELU",
+      "num_views": 1,
+      "num_clusters": 36,
+      "knn_k": 64,
+      "cluster_lr_multiplier": 10.0,
+      "tau_s": 0.3,
+      "sim_block_size": 256,
+      "knn_cache_enabled": true,
+      "knn_cache_dir": "./knn_cache",
+      "knn_search_dtype": "auto",
+      "ann_large_datasets": [
+        "tsocial",
+        "dgraphfin"
+      ],
+      "ann_backend": "faiss_ivfpq",
+      "ann_nlist": 4096,
+      "ann_nprobe": 16,
+      "ann_pq_m": 16,
+      "ann_train_size": 262144,
+      "ann_query_batch_size": 4096,
+      "ann_add_batch_size": 262144,
+      "ann_rerank_factor": 32,
+      "ann_max_rerank_candidates": 256,
+      "ann_score_batch_size": 2048,
+      "ann_seed": 0,
+      "lambda_H": 0.1,
+      "lambda_bal": 0.1,
+      "lambda_E": 0.1,
+      "gamma": 0.01,
+      "tau_e": 1.0,
+      "beta": 0.02,
+      "eps": 1e-08,
+      "lambda_ortho": 0.1,
+      "lambda_min_usage": 0.1,
+      "lambda_diversity": 0.1,
+      "min_cluster_ratio": 0.01
+    }
+  },
+  "records": [
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 0,
+      "dataset": "ACM",
+      "AUROC": 0.64384489325206,
+      "AUPRC": 0.11422495579258457,
+      "seconds": 22.359901949763298,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 0,
+      "dataset": "ACM",
+      "AUROC": 0.7602532922264328,
+      "AUPRC": 0.2277095791616079,
+      "seconds": 26.088829532265663,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 1,
+      "dataset": "ACM",
+      "AUROC": 0.655371758184557,
+      "AUPRC": 0.11835079813086058,
+      "seconds": 29.496582869440317,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 1,
+      "dataset": "ACM",
+      "AUROC": 0.7631597065497859,
+      "AUPRC": 0.2349708040489399,
+      "seconds": 47.5058630798012,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 2,
+      "dataset": "ACM",
+      "AUROC": 0.6410573038921554,
+      "AUPRC": 0.1187540052706481,
+      "seconds": 44.97350697591901,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 2,
+      "dataset": "ACM",
+      "AUROC": 0.7648026962617792,
+      "AUPRC": 0.24224499024705654,
+      "seconds": 43.357504626736045,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 3,
+      "dataset": "ACM",
+      "AUROC": 0.6496300452768449,
+      "AUPRC": 0.11748793915636777,
+      "seconds": 22.393582187592983,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 3,
+      "dataset": "ACM",
+      "AUROC": 0.7623075828988631,
+      "AUPRC": 0.23390141950873097,
+      "seconds": 23.1889184769243,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Non-residual + KMeans",
+      "trial": 4,
+      "dataset": "ACM",
+      "AUROC": 0.6501018130665076,
+      "AUPRC": 0.11201674062539843,
+      "seconds": 21.082384444773197,
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "method": "Residual + KMeans",
+      "trial": 4,
+      "dataset": "ACM",
+      "AUROC": 0.7635893531567534,
+      "AUPRC": 0.2380696668929484,
+      "seconds": 24.299067126587033,
+      "status": "ok",
+      "error": ""
+    }
+  ],
+  "summary": [
+    {
+      "method": "Non-residual + KMeans",
+      "dataset": "ACM",
+      "n": 5,
+      "AUROC_mean": 0.6480011627344251,
+      "AUROC_std": 0.005037527549812291,
+      "AUPRC_mean": 0.1161668877951719,
+      "AUPRC_std": 0.002615440281046814,
+      "seconds_mean": 28.06119168549776
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "ACM",
+      "n": 5,
+      "AUROC_mean": 0.7628225262187229,
+      "AUROC_std": 0.001515844151472689,
+      "AUPRC_mean": 0.23537929197185675,
+      "AUPRC_std": 0.004807315134547558,
+      "seconds_mean": 32.88803656846285
+    }
+  ],
+  "average": [
+    {
+      "method": "Non-residual + KMeans",
+      "dataset": "Average",
+      "n": 5,
+      "AUROC_mean": 0.6480011627344251,
+      "AUROC_std": 0.005037527549812291,
+      "AUPRC_mean": 0.1161668877951719,
+      "AUPRC_std": 0.002615440281046814
+    },
+    {
+      "method": "Residual + KMeans",
+      "dataset": "Average",
+      "n": 5,
+      "AUROC_mean": 0.7628225262187229,
+      "AUROC_std": 0.001515844151472689,
+      "AUPRC_mean": 0.23537929197185675,
+      "AUPRC_std": 0.004807315134547558
+    }
+  ]
+}

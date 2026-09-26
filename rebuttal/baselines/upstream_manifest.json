@@ -1,0 +1,42 @@
+{
+  "created_at": "2026-07-26",
+  "data_root": "/root/autodl-tmp/recap/dataset",
+  "dataset_identity": {
+    "reference": "ARC official dataset directory",
+    "status": "all 12 RECAP Phase 1 MAT files are byte-identical to the official ARC copies",
+    "hash_algorithm": "sha256"
+  },
+  "repositories": {
+    "ARC": {
+      "url": "https://github.com/yixinliu233/ARC",
+      "revision": "f8be54f37710d8dc6449193b7fbc2260d433df34",
+      "archive": "arc-main.tar.gz",
+      "archive_sha256": "1dafb0da0b8f45e160272bc68804dfbca872778f2112573e80427725719a363b",
+      "license_file_at_revision": false
+    },
+    "UNPrompt": {
+      "url": "https://github.com/mala-lab/UNPrompt",
+      "revision": "df1ddffac6262e5a9ebe4bb08909cc5c875a63db",
+      "archive": "unprompt-main.tar.gz",
+      "archive_sha256": "1639dc50cda42879282acb25a32a6c389aa4c71c6158c21dd79611cf1ecf411d",
+      "license_file_at_revision": true
+    },
+    "AnomalyGFM": {
+      "url": "https://github.com/mala-lab/AnomalyGFM",
+      "revision": "1fadec7c57bdeaf561a7d15d3fc80ae535e3335d",
+      "archive": "anomalygfm-main.tar.gz",
+      "archive_sha256": "14840be89d1a80a64c5a9cb6026dd98c521752acac0eba5c04f59fdf7290f01c",
+      "license_file_at_revision": false
+    },
+    "IA-GGAD": {
+      "url": "https://github.com/kg-cc/IA-GGAD",
+      "revision": "9e3243d34837154b192d5038b33b32ff02a17a54",
+      "archive": "iaggad-main.tar.gz",
+      "archive_sha256": "682cc5b88018c8e9a9432555f1647537a2266eb416666b4fab900fc850479af9",
+      "license_file_at_revision": false
+    }
+  },
+  "server_vendor_root": "/root/autodl-tmp/recap_baselines/vendor",
+  "server_archive_root": "/root/autodl-tmp/recap_baselines/archives"
+}
+
